@@ -1,3 +1,3 @@
 # Biosim G24 Olsen Granheim
 
-Modeling the living condisions of an island.
+Modeling the living conditions of an island.
