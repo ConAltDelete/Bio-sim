@@ -105,3 +105,68 @@ class animal:
 		if c_coor in ild:
 			return False
 		else: return True
+
+
+class herbavor(animal):
+	def __init__(self,a,w,coor = [0,0]):
+		self.w_birth     = 8
+		self.sigma_birth = 1.5
+		self.beta        = 0.9
+		self.eta         = 0.05
+		self.a_half      = 40
+		self.phi_age     = 0.6
+		self.w_half      = 10
+		self.phi_weight  = 0.1
+		self.mu          = 0.25
+		self.gamma       = 0.2
+		self.zeta        = 3.5
+		self.xi          = 1.2
+		self.omega       = 0.4
+		self.F           = 10
+		super().__init__(a,w,coor)
+
+	def eat(self,F_there):
+		self.w += self.beta * min(F_there,self.F)
+		self.sigma = self.Big_phi()
+
+class preditor(animal):
+	def __init__(self,a,w,coor = [0,0]):
+		self.w_birth     = 6
+		self.sigma_birth = 1
+		self.beta        = 0.75
+		self.eta         = 0.125
+		self.a_half      = 40
+		self.phi_age     = 0.3
+		self.w_half      = 4
+		self.phi_weight  = 0.4
+		self.mu          = 0.4
+		self.gamma       = 0.8
+		self.zeta        = 3.5
+		self.xi          = 1.1
+		self.omega       = 0.8
+		self.F           = 50
+		self.DeltaPhiMax = 10
+		super().__init__(a,w,coor)
+
+	def yield_life(self,L : list):
+		"""
+		Generator for life.
+		:param L, list[herbavore]: The heard to eat.
+		"""
+		for l in L:
+			if l.life and self.bin_choise(max(0,min(1,(self.sigma-l.sigma)/self.DeltaPhiMax))):
+				yield l
+
+	def eat(self,F_there : list):
+		"""
+		Animal eats, because it is good.
+		"""
+		for pray in self.yield_life(F_there):
+			F_got      = min(self.F,pray.w)
+			self.w    += self.beta*F_got
+			pray.life  = False
+			self.F    -= F_got
+			self.sigma = self.Big_phi()
+			if self.F == 0:
+				break
+		return F_there
