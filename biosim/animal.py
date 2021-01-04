@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
 
+__author__ = "Mats Hoem olsen"
+__email__ = "mats.hoem.olsen@nmbu.no"
+
 import numpy as np
 import random as ran
 
-__author__ = "Mats Hoem olsen"
-__email__ = "mats.hoem.olsen@nmbu.no"
+"""
+Module for animal logic. This file contains
+	- class: animal
+	- class (animal) : herbavore
+	- class (animal) : preditor
+"""
 
 class animal:
 	"""
 	This is the superclass of all the animals.
+	Can be used to create other animals however can't be used
+	by it self.
 	"""
 	ret_moves = {
 		'N':[0,1],
@@ -29,35 +38,50 @@ class animal:
 		self.sigma  = self.Big_phi()
 
 	def Big_phi(self):
+		"""
+		'Big_phi' calculates the fitness of the animal based on its age and weight.
+		:return, float: Fitness of animal.
+		"""
+		def q(S: str):
+			"""
+			Generates a function based on 'S'.
+			:param S, str: 'P' for a smaller value, other for bigger.
+			"""
+			k = 1 if S == "P" else -1
+			def new_q(x,xh,phi):
+				return 1/(1+np.e**(k*phi*(x-xh)))
+			return new_q
+
 		if self.w <= 0:
 			return 0 
 		else: 
-			q_p = self.q("P")(self.a,self.a_half,self.phi_age)
-			q_n = self.q("N")(self.w,self.w_half,self.phi_weight)
+			q_p = q("P")(self.a,self.a_half,self.phi_age)
+			q_n = q("N")(self.w,self.w_half,self.phi_weight)
 			return q_p*q_n
-
-	def q(self,S):
-		k = 1 if S == "P" else -1
-		def new_q(x,xh,phi):
-			return 1/(1+np.e**(k*phi*(x-xh)))
-		return new_q
 
 	def bin_choise(self,p):
 		"""
 		Gives True by random choise.
-		:param p: probability 0<=p<=1
+		:param p, float: probability 0<=p<=1
+		:return, bool: bool
 		"""
 		return bool(np.random.choice([1,0],size=1,p=[p,1-p])[0])
 
 	def N(self,w,p):
 		"""
 		Gauss distrebution.
-		:param w:
-		:param p:
+		:param w, float: mean
+		:param p, float: standard deviance
+		:return, float: a float in range [0,1]
 		"""
 		return ran.gauss(w,p)
 
 	def death(self):
+		"""
+		Desides if this animal dies. It got two ways to determen it:
+			- Its weight is equal to 0 or less.
+			- By random chance based on its fitness.
+		"""
 		if self.w <= 0 or self.bin_choise(self.omega*(1-self.sigma)):
 				self.life = False
 
@@ -65,6 +89,7 @@ class animal:
 		"""
 		Determens if chiald is born.
 		:param N, int: population number in cell.
+		:return None/\{herbavore,preditor\}: either None or a new instace of itself.
 		"""
 		p_pop = min(1,self.sigma*self.gamma*(N-1))
 		if self.w < self.zeta*(self.w_birth + self.sigma_birth) and not self.bin_choise(p_pop):
@@ -78,6 +103,7 @@ class animal:
 		else:
 			self.w -= self.xi*k.w
 			return k
+
 	def moveto(self, ret):
 		"""
 		Animal moves in a given diraction 'ret'
@@ -89,17 +115,20 @@ class animal:
 	def move(self,ild):
 		"""
 		Given a map 'ild' it moves, or not.
-		:param ild: list of illigal spots.
+		:param ild: list of illigal coordiants.
 		"""
 		do_move = self.bin_choise(self.mu*self.sigma)
 		direct  = ran.choice([k for k in animal.ret_moves.keys()])
 		if self.check(direct,ild) and do_move:
 			self.moveto(direct)
 
-	def check(self,r,ild):
+	def check(self,r: list,ild):
 		"""
-		Checks if posible to move 
+		Checks if possible to move in diraction r
 		TODO: check if works.
+		:param r, list[int]: The diraction this instance moves to.
+		:param ild: Contains illigal coordinats.
+		:return, bool:
 		"""
 		c_coor = [self.coor[0] + r[0], self.coor[1] + r[1]]
 		if c_coor in ild:
@@ -109,7 +138,7 @@ class animal:
 
 class herbavor(animal):
 	"""
-	This is the herbavore class that eats grass like vegans.
+	This is the herbavore class that eats non-meat like vegans.
 	"""
 	def __init__(self,a,w,coor = [0,0]):
 		self.w_birth     = 8
@@ -129,6 +158,11 @@ class herbavor(animal):
 		super().__init__(a,w,coor)
 
 	def eat(self,F_there):
+		"""
+		Instace consumes a portion of F.
+		TODO: determen if return eaten amount
+		:param F_there, float/int: number of food.
+		"""
 		self.w += self.beta * min(F_there,self.F)
 		self.sigma = self.Big_phi()
 
@@ -158,6 +192,7 @@ class preditor(animal):
 		"""
 		Generator for life.
 		:param L, list[herbavore]: The heard to eat.
+		:yield: A soon to be dead animal.
 		"""
 		for l in L:
 			if l.life and self.bin_choise(max(0,min(1,(self.sigma-l.sigma)/self.DeltaPhiMax))):
@@ -166,6 +201,8 @@ class preditor(animal):
 	def eat(self,F_there : list):
 		"""
 		Animal eats, because it is good.
+		:param F_there, list[herbavore]: A list of herbavores.
+		:return, list[herbavore]: updated list of herbavores.
 		"""
 		for pray in self.yield_life(F_there):
 			F_got      = min(self.F,pray.w)
