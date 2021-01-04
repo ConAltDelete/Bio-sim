@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import random as ran
+
+__author__ = "Mats Hoem olsen"
+__email__ = "mats.hoem.olsen@nmbu.no"
 
 class animal:
 	"""
@@ -12,6 +17,11 @@ class animal:
 		'E':[-1,0]
 	}
 	def __init__(self,a:int,w:float,coor=[0,0]):
+		"""
+		:param a, int: age of animal.
+		:param w, float: waight of animal.
+		:param coor, list[int,int]: The coordinate of the animal.
+		"""
 		self.coor   = coor
 		self.w      = w
 		self.a      = a
@@ -31,3 +41,12 @@ class animal:
 		def new_q(x,xh,phi):
 			return 1/(1+np.e**(k*phi*(x-xh)))
 		return new_q
+
+	def bin_choise(self,p):
+		"""
+		It takes 
+		"""
+		return bool(np.random.choice([1,0],size=1,p=[p,1-p])[0])
+
+	def N(self,w,p):
+		return ran.gauss(w,p)
