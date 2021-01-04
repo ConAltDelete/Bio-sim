@@ -108,6 +108,9 @@ class animal:
 
 
 class herbavor(animal):
+	"""
+	This is the herbavore class that eats grass like vegans.
+	"""
 	def __init__(self,a,w,coor = [0,0]):
 		self.w_birth     = 8
 		self.sigma_birth = 1.5
@@ -130,6 +133,9 @@ class herbavor(animal):
 		self.sigma = self.Big_phi()
 
 class preditor(animal):
+	"""
+	This is the preditor class that eat meat like non-vegans.
+	"""
 	def __init__(self,a,w,coor = [0,0]):
 		self.w_birth     = 6
 		self.sigma_birth = 1
@@ -170,3 +176,7 @@ class preditor(animal):
 			if self.F == 0:
 				break
 		return F_there
+
+
+if __name__ == "__main__":
+	pass
