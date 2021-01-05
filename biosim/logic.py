@@ -7,7 +7,6 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
-
 target_year = 100
 current_year = 0
 
@@ -69,16 +68,13 @@ def season_breeding(animals: list):
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
     """
-    herb = filter(lambda O: type(O) == "herbavore", animals)
+    herb = [ p for p in animals if type(O) == "herbavore" ]
     herb_len = len(herb)
-    pred = filter(lambda O: type(O) == "preditor", animals)
+    pred = [ p for p in animals if type(O) == "preditor" ]
     pred_len = len(pred)
-    new_herb = [ h for h in [H.birth(herb_len) for H in herb] if h != None ]
-    new_pred = [ p for p in [P.birth(pred_len) for P in pred] if p != None ]
-    return [ new_herb , new_pred ]
-
-
-
+    new_herb = [h for h in [H.birth(herb_len) for H in herb] if h is not None]
+    new_pred = [p for p in [P.birth(pred_len) for P in pred] if p is not None]
+    return [new_herb, new_pred]
 
 
 def season_migration():
@@ -107,7 +103,7 @@ def season_loss(animals: list):
     return animals
 
 
-def season_death(animals : list):
+def season_death(animals: list):
     """
     check every animal if they die
     cycling_cells():
@@ -125,7 +121,6 @@ def yearly_cycle(start_year, end_year, visual_year):
 
     :return:
     """
-    start_year = 0
     while start_year <= end_year:
         season_feeding()
         season_breeding()
@@ -136,7 +131,6 @@ def yearly_cycle(start_year, end_year, visual_year):
         start_year += 1
         if start_year % visual_year == 0:
             print('visuals')
-
 
 
 if __name__ == '__main__':

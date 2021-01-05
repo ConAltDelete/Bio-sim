@@ -92,7 +92,7 @@ class animal:
         if self.w <= 0 or self.bin_choise(self.omega * (1 - self.sigma)):
             self.life = False
 
-    def birth(self, N : int, necro_birth: bool =False):
+    def birth(self, N: int, necro_birth: bool = False):
         """
         Determens if chiald is born.
         :param N:population number in cell.
