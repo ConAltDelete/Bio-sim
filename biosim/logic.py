@@ -9,7 +9,6 @@ __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
 
 target_year = 100
-current_year = 0
 
 
 def cycling_cells():
@@ -105,11 +104,12 @@ def season_death():
     pass
 
 
-def yearly_cycle(start_year, end_year):
+def yearly_cycle(end_year, visual_year=1):
     """
 
     :return:
     """
+    start_year = 0
     while start_year <= end_year:
         season_feeding()
         season_breeding()
@@ -118,7 +118,9 @@ def yearly_cycle(start_year, end_year):
         season_loss()
         season_death()
         start_year += 1
+        if start_year % visual_year == 0:
+            print('visuals')
 
 
 if __name__ == '__main__':
-    yearly_cycle(current_year, target_year)
+    yearly_cycle(target_year, 1)
