@@ -1,5 +1,8 @@
 
 
+from biosim.animal import herbavor, preditor
+
+
 class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
@@ -27,13 +30,21 @@ img_base=None, img_fmt='png'):
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 		"""
+		pass
 	
-	def set_animal_parameters(self, species, params):
+	def set_animal_parameters(self, species: str, params: dict):
 		"""
 		Set parameters for animal species.
 		:param species: String, name of animal species
 		:param params: Dict with valid parameter specification for species
 		"""
+		species = species.lower()
+		for dict_key in params:
+			if species == "herbavore":
+				herbavor.var[dict_key] = params[dict_key]
+			elif species == "preditor":
+				preditor.var[dict_key] = params[dict_key]
+
 	
 	def set_landscape_parameters(self, landscape, params):
 		"""
@@ -41,6 +52,7 @@ img_base=None, img_fmt='png'):
 		:param landscape: String, code letter for landscape
 		:param params: Dict with valid parameter specification for landscape
 		"""
+		pass
 	
 	def simulate(self, num_years, vis_years=1, img_years=None):
 		"""
@@ -50,24 +62,30 @@ img_base=None, img_fmt='png'):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
+		pass
 	
 	def add_population(self, population):
 		"""
 		Add a population to the island
 		:param population: List of dictionaries specifying population
 		"""
+		pass
 	
 	@property
 	def year(self):
 		"""Last year simulated."""
+		pass
 	
 	@property
 	def num_animals(self):
 		"""Total number of animals on island."""
+		pass
 	
 	@property
 	def num_animals_per_species(self):
 		"""Number of animals per species in island, as dictionary."""
+		pass
 	
 	def make_movie(self):
 		"""Create MPEG4 movie from visualization images saved."""
+		pass
