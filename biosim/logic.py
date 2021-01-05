@@ -29,7 +29,7 @@ def fitness_calc():
     pass
 
 
-def season_feeding():
+def season_feeding(f_max, cells, animals):
     """
     1. spawns in f_max amount of food in each cell
 
@@ -51,6 +51,7 @@ Carnivores
     8. fitness Phi for carnivores gets calculated again
     """
     pass
+
 
 
 def season_breeding(animals: list):
