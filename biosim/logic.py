@@ -101,7 +101,9 @@ def season_death():
         else
         death = omega(1 - Phi)
     """
-    pass
+    animals = []
+    animals = [A for A in [B.death() for B in animals] if A.life]
+    return animals
 
 
 def yearly_cycle(end_year, visual_year=1):
