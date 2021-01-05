@@ -31,7 +31,7 @@ from biosim.simulation import BioSim
 
 def test_minimal_island():
     """Island of single jungle cell"""
-    BioSim(island_map="WWW\nWLW\nWWW", in
+    BioSim(island_map="WWW\nWLW\nWWW", ini_pop=[],seed=1)
 
 def test_empty_island():i_pop=[], seed=1)
 
