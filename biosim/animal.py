@@ -166,6 +166,8 @@ class herbavor(animal):
 		self.w += self.beta * min(F_there,self.F)
 		self.sigma = self.Big_phi()
 
+
+
 class preditor(animal):
 	"""
 	This is the preditor class that eat meat like non-vegans.
@@ -211,6 +213,8 @@ class preditor(animal):
 			if self.F == 0:
 				break
 		return F_there
+
+
 
 if __name__ == "__main__":
 	H = herbavor(1,4)

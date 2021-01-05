@@ -8,9 +8,6 @@ __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
 
-target_year = 100
-
-
 def cycling_cells():
     """
     function for going through cells on the map as this is required for multiple functions
@@ -29,6 +26,7 @@ def fitness_calc():
     """
     function for calculating fitness as this is needed ALL THE TIME
     """
+    pass
 
 
 def season_feeding():
@@ -55,7 +53,7 @@ Carnivores
     pass
 
 
-def season_breeding():
+def season_breeding(animals: list):
     """
     N_herbivore = number of herbivores in cell
     N_carnivore = number of carnivores in cell
@@ -67,7 +65,13 @@ def season_breeding():
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
     """
-    pass
+    herb = filter(lambda O: type(O) == "herbavore", animals)
+    herb_len = len(herb)
+    pred = filter(lambda O: type(O) == "preditor", animals)
+    pred_len = len(pred)
+    new_herb = [ h for h in [H.birth(herb_len) for H in herb] if h != None ]
+    new_pred = [ p for p in [P.birth(pred_len) for P in pred] if p != None ]
+    return [ new_herb , new_pred ]
 
 
 def season_migration():
@@ -78,21 +82,25 @@ def season_migration():
     pass
 
 
-def season_aging():
+def season_aging(animals: list):
     """
     age += 1
     """
-    pass
+    for animal in animals:
+        animal.a += 1
+    return animals
 
 
-def season_loss():
+def season_loss(animals: list):
     """
     w -= eta * w
     """
-    pass
+    for animal in animals:
+        animal.w -= animal.eta * animal.w
+    return animals
 
 
-def season_death():
+def season_death(animals : list):
     """
     check every animal if they die
     cycling_cells():
@@ -101,12 +109,11 @@ def season_death():
         else
         death = omega(1 - Phi)
     """
-    animals = []
     animals = [A for A in [B.death() for B in animals] if A.life]
     return animals
 
 
-def yearly_cycle(end_year, visual_year=1):
+def yearly_cycle(end_year=100, visual_year=1):
     """
 
     :return:
@@ -125,4 +132,4 @@ def yearly_cycle(end_year, visual_year=1):
 
 
 if __name__ == '__main__':
-    yearly_cycle(target_year, 1)
+    yearly_cycle()
