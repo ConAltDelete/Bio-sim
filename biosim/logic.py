@@ -68,9 +68,9 @@ def season_breeding(animals: list):
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
     """
-    herb = [ p for p in animals if type(O) == "herbavore" ]
+    herb = [ p for p in animals if type(p) == "herbavore" ]
     herb_len = len(herb)
-    pred = [ p for p in animals if type(O) == "preditor" ]
+    pred = [ p for p in animals if type(p) == "preditor" ]
     pred_len = len(pred)
     new_herb = [h for h in [H.birth(herb_len) for H in herb] if h is not None]
     new_pred = [p for p in [P.birth(pred_len) for P in pred] if p is not None]
