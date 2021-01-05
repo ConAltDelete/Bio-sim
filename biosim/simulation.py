@@ -1,7 +1,7 @@
 
 
 class BioSim:
-	def __init__(self, island_map, ini_pop, seed,ymax_animals=None, cmax_animals=None, hist_specs=None,
+	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
 		"""
 		:param island_map: Multi-line string specifying island geography

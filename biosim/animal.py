@@ -59,7 +59,8 @@ class animal:
 			q_n = q("N")(self.w,self.w_half,self.phi_weight)
 			return q_p*q_n
 
-	def bin_choise(self,p):
+	@staticmethod
+	def bin_choise(p):
 		"""
 		Gives True by random choise.
 		:param p, float: probability 0<=p<=1
@@ -67,7 +68,8 @@ class animal:
 		"""
 		return bool(np.random.choice([1,0],size=1,p=[p,1-p])[0])
 
-	def N(self,w,p):
+	@staticmethod
+	def N(w,p):
 		"""
 		Gauss distrebution.
 		:param w, float: mean
@@ -140,22 +142,20 @@ class herbavor(animal):
 	"""
 	This is the herbavore class that eats non-meat like vegans.
 	"""
-	def __init__(self,a,w,coor = [0,0]):
-		self.w_birth     = 8
-		self.sigma_birth = 1.5
-		self.beta        = 0.9
-		self.eta         = 0.05
-		self.a_half      = 40
-		self.phi_age     = 0.6
-		self.w_half      = 10
-		self.phi_weight  = 0.1
-		self.mu          = 0.25
-		self.gamma       = 0.2
-		self.zeta        = 3.5
-		self.xi          = 1.2
-		self.omega       = 0.4
-		self.F           = 10
-		super().__init__(a,w,coor)
+	w_birth     = 8
+	sigma_birth = 1.5
+	beta        = 0.9
+	eta         = 0.05
+	a_half      = 40
+	phi_age     = 0.6
+	w_half      = 10
+	phi_weight  = 0.1
+	mu          = 0.25
+	gamma       = 0.2
+	zeta        = 3.5
+	xi          = 1.2
+	omega       = 0.4
+	F           = 10
 
 	def eat(self,F_there):
 		"""
@@ -170,23 +170,21 @@ class preditor(animal):
 	"""
 	This is the preditor class that eat meat like non-vegans.
 	"""
-	def __init__(self,a,w,coor = [0,0]):
-		self.w_birth     = 6
-		self.sigma_birth = 1
-		self.beta        = 0.75
-		self.eta         = 0.125
-		self.a_half      = 40
-		self.phi_age     = 0.3
-		self.w_half      = 4
-		self.phi_weight  = 0.4
-		self.mu          = 0.4
-		self.gamma       = 0.8
-		self.zeta        = 3.5
-		self.xi          = 1.1
-		self.omega       = 0.8
-		self.F           = 50
-		self.DeltaPhiMax = 10
-		super().__init__(a,w,coor)
+	w_birth     = 6
+	sigma_birth = 1
+	beta        = 0.75
+	eta         = 0.125
+	a_half      = 40
+	phi_age     = 0.3
+	w_half      = 4
+	phi_weight  = 0.4
+	mu          = 0.4
+	gamma       = 0.8
+	zeta        = 3.5
+	xi          = 1.1
+	omega       = 0.8
+	F           = 50
+	DeltaPhiMax = 10
 
 	def yield_life(self,L : list):
 		"""
@@ -215,5 +213,14 @@ class preditor(animal):
 		return F_there
 
 
+def new_func(herbavor):
+	H = herbavor(1,4)
+	H.gamma = 4
+	print(H.gamma)
+	herbavor.gamma = 3
+	print(H.gamma)
+	K = herbavor(2,3)
+	print(K.gamma)
+
 if __name__ == "__main__":
-	pass
+	new_func(herbavor)
