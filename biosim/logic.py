@@ -79,12 +79,9 @@ Carnivores
         if c.n_herb != 0:
             for a in list_herb:
                 if c.coord == a.coord:
-                    if F < c.food:
-                        a.eat(F)
-                        c.reduce_food(F)
+                    if F > 0:
+                        c.reduce_food(a.eat(F, return_food = True))
                     else:
-                        a.eat(c.food)
-                        c.reduce_food(c.food)
                         break
 
 
