@@ -7,6 +7,9 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
+from island import Cells
+from animal import *
+
 
 def gen_cells():
     """
@@ -16,10 +19,12 @@ def gen_cells():
     3. does not generate a cell if the coordinate is a water cell
     4. for L, H and D generates different food
     """
-    pass
+    list_of_cells = list
+    list_of_cells.append(Cells([0, 0]))
+    return list_of_cells
 
 
-def cycling_cells():
+def cycling_cells(list_of_cells):
     """
     function for going through cells on the map as this is required for multiple functions
     """
@@ -40,7 +45,7 @@ def fitness_calc():
     pass
 
 
-def season_feeding(f_max, cells, animals):
+def season_feeding(f_max, animals):
     """
     1. spawns in f_max amount of food in each cell
 
@@ -61,8 +66,7 @@ Carnivores
 
     8. fitness Phi for carnivores gets calculated again
     """
-    pass
-
+    cells = gen_cells()
 
 
 def season_breeding(animals: list):
