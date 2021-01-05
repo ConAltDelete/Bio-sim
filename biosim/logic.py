@@ -65,13 +65,13 @@ def season_breeding(animals: list):
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
     """
-    herb = filter(lambda O: type(O) == "herbavore", animals)
+    herb = filter(lambda o: type(o) == "herbavore", animals)
     herb_len = len(herb)
-    pred = filter(lambda O: type(O) == "preditor", animals)
+    pred = filter(lambda o: type(o) == "preditor", animals)
     pred_len = len(pred)
-    new_herb = [ h for h in [H.birth(herb_len) for H in herb] if h != None ]
-    new_pred = [ p for p in [P.birth(pred_len) for P in pred] if p != None ]
-    return [ new_herb , new_pred ]
+    new_herb = [h for h in [H.birth(herb_len) for H in herb] if h is not None]
+    new_pred = [p for p in [P.birth(pred_len) for P in pred] if p is not None]
+    return [new_herb, new_pred]
 
 
 def season_migration():
@@ -100,7 +100,7 @@ def season_loss(animals: list):
     return animals
 
 
-def season_death(animals : list):
+def season_death(animals: list):
     """
     check every animal if they die
     cycling_cells():
