@@ -179,6 +179,8 @@ class herbavor(animal):
             return min(max(F_there,0), self.var["F"])
 
 
+
+
 class preditor(animal):
     """
     This is the preditor class that eat meat like non-vegans.
@@ -225,6 +227,8 @@ class preditor(animal):
             if self.var["F"] == 0:
                 break
         return F_there
+
+
 
 
 if __name__ == "__main__":

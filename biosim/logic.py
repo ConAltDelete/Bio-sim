@@ -7,11 +7,24 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
-target_year = 100
-current_year = 0
+from island import Cells
+from animal import *
 
 
-def cycling_cells():
+def gen_cells():
+    """
+    function for generating cells at the zeroth year
+    1. generates cells based on given map
+    2. generates a cell for each coordinate
+    3. does not generate a cell if the coordinate is a water cell
+    4. for L, H and D generates different food
+    """
+    list_of_cells = []
+    list_of_cells.append(Cells(3, [0, 0]))
+    return list_of_cells
+
+
+def cycling_cells(list_of_cells):
     """
     function for going through cells on the map as this is required for multiple functions
     """
@@ -32,7 +45,7 @@ def fitness_calc():
     pass
 
 
-def season_feeding():
+def season_feeding(f_max_H, f_max_L, list_herb, list_carn):
     """
     1. spawns in f_max amount of food in each cell
 
@@ -53,10 +66,26 @@ Carnivores
 
     8. fitness Phi for carnivores gets calculated again
     """
-    pass
+    cells = gen_cells()
+    for c in cells:
+        if c.type == 3:
+            c.fill_food(f_max_L)
+        elif c.type == 2:
+            c.fill_food(f_max_H)
+
+    F = herbavor.var["F"]
+
+    for c in cells:
+        if c.n_herb != 0:
+            for a in list_herb:
+                if c.coord == a.coord:
+                    if F > 0:
+                        c.reduce_food(a.eat(F, return_food = True))
+                    else:
+                        break
 
 
-def season_breeding(*animals: list):
+def season_breeding(animals: list):
     """
     N_herbivore = number of herbivores in cell
     N_carnivore = number of carnivores in cell
@@ -67,7 +96,7 @@ def season_breeding(*animals: list):
     3. loops through all animals that can breed and randomly gives birth given by min(1, gamma * Phi * (N_species - 1))
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
-    
+
     :return: [new of what ever you put in first,new of whatever comes second, ...]
     """
     pups = []
@@ -117,11 +146,13 @@ def season_death(animals: list):
     return animals
 
 
-def yearly_cycle(start_year, end_year, visual_year):
+def yearly_cycle(end_year=100, visual_year=1):
     """
-
-    :return:
+    1. generation of cells
+    2. loop through the year
     """
+    gen_cells()
+    start_year = 0
     while start_year <= end_year:
         season_feeding()
         season_breeding()
@@ -135,4 +166,4 @@ def yearly_cycle(start_year, end_year, visual_year):
 
 
 if __name__ == '__main__':
-    yearly_cycle(current_year, target_year)
+    yearly_cycle()
