@@ -120,11 +120,12 @@ def season_death(animals : list):
     return animals
 
 
-def yearly_cycle(start_year, end_year):
+def yearly_cycle(start_year, end_year, visual_year):
     """
 
     :return:
     """
+    start_year = 0
     while start_year <= end_year:
         season_feeding()
         season_breeding()
@@ -133,6 +134,9 @@ def yearly_cycle(start_year, end_year):
         season_loss()
         season_death()
         start_year += 1
+        if start_year % visual_year == 0:
+            print('visuals')
+
 
 
 if __name__ == '__main__':
