@@ -19,8 +19,8 @@ def gen_cells():
     3. does not generate a cell if the coordinate is a water cell
     4. for L, H and D generates different food
     """
-    list_of_cells = list
-    list_of_cells.append(Cells([0, 0]))
+    list_of_cells = []
+    list_of_cells.append(Cells(3, [0, 0]))
     return list_of_cells
 
 
@@ -45,7 +45,7 @@ def fitness_calc():
     pass
 
 
-def season_feeding(f_max, animals):
+def season_feeding(f_max_H, f_max_L, list_herb, list_carn):
     """
     1. spawns in f_max amount of food in each cell
 
@@ -67,6 +67,17 @@ Carnivores
     8. fitness Phi for carnivores gets calculated again
     """
     cells = gen_cells()
+    for c in cells:
+        if c.type == 3:
+            c.fill_food(f_max_L)
+        elif c.type == 2:
+            c.fill_food(f_max_H)
+
+    F = herbavor.var['F']
+
+    for c in cells:
+        for a in list_herb:
+            if c.coord == a.coord:
 
 
 def season_breeding(animals: list):
