@@ -29,8 +29,8 @@ class animal:
 
     def __init__(self, a: int, w: float, coor=[0, 0]):
         """
-        :param a, int: age of animal.
-        :param w, float: waight of animal.
+        :param a: age of animal.
+        :param w: waight of animal.
         :param coor, list[int,int]: The coordinate of the animal.
         """
         self.coor = coor
@@ -44,15 +44,17 @@ class animal:
         'Big_phi' calculates the fitness of the animal based on its age and weight.
         :return, float: Fitness of animal.
         """
+
         def q(S: str):
             """
             Generates a function based on 'S'.
-            :param S, str: 'P' for a smaller value, other for bigger.
+            :param S: 'P' for a smaller value, other for bigger.
             """
             k = 1 if S == "P" else -1
 
             def new_q(x, xh, phi):
-                return 1/(1+np.e**(k*phi*(x-xh)))
+                return 1 / (1 + np.e ** (k * phi * (x - xh)))
+
             return new_q
 
         if self.w <= 0:
@@ -60,24 +62,24 @@ class animal:
         else:
             q_p = q("P")(self.a, self.a_half, self.phi_age)
             q_n = q("N")(self.w, self.w_half, self.phi_weight)
-            return q_p*q_n
+            return q_p * q_n
 
     @staticmethod
     def bin_choise(p):
         """
         Gives True by random choise.
-        :param p, float: probability 0<=p<=1
-        :return, bool: bool
+        :param p: probability 0<=p<=1
+        :return: bool
         """
-        return bool(np.random.choice([1, 0], size=1, p=[p, 1-p])[0])
+        return bool(np.random.choice([1, 0], size=1, p=[p, 1 - p])[0])
 
     @staticmethod
-    def N(w : float, p : float):
+    def N(w: float, p: float):
         """
         Gauss distrebution.
-        :param w, float: mean
-        :param p, float: standard deviance
-        :return, float: a float in range [0,1]
+        :param w: mean
+        :param p: standard deviance
+        :return: a float in range [0,1]
         """
         return ran.gauss(w, p)
 
@@ -87,33 +89,34 @@ class animal:
                 - Its weight is equal to 0 or less.
                 - By random chance based on its fitness.
         """
-        if self.w <= 0 or self.bin_choise(self.omega*(1-self.sigma)):
+        if self.w <= 0 or self.bin_choise(self.omega * (1 - self.sigma)):
             self.life = False
 
-    def birth(self, N, necro_birth=False):
+    def birth(self, N : int, necro_birth: bool =False):
         """
         Determens if chiald is born.
-        :param N, int: population number in cell.
-        :return None/\{herbavore,preditor\}: either None or a new instace of itself.
+        :param N:population number in cell.
+        :param necro_birth: Give birth even when dead.
+        :return: either None or a new instace of itself.
         """
-        p_pop = min(1, self.sigma*self.gamma*(N-1))
-        if self.w < self.zeta*(self.w_birth + self.sigma_birth) and not self.bin_choise(p_pop):
+        p_pop = min(1, self.sigma * self.gamma * (N - 1))
+        if self.w < self.zeta * (self.w_birth + self.sigma_birth) and not self.bin_choise(p_pop):
             return None
         class_name = type(self).__name__
         k = eval(
             "{}(a = 0, w = self.N(self.w_birth,self.sigma_birth))".format(class_name))
         if not necro_birth:
             k.life = self.life
-        if self.w <= self.xi*k.w:
+        if self.w <= self.xi * k.w:
             return None
         else:
-            self.w -= self.xi*k.w
+            self.w -= self.xi * k.w
             return k
 
     def moveto(self, ret):
         """
         Animal moves in a given diraction 'ret'
-        :param ret, str: a key from 'ret_moves'.
+        :param ret: a key from 'ret_moves'.
         """
         self.coor[0] += animal.ret_moves[ret][0]
         self.coor[1] += animal.ret_moves[ret][1]
@@ -123,7 +126,7 @@ class animal:
         Given a map 'ild' it moves, or not.
         :param ild: list of illigal coordiants.
         """
-        do_move = self.bin_choise(self.mu*self.sigma)
+        do_move = self.bin_choise(self.mu * self.sigma)
         direct = ran.choice([k for k in animal.ret_moves.keys()])
         direct_list = animal.ret_moves[direct]
         if self.check(direct_list, ild) and do_move:
@@ -133,7 +136,7 @@ class animal:
         """
         Checks if possible to move in diraction r
         TODO: check if works.
-        :param r, list[int]: The diraction this instance moves to.
+        :param r: The diraction this instance moves to.
         :param ild: Contains illigal coordinats.
         :return, bool:
         """
@@ -196,22 +199,22 @@ class preditor(animal):
     def yield_life(self, L: list):
         """
         Generator for life.
-        :param L, list[herbavore]: The heard to eat.
+        :param L: The heard to eat.
         :yield: A soon to be dead animal.
         """
         for l in L:
-            if l.life and self.bin_choise(max(0, min(1, (self.sigma-l.sigma)/self.DeltaPhiMax))):
+            if l.life and self.bin_choise(max(0, min(1, (self.sigma - l.sigma) / self.DeltaPhiMax))):
                 yield l
 
     def eat(self, F_there: list):
         """
         Animal eats, because it is good.
-        :param F_there, list[herbavore]: A list of herbavores.
-        :return, list[herbavore]: updated list of herbavores.
+        :param F_there: A list of herbavores.
+        :return: updated list of herbavores.
         """
         for pray in self.yield_life(F_there):
             F_got = min(self.F, pray.w)
-            self.w += self.beta*F_got
+            self.w += self.beta * F_got
             pray.life = False
             self.F -= F_got
             self.sigma = self.Big_phi()
