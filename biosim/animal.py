@@ -72,7 +72,7 @@ class animal:
         return bool(np.random.choice([1, 0], size=1, p=[p, 1-p])[0])
 
     @staticmethod
-    def N(w, p):
+    def N(w : float, p : float):
         """
         Gauss distrebution.
         :param w, float: mean
