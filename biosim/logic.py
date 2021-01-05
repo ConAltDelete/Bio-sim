@@ -73,11 +73,19 @@ Carnivores
         elif c.type == 2:
             c.fill_food(f_max_H)
 
-    F = herbavor.var['F']
+    F = herbavor.var["F"]
 
     for c in cells:
-        for a in list_herb:
-            if c.coord == a.coord:
+        if c.n_herb != 0:
+            for a in list_herb:
+                if c.coord == a.coord:
+                    if F < c.food:
+                        a.eat(F)
+                        c.reduce_food(F)
+                    else:
+                        a.eat(c.food)
+                        c.reduce_food(c.food)
+                        break
 
 
 def season_breeding(animals: list):
