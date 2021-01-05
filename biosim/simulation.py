@@ -1,5 +1,8 @@
 
 
+from biosim.animal import herbavor, preditor
+
+
 class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
@@ -37,7 +40,11 @@ img_base=None, img_fmt='png'):
 		"""
 		species = species.lower()
 		for dict_key in params:
-			pass
+			if species == "herbavore":
+				herbavor.var[dict_key] = params[dict_key]
+			elif species == "preditor":
+				preditor.var[dict_key] = params[dict_key]
+
 	
 	def set_landscape_parameters(self, landscape, params):
 		"""

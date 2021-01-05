@@ -56,7 +56,7 @@ Carnivores
     pass
 
 
-def season_breeding(animals: list):
+def season_breeding(*animals: list):
     """
     N_herbivore = number of herbivores in cell
     N_carnivore = number of carnivores in cell
@@ -67,14 +67,15 @@ def season_breeding(animals: list):
     3. loops through all animals that can breed and randomly gives birth given by min(1, gamma * Phi * (N_species - 1))
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
+    
+    :return: [new of what ever you put in first,new of whatever comes second, ...]
     """
-    herb = [ p for p in animals if type(p) == "herbavore" ]
-    herb_len = len(herb)
-    pred = [ p for p in animals if type(p) == "preditor" ]
-    pred_len = len(pred)
-    new_herb = [h for h in [H.birth(herb_len) for H in herb] if h is not None]
-    new_pred = [p for p in [P.birth(pred_len) for P in pred] if p is not None]
-    return [new_herb, new_pred]
+    pups = []
+    for animal in animals:
+        pred_len = len(animal)
+        new_pred = [p for p in [P.birth(pred_len) for P in animal] if p is not None]
+        pups.append(new_pred)
+    return pups
 
 
 def season_migration():

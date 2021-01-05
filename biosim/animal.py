@@ -27,13 +27,13 @@ class animal:
         'E': [-1, 0]
     }
 
-    def __init__(self, a: int, w: float, coor=[0, 0]):
+    def __init__(self, a: int, w: float, coord=[0, 0]):
         """
         :param a: age of animal.
         :param w: waight of animal.
-        :param coor, list[int,int]: The coordinate of the animal.
+        :param coord, list[int,int]: The coorddinate of the animal.
         """
-        self.var["coor"] = coor
+        self.var["coord"] = coord
         self.var["w"] = w
         self.var["a"] = a
         self.var["life"] = True
@@ -118,13 +118,13 @@ class animal:
         Animal moves in a given diraction 'ret'
         :param ret: a key from 'ret_moves'.
         """
-        self.var["coor"][0] += animal.ret_moves[ret][0]
-        self.var["coor"][1] += animal.ret_moves[ret][1]
+        self.var["coord"][0] += animal.ret_moves[ret][0]
+        self.var["coord"][1] += animal.ret_moves[ret][1]
 
     def move(self, ild):
         """
         Given a map 'ild' it moves, or not.
-        :param ild: list of illigal coordiants.
+        :param ild: list of illigal coorddiants.
         """
         do_move = self.bin_choise(self.var["mu"] * self.var["sigma"])
         direct = ran.choice([k for k in animal.ret_moves.keys()])
@@ -137,11 +137,11 @@ class animal:
         Checks if possible to move in diraction r
         TODO: check if works.
         :param r: The diraction this instance moves to.
-        :param ild: Contains illigal coordinats.
+        :param ild: Contains illigal coorddinats.
         :return, bool:
         """
-        c_coor = [self.var["coor"][0] + r[0], self.var["coor"][1] + r[1]]
-        if c_coor in ild:
+        c_coord = [self.var["coord"][0] + r[0], self.var["coord"][1] + r[1]]
+        if c_coord in ild:
             return False
         else:
             return True
@@ -156,7 +156,7 @@ class herbavor(animal):
     "beta"        : 0.9,
     "eta"         : 0.05,
     "a_half"      : 40,
-    "coor"        : [0,0],
+    "coord"        : [0,0],
     "phi_age"     : 0.6,
     "w_half"      : 10,
     "phi_weight"  : 0.1,
@@ -184,7 +184,7 @@ class preditor(animal):
     This is the preditor class that eat meat like non-vegans.
     """
     var = {"w_birth"     : 6,
-    "coor"        : [0,0],
+    "coord"        : [0,0],
     "sigma_birth" : 1,
     "beta"        : 0.75,
     "eta"         : 0.125,
