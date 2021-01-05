@@ -121,6 +121,7 @@ class animal:
 		"""
 		do_move = self.bin_choise(self.mu*self.sigma)
 		direct  = ran.choice([k for k in animal.ret_moves.keys()])
+		direct = animal.ret_moves[direct]
 		if self.check(direct,ild) and do_move:
 			self.moveto(direct)
 
