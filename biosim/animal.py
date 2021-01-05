@@ -212,8 +212,7 @@ class preditor(animal):
 				break
 		return F_there
 
-
-def new_func(herbavor):
+if __name__ == "__main__":
 	H = herbavor(1,4)
 	H.gamma = 4
 	print(H.gamma)
@@ -221,6 +220,3 @@ def new_func(herbavor):
 	print(H.gamma)
 	K = herbavor(2,3)
 	print(K.gamma)
-
-if __name__ == "__main__":
-	new_func(herbavor)
