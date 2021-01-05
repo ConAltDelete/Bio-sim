@@ -8,6 +8,17 @@ __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
 
+def gen_cells():
+    """
+    function for generating cells at the zeroth year
+    1. generates cells based on given map
+    2. generates a cell for each coordinate
+    3. does not generate a cell if the coordinate is a water cell
+    4. for L, H and D generates different food
+    """
+    pass
+
+
 def cycling_cells():
     """
     function for going through cells on the map as this is required for multiple functions
@@ -116,9 +127,10 @@ def season_death(animals: list):
 
 def yearly_cycle(end_year=100, visual_year=1):
     """
-
-    :return:
+    1. generation of cells
+    2. loop through the year
     """
+    gen_cells()
     start_year = 0
     while start_year <= end_year:
         season_feeding()
