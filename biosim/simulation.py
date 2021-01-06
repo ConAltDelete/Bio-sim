@@ -31,7 +31,7 @@ img_base=None, img_fmt='png'):
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 		"""
-		self.island = bv.string2map(island_map)
+		self.island, self.illigal_coord = bv.string2map(island_map)
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""

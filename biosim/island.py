@@ -13,13 +13,19 @@ class Cells:
     """
     The cells class
     """
+    defauld_food = {
+        0:0,
+        1:0,
+        2:300,
+        3:800
+    }
     def __init__(self, cell_type, coord=None):
-
         self.coord = coord if coord is not None else [0, 0]
         self.food = 0.0
         self.n_herb = 0
         self.n_carn = 0
         self.type = cell_type
+        self.f_max = Cells.defauld_food[self.type]
         self.herb_default = list()
         self.herb_newborn = list()
         self.herb_migrate = list()
@@ -27,6 +33,18 @@ class Cells:
         self.carn_newborn = list()
         self.carn_migrate = list()
         self.carn_eaten = list()
+
+    def migration(self, illigal_moves):
+        for H in self.herb_default:
+            H.var["coord"] = self.coord
+        [H.move(illigal_moves) for H in self.herb_default]
+        self.herb_migrate = [h for h in self.herb_default if h.var["coord"] != self.coord]
+        self.herb_default = [h for h in self.herb_default if h.var["coord"] == self.coord]
+        for P in self.carn_default:
+            P.var["coord"] = self.coord
+        [P.move(illigal_moves) for P in self.carn_default]
+        self.herb_migrate = [p for p in self.carn_default if p.var["coord"] != self.coord]
+        self.herb_default = [p for p in self.carn_default if p.var["coord"] == self.coord]
 
     def count_herb(self):
         self.n_herb = len(self.herb_default) + len(self.herb_newborn) + len(self.herb_migrate)

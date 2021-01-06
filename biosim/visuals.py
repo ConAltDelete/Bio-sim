@@ -14,14 +14,18 @@ def string2map(map_str : str):
     This file converts map to a readable map.
     Assumes class 'Cells' handels strings at __init__.
     :param map_str: a string that represents the map.
+    :return: a new map, and illigal coordinates
     """
     map_list = [list(map_r) for map_r in map_str.split()]
     new_map = []
+    illigal_coord = []
     for row in enumerate( map_list ):
         for colum in enumerate( row[1] ):
             if colum[1] != "W":
                 new_map.append( { ( colum[0] + 1, row[0] + 1) : Cells({"W":0,"L":3,"H":2,"D":1}[colum[1]],[colum[0] + 1, row[0] + 1] ) } )
-    return new_map
+            else:
+                illigal_coord.append( (colum[0] + 1 , row[0] + 1) )
+    return [new_map, illigal_coord]
 
 def set_param(island,_type : str, parm : dict):
     """
@@ -37,7 +41,7 @@ def set_param(island,_type : str, parm : dict):
 
 if __name__ == '__main__':
     map_test = "WWWWW\nWWLLW\nWWWWW"
-    new_map = string2map(map_test)
+    new_map = string2map(map_test)[0]
     print(new_map)
     for cells in new_map:
         for c in cells.values():

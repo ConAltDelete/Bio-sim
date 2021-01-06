@@ -106,25 +106,37 @@ def season_breeding(*animal: list):
             species.extend(pups)
 
 
-def season_migration():
+def season_migration(cells: dict, illigal_moves: list):
     """
-
+    Animals moves to desired location if possible.
+    :param cells: dictonary with coordinats as key, and Cells objects as value
     :return:
     """
-    pass
+    moving_animals = {"herb":{},"pred":{}}
+    for cell in cells.values():
+        cell.migration(illigal_moves)
+        for mov_herb in cell.herb_migrate:
+            moving_animals["herb"][mov_herb.var["coord"]] = mov_herb
+        for mov_carn in cell.carn_migrate:
+            moving_animals["pred"][mov_carn.var["coord"]] = mov_carn
+
+    # moving animals
+    for mov_herb in moving_animals["herb"]:
+        cells[mov_herb].herb_default = moving_animals["herb"][mov_herb]
+    for mov_pred in moving_animals["pred"]:
+        cells[mov_pred].carn_default = moving_animals["pred"][mov_pred]
 
 
-def season_aging(herb: list, carn: list):
+
+def season_aging(*animals : list):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     age += 1
     """
 
-    for animals in herb:
-        animals.age()
-
-    for animals in carn:
-        animals.age()
+    for specis in animals:
+        for turd in specis:
+            turd.age()
 
 
 def season_loss(*animal: list):
@@ -151,7 +163,7 @@ def season_death(cell, herb: list, carn: list):
     cell.carn_default = [A for A in carn if A.var["life"]]
 
 
-def yearly_cycle(end_year=20, visual_year=1):
+def yearly_cycle(end_year=10, visual_year=1):
     """
     1. generation of cells
     2. loop through the year
@@ -168,7 +180,7 @@ def yearly_cycle(end_year=20, visual_year=1):
         for c in cells:
             season_breeding(c.herb_default, c.carn_default)
 
-        season_migration()
+        season_migration(cells)
 
         for c in cells:
             season_aging(c.herb_default, c.carn_default)
