@@ -9,6 +9,8 @@ __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
 from island import Cells
 from animal import *
+from colorama import Fore
+from colorama import Style
 
 
 def gen_cells():
@@ -100,7 +102,7 @@ def season_breeding(*animal: list):
             pups = list()
             pred_len = len(species)
             new_pred = [p for p in [P.birth(pred_len) for P in species] if p is not None]
-            pups.append(new_pred)
+            pups = pups + new_pred
             species.extend(pups)
 
 
@@ -112,14 +114,17 @@ def season_migration():
     pass
 
 
-def season_aging(*animal: list):
+def season_aging(herb: list, carn: list):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     age += 1
     """
-    for species in animal:
-        for animals in species:
-            animals.var["a"] += 1
+
+    for animals in herb:
+        animals.var["a"] += 1
+
+    for animals in herb:
+        animals.var["a"] += 1
 
 
 def season_loss(*animal: list):
@@ -153,7 +158,7 @@ def yearly_cycle(end_year=20, visual_year=1):
     """
     gen_cells()
     cells = gen_cells()
-    cells[0].herb_default = [herbavor(0, 8.0)]
+    cells[0].herb_default = [herbavor(0, 8.0), herbavor(0, 8.0), herbavor(0, 8.0)]
     start_year = 0
     while start_year < end_year:
         for c in cells:
@@ -171,17 +176,18 @@ def yearly_cycle(end_year=20, visual_year=1):
         for c in cells:
             season_loss(c.herb_default, c.carn_default)
 
-        for c in cells:
-            season_death(c, c.herb_default, c.carn_default)
+        """for c in cells:
+            season_death(c, c.herb_default, c.carn_default)"""
 
         start_year += 1
         if start_year % visual_year == 0:
-            print(start_year)
+            print(f"{Fore.RED}Current year{Style.RESET_ALL}", start_year)
             if len(cells[0].herb_default) > 0:
-                print(cells[0].herb_default[0].var["a"])
-                print(cells[0].herb_default[0].var["w"])
-                print(cells[0].herb_default[0].var["sigma"])
-                print(cells[0].herb_default[0].var["life"])
+                for a in cells[0].herb_default:
+                    print("Age", a.var["a"])
+                    print("Weight", a.var["w"])
+                    print("Fitness", a.var["sigma"])
+                    print("Alive", a.var["life"])
 
 
 if __name__ == '__main__':
