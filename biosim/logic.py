@@ -24,7 +24,7 @@ def gen_cells():
     return list_of_cells
 
 
-def cycling_cells(list_of_cells):
+def cycling_cells():
     """
     function for going through cells on the map as this is required for multiple functions
     """
@@ -45,7 +45,7 @@ def fitness_calc():
     pass
 
 
-def season_feeding(f_max_H, f_max_L, list_herb, list_carn):
+def season_feeding(f_max_H, f_max_L, cell, herb: list):
     """
     1. spawns in f_max amount of food in each cell
 
@@ -65,26 +65,22 @@ Carnivores
     -  loops until all carnivores stop
 
     8. fitness Phi for carnivores gets calculated again
+    9. food value for carnivores gets reset
     """
-    cells = gen_cells()
-    for c in cells:
-        if c.type == 3:
-            c.fill_food(f_max_L)
-        elif c.type == 2:
-            c.fill_food(f_max_H)
+    if cell.type == 3:
+        cell.fill_food(f_max_L)
+    elif cell.type == 2:
+        cell.fill_food(f_max_H)
 
-    F = herbavor.var["F"]
-
-    for c in cells:
-        if c.n_herb != 0:
-            for a in c.herb_default:
-                if c.food > 0:
-                    c.reduce_food(a.eat(c.food, return_food=True))
-                else:
-                    break
+    if cell.n_herb != 0:
+        for animal in herb:
+            if cell.food > 0:
+                cell.reduce_food(animal.eat(cell.food, return_food=True))
+            else:
+                break
 
 
-def season_breeding(animals: list):
+def season_breeding(*animal: list):
     """
     N_herbivore = number of herbivores in cell
     N_carnivore = number of carnivores in cell
@@ -98,12 +94,14 @@ def season_breeding(animals: list):
 
     :return: [new of what ever you put in first,new of whatever comes second, ...]
     """
-    pups = []
-    for animal in animals:
-        pred_len = len(animal)
-        new_pred = [p for p in [P.birth(pred_len) for P in animal] if p is not None]
-        pups.append(new_pred)
-    return pups
+
+    for species in animal:
+        if len(species) > 1:
+            pups = list()
+            pred_len = len(species)
+            new_pred = [p for p in [P.birth(pred_len) for P in species] if p is not None]
+            pups.append(new_pred)
+            species.extend(pups)
 
 
 def season_migration():
@@ -114,54 +112,76 @@ def season_migration():
     pass
 
 
-def season_aging(animals: list):
+def season_aging(*animal: list):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     age += 1
     """
-    for animal in animals:
-        animal.a += 1
-    return animals
+    for species in animal:
+        for animals in species:
+            animals.var["a"] += 1
 
 
-def season_loss(animals: list):
+def season_loss(*animal: list):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     w -= eta * w
     """
-    for animal in animals:
-        animal.w -= animal.eta * animal.w
-    return animals
+    for species in animal:
+        for animals in species:
+            animals.var["w"] -= animals.var["eta"] * animals.var["w"]
 
 
-def season_death(animals: list):
+def season_death(cell, herb: list, carn: list):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     death = yes if w = 0
         else
         death = omega(1 - Phi)
     """
-    animals = [A for A in [B.death() for B in animals] if A.life]
-    return animals
+    [B.death() for B in herb]
+    cell.herb_default = [A for A in herb if A.var["life"]]
+
+    [B.death() for B in carn]
+    cell.carn_default = [A for A in carn if A.var["life"]]
 
 
-def yearly_cycle(end_year=100, visual_year=1):
+def yearly_cycle(end_year=20, visual_year=1):
     """
     1. generation of cells
     2. loop through the year
     """
     gen_cells()
+    cells = gen_cells()
+    cells[0].herb_default = [herbavor(0, 8.0)]
     start_year = 0
-    while start_year <= end_year:
-        season_feeding()
-        season_breeding()
+    while start_year < end_year:
+        for c in cells:
+            c.count_herb()
+            season_feeding(800, 300, c, c.herb_default)
+
+        for c in cells:
+            season_breeding(c.herb_default, c.carn_default)
+
         season_migration()
-        season_aging()
-        season_loss()
-        season_death()
+
+        for c in cells:
+            season_aging(c.herb_default, c.carn_default)
+
+        for c in cells:
+            season_loss(c.herb_default, c.carn_default)
+
+        for c in cells:
+            season_death(c, c.herb_default, c.carn_default)
+
         start_year += 1
         if start_year % visual_year == 0:
-            print('visuals')
+            print(start_year)
+            if len(cells[0].herb_default) > 0:
+                print(cells[0].herb_default[0].var["a"])
+                print(cells[0].herb_default[0].var["w"])
+                print(cells[0].herb_default[0].var["sigma"])
+                print(cells[0].herb_default[0].var["life"])
 
 
 if __name__ == '__main__':
