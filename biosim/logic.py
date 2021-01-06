@@ -5,7 +5,7 @@ functioning logic of the island simulation
 """
 
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
-__email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
+__email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
 from island import Cells
 from animal import *
@@ -77,12 +77,11 @@ Carnivores
 
     for c in cells:
         if c.n_herb != 0:
-            for a in list_herb:
-                if c.coord == a.coord:
-                    if F > 0:
-                        c.reduce_food(a.eat(F, return_food = True))
-                    else:
-                        break
+            for a in c.herb_default:
+                if c.food > 0:
+                    c.reduce_food(a.eat(c.food, return_food=True))
+                else:
+                    break
 
 
 def season_breeding(animals: list):
@@ -117,6 +116,7 @@ def season_migration():
 
 def season_aging(animals: list):
     """
+    for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     age += 1
     """
     for animal in animals:
@@ -126,6 +126,7 @@ def season_aging(animals: list):
 
 def season_loss(animals: list):
     """
+    for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     w -= eta * w
     """
     for animal in animals:
@@ -135,9 +136,7 @@ def season_loss(animals: list):
 
 def season_death(animals: list):
     """
-    check every animal if they die
-    cycling_cells():
-    cycling_animals():
+    for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     death = yes if w = 0
         else
         death = omega(1 - Phi)
