@@ -19,7 +19,7 @@ def gen_cells():
     3. does not generate a cell if the coordinate is a water cell
     4. for L, H and D generates different food
     """
-    list_of_cells = []
+    list_of_cells = list()
     list_of_cells.append(Cells(3, [0, 0]))
     return list_of_cells
 
