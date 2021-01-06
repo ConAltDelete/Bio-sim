@@ -2,6 +2,7 @@
 
 from biosim.animal import herbavor, preditor
 
+import biosim.visuals as bv
 
 class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
@@ -30,7 +31,7 @@ img_base=None, img_fmt='png'):
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 		"""
-		pass
+		self.island = bv.string2map(island_map)
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -52,7 +53,7 @@ img_base=None, img_fmt='png'):
 		:param landscape: String, code letter for landscape
 		:param params: Dict with valid parameter specification for landscape
 		"""
-		pass
+		bv.set_param(self.island,landscape,params)
 	
 	def simulate(self, num_years, vis_years=1, img_years=None):
 		"""
@@ -67,9 +68,20 @@ img_base=None, img_fmt='png'):
 	def add_population(self, population):
 		"""
 		Add a population to the island
-		:param population: List of dictionaries specifying population
+		:param population: List of dictionaries specifying population (x,y):{
+			'age': int,
+			'weight': float,
+			'species': str
+		}
 		"""
-		pass
+		for coord in population:
+			cell = self.island[coord]
+			if population[coord]["species"].lower() == "herbivore":
+				cell.herb_default.append(a = herbavor(population[coord]["age"], w = population[coord]["weight"]))
+			elif population[coord]["species"].lower() == "carnivore":
+				cell.carn_default.append(a = herbavor(population[coord]["age"], w = population[coord]["weight"]))
+			else:
+				raise ValueError("Got '{}'; needs 'herbivore' or 'carnivore'")
 	
 	@property
 	def year(self):

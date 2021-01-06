@@ -121,10 +121,10 @@ def season_aging(herb: list, carn: list):
     """
 
     for animals in herb:
-        animals.var["a"] += 1
+        animals.age()
 
-    for animals in herb:
-        animals.var["a"] += 1
+    for animals in carn:
+        animals.age()
 
 
 def season_loss(*animal: list):
@@ -176,8 +176,8 @@ def yearly_cycle(end_year=20, visual_year=1):
         for c in cells:
             season_loss(c.herb_default, c.carn_default)
 
-        """for c in cells:
-            season_death(c, c.herb_default, c.carn_default)"""
+        for c in cells:
+            season_death(c, c.herb_default, c.carn_default)
 
         start_year += 1
         if start_year % visual_year == 0:

@@ -3,8 +3,5 @@
 """
 """
 
-__author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
-__email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
-
-if __name__ == '__main__':
-    pass
+if __name__ == "__main__":
+    print([a for a in [1,2,3,4,5] if a != 3])
