@@ -31,7 +31,7 @@ img_base=None, img_fmt='png'):
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 		"""
-		ran.Random(seed)
+		ran.seed(seed)
 		self.island, self.illigal_coord = bv.string2map(island_map)
 		
 		temp_population = { pop['loc']: pop['pop'] for pop in ini_pop }

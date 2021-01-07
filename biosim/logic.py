@@ -11,7 +11,7 @@ from island import Cells
 from animal import *
 from colorama import Fore
 from colorama import Style
-
+import simulation
 
 def gen_cells():
     """
@@ -115,17 +115,29 @@ def season_migration(cells: dict, illigal_moves: list):
     moving_animals = {"herb":{},"pred": {} }
     for cell in cells:
         cells[cell].migration(illigal_moves)
-        for mov_herb in cells[cell].herb_migrate:
-            if tuple(mov_herb.var["coord"]) not in moving_animals["herb"]:
-                moving_animals["herb"][tuple(mov_herb.var["coord"])] = [mov_herb]
+        herb_migrating_len = len(cells[cell].herb_migrate)
+        carn_migrating_len = len(cells[cell].carn_migrate)
+        for mov_herb in range(herb_migrating_len):
+            try:
+                moving_animal = cells[cell].herb_migrate.pop(0)
+            except IndexError:
+                print("IndexError in logic::season_migration::mov_herb")
+                break
+            if tuple(moving_animal.var["coord"]) not in moving_animals["herb"]:
+                moving_animals["herb"][tuple(moving_animal.var["coord"])] = [moving_animal]
             else:
-                moving_animals["herb"][tuple(mov_herb.var["coord"])].append(mov_herb)
-        for mov_carn in cells[cell].carn_migrate:
-            if tuple(mov_carn.var["coord"]) not in moving_animals["pred"]:
-                moving_animals["pred"][tuple(mov_carn.var["coord"])] = [mov_carn]
+                moving_animals["herb"][tuple(moving_animal.var["coord"])].append(moving_animal)
+        for mov_carn in range(carn_migrating_len):
+            try:
+                moving_animal = cells[cell].carn_migrate.pop(0)
+            except IndexError:
+                print("IndexError in logic::season_migration::mov_carn")
+                break
+            if tuple(moving_animal.var["coord"]) not in moving_animals["pred"]:
+                moving_animals["pred"][tuple(moving_animal.var["coord"])] = [moving_animal]
             else:
-                moving_animals["pred"][tuple(mov_carn.var["coord"])].append(mov_carn)
-    # moving animals
+                moving_animals["pred"][tuple(moving_animal.var["coord"])].append(moving_animal)
+    # moving animals, possibaly her shit hit the fan
     for mov_herb in moving_animals["herb"]:
         cells[mov_herb].herb_default.extend(moving_animals["herb"][mov_herb])
     for mov_pred in moving_animals["pred"]:
@@ -208,4 +220,12 @@ def yearly_cycle(end_year=10, visual_year=1):
 
 
 if __name__ == '__main__':
-    yearly_cycle()
+    this_fucking_thing = simulation.BioSim(island_map = "WWWW\nWLLW\nWWWW", ini_pop = [{'loc':(2,2) , 'pop':[ {"species":"herbivore","age":5,"weight":20} for _ in range(5)] } ] , seed = 1234)
+    the_map = this_fucking_thing.island
+    illigal_moves = this_fucking_thing.illigal_coord
+    for _ in range(3):
+        season_migration(the_map,illigal_moves)
+    for cell in the_map:
+        print("coord:",the_map[cell].coord,"animals:",the_map[cell].herb_default)
+        for C in the_map[cell].herb_default:
+            print(C.var["coord"], C.var["a"])
