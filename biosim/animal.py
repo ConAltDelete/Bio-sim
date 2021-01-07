@@ -169,7 +169,8 @@ class herbavor(animal):
             "zeta"        : 3.5 ,
             "xi"          : 1.2,
             "omega"       : 0.4,
-            "F"           : 10}
+            "F"           : 10,
+            "F_max"       : 10}
         super().__init__(a, w, coord= coord)
 
     def eat(self, F_there, return_food = False):

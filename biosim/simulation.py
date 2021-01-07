@@ -50,6 +50,8 @@ img_base=None, img_fmt='png'):
 				herbavor.var[dict_key] = params[dict_key]
 			elif species == "preditor":
 				preditor.var[dict_key] = params[dict_key]
+				if dict_key == "F":
+					preditor.var["F_max"] = params[dict_key]
 
 	
 	def set_landscape_parameters(self, landscape, params):

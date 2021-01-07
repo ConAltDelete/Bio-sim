@@ -20,6 +20,9 @@ def gen_cells():
     2. generates a cell for each coordinate
     3. does not generate a cell if the coordinate is a water cell
     4. for L, H and D generates different food
+
+
+    NOTE: Made code in `visual.py` that generates map from string.
     """
     list_of_cells = list()
     list_of_cells.append(Cells(3, [0, 0]))
@@ -43,6 +46,8 @@ def cycling_animals():
 def fitness_calc():
     """
     function for calculating fitness as this is needed ALL THE TIME
+
+    NOTE: animal class has this covered.
     """
     pass
 
@@ -85,7 +90,10 @@ Carnivores
     for animal in cell.carn_default:
         if all( not H.life for H in cell.herb_default):
             break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
-        cell.herb_default = [ h for h in animal.eat(cell.herb_default) if h.life] # replace original list with new list with not dead animals
+        cell.herb_default = [ h for h in animal.eat(cell.herb_default) if h.var["life"]] # replace original list with new list with not dead animals
+    # preditor food reset
+    for animal in cell.carn_default:
+        animal.var["F"] = animal.var["F_max"]
 
 
 def season_breeding(*animal: list):
