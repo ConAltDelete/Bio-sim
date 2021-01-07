@@ -11,6 +11,7 @@ from island import Cells
 from animal import *
 from colorama import Fore
 from colorama import Style
+import random
 
 
 def gen_cells():
@@ -75,6 +76,7 @@ Carnivores
         cell.fill_food(f_max_H)
 
     if cell.n_herb != 0:
+        random.shuffle(herb)
         for animal in herb:
             if cell.food > 0:
                 cell.reduce_food(animal.eat(cell.food, return_food=True))
@@ -99,11 +101,8 @@ def season_breeding(*animal: list):
 
     for species in animal:
         if len(species) > 1:
-            pups = list()
             pred_len = len(species)
-            new_pred = [p for p in [P.birth(pred_len) for P in species] if p is not None]
-            pups = pups + new_pred
-            species.extend(pups)
+            species.extend([p for p in [P.birth(pred_len) for P in species] if p is not None])
 
 
 def season_migration(cells: dict, illigal_moves: list):
@@ -127,8 +126,7 @@ def season_migration(cells: dict, illigal_moves: list):
         cells[mov_pred].carn_default.extend(moving_animals["pred"][mov_pred])
 
 
-
-def season_aging(*animals : list):
+def season_aging(*animals: list):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     age += 1
@@ -156,40 +154,59 @@ def season_death(cell, herb: list, carn: list):
         else
         death = omega(1 - Phi)
     """
-    [B.death() for B in herb]
+    """[B.death() for B in herb]
     cell.herb_default = [A for A in herb if A.var["life"]]
 
     [B.death() for B in carn]
-    cell.carn_default = [A for A in carn if A.var["life"]]
+    cell.carn_default = [A for A in carn if A.var["life"]]"""
+    for animal in herb:
+        if animal.var["w"] == 0 or (animal.var["omega"] * (1 - animal.var["sigma"])) > random.random():
+            herb.remove(animal)
 
 
-def yearly_cycle(end_year=10, visual_year=1):
+def yearly_cycle(end_year=100, visual_year=100):
     """
     1. generation of cells
     2. loop through the year
     """
     gen_cells()
     cells = gen_cells()
-    cells[0].herb_default = [herbavor(0, 8.0), herbavor(0, 8.0), herbavor(0, 8.0)]
+    cells[0].herb_default = [herbavor(5, 20.0) for _ in range(50)]
     start_year = 0
     while start_year < end_year:
         for c in cells:
             c.count_herb()
-            season_feeding(800, 300, c, c.herb_default)
+            season_feeding(300, 800, c, c.herb_default)
+            sumw = 0.0
+            for a in c.herb_default:
+                sumw = sumw + a.var["w"]
+            print("sum of weight before breeding", sumw)
 
         for c in cells:
             season_breeding(c.herb_default, c.carn_default)
+            sumb = 0.0
+            for a in c.herb_default:
+                sumb = sumb + a.var["w"]
+            print("sum of weight after breeding", sumb)
 
-        season_migration(cells)
+        """season_migration(cells)"""
 
         for c in cells:
             season_aging(c.herb_default, c.carn_default)
 
         for c in cells:
             season_loss(c.herb_default, c.carn_default)
+            suml = 0.0
+            for a in c.herb_default:
+                suml = suml + a.var["w"]
+            print("sum of weight after loss", suml)
 
         for c in cells:
             season_death(c, c.herb_default, c.carn_default)
+            sumd = 0.0
+            for a in c.herb_default:
+                sumd = sumd + a.var["w"]
+            print("sum of weight after death", sumd)
 
         start_year += 1
         if start_year % visual_year == 0:
@@ -199,8 +216,10 @@ def yearly_cycle(end_year=10, visual_year=1):
                     print("Age", a.var["a"])
                     print("Weight", a.var["w"])
                     print("Fitness", a.var["sigma"])
-                    print("Alive", a.var["life"])
+                cells[0].count_herb()
+                print(cells[0].n_herb)
 
 
 if __name__ == '__main__':
     yearly_cycle()
+
