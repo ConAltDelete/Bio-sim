@@ -17,12 +17,12 @@ def string2map(map_str : str):
     :return: a new map, and illigal coordinates
     """
     map_list = [list(map_r) for map_r in map_str.split()]
-    new_map = []
+    new_map = {} 
     illigal_coord = []
     for row in enumerate( map_list ):
         for colum in enumerate( row[1] ):
             if colum[1] != "W":
-                new_map.append( { ( colum[0] + 1, row[0] + 1) : Cells({"W":0,"L":3,"H":2,"D":1}[colum[1]],[colum[0] + 1, row[0] + 1] ) } )
+                new_map.update( { ( colum[0] + 1, row[0] + 1) : Cells({"W":0,"L":3,"H":2,"D":1}[colum[1]],[colum[0] + 1, row[0] + 1] ) } )
             else:
                 illigal_coord.append( (colum[0] + 1 , row[0] + 1) )
     return [new_map, illigal_coord]

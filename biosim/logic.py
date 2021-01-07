@@ -112,14 +112,19 @@ def season_migration(cells: dict, illigal_moves: list):
     :param cells: dictonary with coordinats as key, and Cells objects as value
     :return:
     """
-    moving_animals = {"herb":{},"pred":{}}
-    for cell in cells.values():
-        cell.migration(illigal_moves)
-        for mov_herb in cell.herb_migrate:
-            moving_animals["herb"][mov_herb.var["coord"]] = mov_herb
-        for mov_carn in cell.carn_migrate:
-            moving_animals["pred"][mov_carn.var["coord"]] = mov_carn
-
+    moving_animals = {"herb":{},"pred": {} }
+    for cell in cells:
+        cells[cell].migration(illigal_moves)
+        for mov_herb in cells[cell].herb_migrate:
+            if tuple(mov_herb.var["coord"]) not in moving_animals["herb"]:
+                moving_animals["herb"][tuple(mov_herb.var["coord"])] = [mov_herb]
+            else:
+                moving_animals["herb"][tuple(mov_herb.var["coord"])].append(mov_herb)
+        for mov_carn in cells[cell].carn_migrate:
+            if tuple(mov_carn.var["coord"]) not in moving_animals["pred"]:
+                moving_animals["pred"][tuple(mov_carn.var["coord"])] = [mov_carn]
+            else:
+                moving_animals["pred"][tuple(mov_carn.var["coord"])].append(mov_carn)
     # moving animals
     for mov_herb in moving_animals["herb"]:
         cells[mov_herb].herb_default.extend(moving_animals["herb"][mov_herb])

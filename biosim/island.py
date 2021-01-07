@@ -36,15 +36,18 @@ class Cells:
 
     def migration(self, illigal_moves):
         for H in self.herb_default:
-            H.var["coord"] = self.coord
-        [H.move(illigal_moves) for H in self.herb_default]
-        self.herb_migrate = [h for h in self.herb_default if h.var["coord"] != self.coord]
-        self.herb_default = [h for h in self.herb_default if h.var["coord"] == self.coord]
+            H.var["coord"] = list(self.coord)
+            H.move(illigal_moves)
+        for h in self.herb_default:
+            if h.var["coord"] != self.coord:
+                self.herb_migrate.append(h)
+                self.herb_default.remove(h)
+
         for P in self.carn_default:
             P.var["coord"] = self.coord
         [P.move(illigal_moves) for P in self.carn_default]
-        self.herb_migrate = [p for p in self.carn_default if p.var["coord"] != self.coord]
-        self.herb_default = [p for p in self.carn_default if p.var["coord"] == self.coord]
+        self.carn_migrate = [p for p in self.carn_default if p.var["coord"] != self.coord]
+        self.carn_default = [p for p in self.carn_default if p.var["coord"] == self.coord]
 
     def count_herb(self):
         self.n_herb = len(self.herb_default) + len(self.herb_newborn) + len(self.herb_migrate)

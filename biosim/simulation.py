@@ -1,8 +1,8 @@
 
 
-from biosim.animal import herbavor, preditor
+from animal import herbavor, preditor
 import random as ran
-import biosim.visuals as bv
+import visuals as bv
 
 class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
@@ -31,10 +31,10 @@ img_base=None, img_fmt='png'):
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 		"""
-		ran(seed)
+		ran.Random(seed)
 		self.island, self.illigal_coord = bv.string2map(island_map)
 		
-		temp_population = { pop.values()[0] : pop.values()[1] for pop in ini_pop }
+		temp_population = { pop['loc']: pop['pop'] for pop in ini_pop }
 		
 		self.population = self.add_population(temp_population)
 	
@@ -83,9 +83,9 @@ img_base=None, img_fmt='png'):
 			cell = self.island[coord]
 			for animal in population[coord]:
 				if animal["species"].lower() == "herbivore":
-					cell.herb_default.append(a = herbavor(animal["age"], w = animal["weight"]))
+					cell.herb_default.append(herbavor(a = animal["age"], w = animal["weight"]))
 				elif animal["species"].lower() == "carnivore":
-					cell.carn_default.append(a = preditor(animal["age"], w = animal["weight"]))
+					cell.carn_default.append(preditor(a = animal["age"], w = animal["weight"]))
 				else:
 					raise ValueError("Got '{}'; needs 'herbivore' or 'carnivore'")
 	

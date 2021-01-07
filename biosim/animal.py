@@ -71,7 +71,7 @@ class animal:
         :param p: probability 0<=p<=1
         :return: bool
         """
-        return ran.random() <= p
+        return ran.uniform(0,1) <= p
 
     @staticmethod
     def N(w: float, p: float):
@@ -144,7 +144,7 @@ class animal:
         :return, bool:
         """
         c_coord = [self.var["coord"][0] + r[0], self.var["coord"][1] + r[1]]
-        if c_coord in ild:
+        if tuple(c_coord) in ild:
             return False
         else:
             return True
