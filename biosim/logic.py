@@ -122,9 +122,9 @@ def season_migration(cells: dict, illigal_moves: list):
 
     # moving animals
     for mov_herb in moving_animals["herb"]:
-        cells[mov_herb].herb_default = moving_animals["herb"][mov_herb]
+        cells[mov_herb].herb_default.extend(moving_animals["herb"][mov_herb])
     for mov_pred in moving_animals["pred"]:
-        cells[mov_pred].carn_default = moving_animals["pred"][mov_pred]
+        cells[mov_pred].carn_default.extend(moving_animals["pred"][mov_pred])
 
 
 
