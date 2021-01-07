@@ -61,7 +61,7 @@ class animal:
             return 0
         else:
             q_p = q("P")(self.var["a"], self.var["a_half"], self.var["phi_age"])
-            q_n = q("N")(self.var["w_half"], self.var["w_half"], self.var["phi_weight"])
+            q_n = q("N")(self.var["w"], self.var["w_half"], self.var["phi_weight"])
             return q_p * q_n
 
     @staticmethod
