@@ -47,7 +47,7 @@ def fitness_calc():
     pass
 
 
-def season_feeding(f_max_H, f_max_L, cell, herb: list):
+def season_feeding(f_max_H, f_max_L, cell: Cells):
     """
     1. spawns in f_max amount of food in each cell
 
@@ -69,17 +69,23 @@ Carnivores
     8. fitness Phi for carnivores gets calculated again
     9. food value for carnivores gets reset
     """
+    # possible to make happen in `Cells` object by `__init__`
     if cell.type == 3:
         cell.fill_food(f_max_L)
     elif cell.type == 2:
         cell.fill_food(f_max_H)
 
+    # assums single cell given, othervise put in loop
     if cell.n_herb != 0:
-        for animal in herb:
+        for animal in cell.herb_default:
             if cell.food > 0:
                 cell.reduce_food(animal.eat(cell.food, return_food=True))
             else:
                 break
+    for animal in cell.carn_default:
+        if all( not H.life for H in cell.herb_default):
+            break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
+        cell.herb_default = [ h for h in animal.eat(cell.herb_default) if h.life] # replace original list with new list with not dead animals
 
 
 def season_breeding(*animal: list):
