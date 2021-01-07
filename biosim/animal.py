@@ -102,8 +102,11 @@ class animal:
         :param necro_birth: Give birth even when dead.
         :return: either None or a new instace of itself.
         """
+        self.var["sigma"] = self.Big_phi()
         p_pop = min(1, self.var["sigma"] * self.var["gamma"] * (N - 1))
-        if self.var["w"] < self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]) and not self.bin_choise(p_pop):
+        if self.var["w"] < self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]):
+            return None
+        if p_pop < ran.random():
             return None
         class_name = type(self).__name__
         k = eval(
@@ -181,7 +184,7 @@ class herbavor(animal):
         self.var["w"] += self.var["beta"] * min(max(F_there, 0), self.var["F"])
         self.var["sigma"] = self.Big_phi()
         if return_food:
-            return min(max(F_there,0), self.var["F"])
+            return min(max(F_there, 0), self.var["F"])
 
 
 class preditor(animal):
