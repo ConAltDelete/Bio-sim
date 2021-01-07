@@ -71,7 +71,7 @@ class animal:
         :param p: probability 0<=p<=1
         :return: bool
         """
-        return bool(np.random.choice([1, 0], size=1, p=[p, 1 - p])[0])
+        return ran.random() <= p
 
     @staticmethod
     def N(w: float, p: float):
