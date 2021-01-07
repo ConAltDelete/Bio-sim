@@ -122,7 +122,7 @@ def season_breeding(*animal: list):
 
 def season_migration(cells: dict, illigal_moves: list):
     """
-    Animals moves to desired location if possible.
+    Animals moves to desired location if possible, else they don't move from cell.
     :param cells: dictonary with coordinats as key, and Cells objects as value
     :return:
     """
