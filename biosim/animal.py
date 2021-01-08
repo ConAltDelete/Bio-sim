@@ -102,8 +102,11 @@ class animal:
         :param necro_birth: Give birth even when dead.
         :return: either None or a new instace of itself.
         """
+        self.var["sigma"] = self.Big_phi()
         p_pop = min(1, self.var["sigma"] * self.var["gamma"] * (N - 1))
-        if self.var["w"] < self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]) and not self.bin_choise(p_pop):
+        if self.var["w"] < self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]):
+            return None
+        if p_pop < ran.random():
             return None
         class_name = type(self).__name__
         k = eval(
@@ -154,36 +157,34 @@ class herbavor(animal):
     """
     This is the herbavore class that eats non-meat like vegans.
     """
-    def __init__(self, a: int, w: float, coord = [0,0]):
+    def __init__(self, a: int, w: float, coord=[0, 0]):
         self.var = {"w_birth"     : 8,
             "sigma_birth" : 1.5,
             "beta"        : 0.9,
             "eta"         : 0.05,
             "a_half"      : 40,
-            "coord"        : [0,0],
+            "coord"       : [0, 0],
             "phi_age"     : 0.6,
             "w_half"      : 10,
             "phi_weight"  : 0.1,
             "mu"          : 0.25,
             "gamma"       : 0.2,
-            "zeta"        : 3.5 ,
+            "zeta"        : 3.5,
             "xi"          : 1.2,
             "omega"       : 0.4,
             "F"           : 10}
-        super().__init__(a, w, coord= coord)
+        super().__init__(a, w, coord=coord)
 
-    def eat(self, F_there, return_food = False):
+    def eat(self, F_there, return_food=False):
         """
         Instace consumes a portion of F.
         TODO: determen if return eaten amount
         :param F_there: number of food.
         """
-        self.var["w"] += self.var["beta"] * min(max(F_there,0), self.var["F"])
+        self.var["w"] += self.var["beta"] * min(max(F_there, 0), self.var["F"])
         self.var["sigma"] = self.Big_phi()
         if return_food:
-            return min(max(F_there,0), self.var["F"])
-
-
+            return min(max(F_there, 0), self.var["F"])
 
 
 class preditor(animal):
