@@ -60,8 +60,10 @@ class animal:
         if self.var["w"] <= 0:
             return 0
         else:
-            q_p = q("P")(self.var["a"], self.var["a_half"], self.var["phi_age"])
-            q_n = q("N")(self.var["w"], self.var["w_half"], self.var["phi_weight"])
+            q_p = q("P")(self.var["a"],
+                         self.var["a_half"], self.var["phi_age"])
+            q_n = q("N")(self.var["w"],
+                         self.var["w_half"], self.var["phi_weight"])
             return q_p * q_n
 
     @staticmethod
@@ -71,7 +73,7 @@ class animal:
         :param p: probability 0<=p<=1
         :return: bool
         """
-        return ran.uniform(0,1) <= p
+        return ran.uniform(0, 1) <= p
 
     @staticmethod
     def N(w: float, p: float):
@@ -82,7 +84,7 @@ class animal:
         :return: a float in range [0,1]
         """
         return ran.gauss(w, p)
-    
+
     def age(self):
         self.var["a"] += 1
 
@@ -157,22 +159,23 @@ class herbavor(animal):
     """
     This is the herbavore class that eats non-meat like vegans.
     """
+
     def __init__(self, a: int, w: float, coord=[0, 0]):
-        self.var = {"w_birth"     : 8,
-            "sigma_birth" : 1.5,
-            "beta"        : 0.9,
-            "eta"         : 0.05,
-            "a_half"      : 40,
-            "coord"       : [0, 0],
-            "phi_age"     : 0.6,
-            "w_half"      : 10,
-            "phi_weight"  : 0.1,
-            "mu"          : 0.25,
-            "gamma"       : 0.2,
-            "zeta"        : 3.5,
-            "xi"          : 1.2,
-            "omega"       : 0.4,
-            "F"           : 10}
+        self.var = {"w_birth": 8,
+                    "sigma_birth": 1.5,
+                    "beta": 0.9,
+                    "eta": 0.05,
+                    "a_half": 40,
+                    "coord": [0, 0],
+                    "phi_age": 0.6,
+                    "w_half": 10,
+                    "phi_weight": 0.1,
+                    "mu": 0.25,
+                    "gamma": 0.2,
+                    "zeta": 3.5,
+                    "xi": 1.2,
+                    "omega": 0.4,
+                    "F": 10}
         super().__init__(a, w, coord=coord)
 
     def eat(self, F_there, return_food=False):
@@ -191,22 +194,22 @@ class preditor(animal):
     """
     This is the preditor class that eat meat like non-vegans.
     """
-    var = {"w_birth"     : 6,
-    "coord"        : [0,0],
-    "sigma_birth" : 1,
-    "beta"        : 0.75,
-    "eta"         : 0.125,
-    "a_half"      : 40,
-    "phi_age"     : 0.3,
-    "w_half"      : 4,
-    "phi_weight"  : 0.4,
-    "mu"          : 0.4,
-    "gamma"       : 0.8,
-    "zeta"        : 3.5,
-    "xi"          : 1.1,
-    "omega"       : 0.8,
-    "F"           : 50,
-    "DeltaPhiMax" : 10}
+    var = {"w_birth": 6,
+           "coord": [0, 0],
+           "sigma_birth": 1,
+           "beta": 0.75,
+           "eta": 0.125,
+           "a_half": 40,
+           "phi_age": 0.3,
+           "w_half": 4,
+           "phi_weight": 0.4,
+           "mu": 0.4,
+           "gamma": 0.8,
+           "zeta": 3.5,
+           "xi": 1.1,
+           "omega": 0.8,
+           "F": 50,
+           "DeltaPhiMax": 10}
 
     def yield_life(self, L: list):
         """
@@ -233,8 +236,6 @@ class preditor(animal):
             if self.var["F"] == 0:
                 break
         return F_there
-
-
 
 
 if __name__ == "__main__":

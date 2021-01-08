@@ -102,7 +102,8 @@ def season_breeding(*animal: list):
     for species in animal:
         if len(species) > 1:
             pred_len = len(species)
-            species.extend([p for p in [P.birth(pred_len) for P in species] if p is not None])
+            species.extend([p for p in [P.birth(pred_len)
+                                        for P in species] if p is not None])
 
 
 def season_migration(cells: dict, illigal_moves: list):
@@ -111,19 +112,29 @@ def season_migration(cells: dict, illigal_moves: list):
     :param cells: dictonary with coordinats as key, and Cells objects as value
     :return:
     """
-    moving_animals = {"herb":{},"pred": {} }
+    moving_animals = {"herb": {}, "pred": {}}
     for cell in cells:
         cells[cell].migration(illigal_moves)
-        for mov_herb in cells[cell].herb_migrate:
-            if tuple(mov_herb.var["coord"]) not in moving_animals["herb"]:
-                moving_animals["herb"][tuple(mov_herb.var["coord"])] = [mov_herb]
+
+        herb_len = len(cells[cell].herb_migrate)
+        carn_len = len(cells[cell].carn_migrate)
+
+        for mov_herb in range(herb_len):
+            moving_herb = cells[cell].herb_migrate.pop(0)
+            if tuple(moving_herb.var["coord"]) not in moving_animals["herb"]:
+                moving_animals["herb"][tuple(moving_herb.var["coord"])] = [
+                    moving_herb]
             else:
-                moving_animals["herb"][tuple(mov_herb.var["coord"])].append(mov_herb)
-        for mov_carn in cells[cell].carn_migrate:
-            if tuple(mov_carn.var["coord"]) not in moving_animals["pred"]:
-                moving_animals["pred"][tuple(mov_carn.var["coord"])] = [mov_carn]
+                moving_animals["herb"][tuple(
+                    moving_herb.var["coord"])].append(moving_herb)
+        for mov_carn in range(carn_len):
+            moving_carn = cells[cell].carn_migrate.pop(0)
+            if tuple(moving_carn.var["coord"]) not in moving_animals["pred"]:
+                moving_animals["pred"][tuple(moving_carn.var["coord"])] = [
+                    moving_carn]
             else:
-                moving_animals["pred"][tuple(mov_carn.var["coord"])].append(mov_carn)
+                moving_animals["pred"][tuple(
+                    moving_carn.var["coord"])].append(moving_carn)
     # moving animals
     for mov_herb in moving_animals["herb"]:
         cells[mov_herb].herb_default.extend(moving_animals["herb"][mov_herb])
@@ -227,4 +238,3 @@ def yearly_cycle(end_year=100, visual_year=100):
 
 if __name__ == '__main__':
     yearly_cycle()
-

@@ -25,6 +25,7 @@ import os.path
 
 from biosim.simulation import BioSim
 
+def test_somthiong():
     """Empty island can be created"""
     BioSim(island_map="WW\nWW", ini_pop=[], seed=1)
 

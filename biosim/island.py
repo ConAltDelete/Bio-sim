@@ -14,11 +14,12 @@ class Cells:
     The cells class
     """
     defauld_food = {
-        0:0,
-        1:0,
-        2:300,
-        3:800
+        0: 0,
+        1: 0,
+        2: 300,
+        3: 800
     }
+
     def __init__(self, cell_type, coord=None):
         self.coord = coord if coord is not None else [0, 0]
         self.food = 0.0
@@ -41,10 +42,12 @@ class Cells:
                 self.herb_default.remove(h)
 
         for P in self.carn_default:
-            P.var["coord"] = self.coord
-        [P.move(illigal_moves) for P in self.carn_default]
-        self.carn_migrate = [p for p in self.carn_default if p.var["coord"] != self.coord]
-        self.carn_default = [p for p in self.carn_default if p.var["coord"] == self.coord]
+            P.var["coord"] = list(self.coord)
+            P.move(illigal_moves)
+        for p in self.herb_default:
+            if p.var["coord"] != self.coord:
+                self.herb_migrate.append(p)
+                self.herb_default.remove(p)
 
     def count_herb(self):
         self.n_herb = len(self.herb_default) + len(self.herb_migrate)
@@ -68,7 +71,8 @@ class Cells:
 if __name__ == '__main__':
 
     K = Cells(3)
-    K.herb_default.extend([herbavor(0, 8.0), herbavor(0, 8.0), herbavor(0, 8.0)])
+    K.herb_default.extend(
+        [herbavor(0, 8.0), herbavor(0, 8.0), herbavor(0, 8.0)])
     print(K.n_herb)
     K.count_herb()
     print(K.n_herb)
