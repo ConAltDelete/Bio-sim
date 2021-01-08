@@ -191,50 +191,50 @@ class preditor(animal):
     """
     This is the preditor class that eat meat like non-vegans.
     """
-    var = {"w_birth"     : 6,
-    "coord"        : [0,0],
-    "sigma_birth" : 1,
-    "beta"        : 0.75,
-    "eta"         : 0.125,
-    "a_half"      : 40,
-    "phi_age"     : 0.3,
-    "w_half"      : 4,
-    "phi_weight"  : 0.4,
-    "mu"          : 0.4,
-    "gamma"       : 0.8,
-    "zeta"        : 3.5,
-    "xi"          : 1.1,
-    "omega"       : 0.8,
-    "F"           : 50,
-    "DeltaPhiMax" : 10}
+    def __init__(self, a: int, w: float, coord=[0, 0]):
+        self.food = 50.0
+        self.var = {"w_birth"     : 6,
+            "coord"        : [0,0],
+            "sigma_birth" : 1,
+            "beta"        : 0.75,
+            "eta"         : 0.125,
+            "a_half"      : 40,
+            "phi_age"     : 0.3,
+            "w_half"      : 4,
+            "phi_weight"  : 0.4,
+            "mu"          : 0.4,
+            "gamma"       : 0.8,
+            "zeta"        : 3.5,
+            "xi"          : 1.1,
+            "omega"       : 0.8,
+            "F"           : 50,
+            "DeltaPhiMax" : 10}
+        super().__init__(a, w, coord=coord)
 
-    def yield_life(self, L: list):
+    def food_reset(self):
+        self.food = self.var["F"]
+
+    def hunting_chance(self, prey: object):
         """
         Generator for life.
         :param L: The heard to eat.
-        :yield: A soon to be dead animal.
+        :return: the probability.
         """
-        for l in L:
-            if l.var["life"] and self.bin_choise(max(0, min(1, (self.var["sigma"] - l.var["sigma"]) / self.var["DeltaPhiMax"]))):
-                yield l
+        if self.var["sigma"] <= prey.var["sigma"]:
+            return 0
+        if 0 < self.var["sigma"] - prey.var["sigma"] < self.var["DeltaPhiMax"]:
+            return (self.var["sigma"] - prey.var["sigma"]) / self.var["DeltaPhiMax"]
+        return 1
 
-    def eat(self, F_there: list):
+    def eat(self, F_there: object):
         """
         Animal eats, because it is good.
-        :param F_there: A list of herbavores.
-        :return: updated list of herbavores.
+        :param F_there: A herbivore.
         """
-        for pray in self.yield_life(F_there):
-            F_got = min(self.var["F"], pray.var["w"])
-            self.var["w"] += self.var["beta"] * F_got
-            pray.var["life"] = False
-            self.var["F"] -= F_got
-            self.var["sigma"] = self.Big_phi()
-            if self.var["F"] == 0:
-                break
-        return F_there
-
-
+        food_to_eat = min(self.food, F_there.var["w"])
+        self.var["w"] += self.var["beta"] * food_to_eat
+        self.food -= food_to_eat
+        self.var["sigma"] = self.Big_phi()
 
 
 if __name__ == "__main__":

@@ -14,11 +14,12 @@ class Cells:
     The cells class
     """
     defauld_food = {
-        0:0,
-        1:0,
-        2:300,
-        3:800
+        0: 0,
+        1: 0,
+        2: 300,
+        3: 800
     }
+
     def __init__(self, cell_type, coord=None):
         self.coord = coord if coord is not None else [0, 0]
         self.food = 0.0
