@@ -148,8 +148,10 @@ class animal:
             return False
         else:
             return True
+
     def loss_weight(self):
         self.var["w"] -= self.var["eta"] * self.var["w"]
+        self.var["sigma"] = self.Big_phi()
 
 
 class herbavor(animal):
