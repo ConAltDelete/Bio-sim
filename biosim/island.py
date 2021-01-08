@@ -6,7 +6,7 @@
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
-from animal import *
+from biosim.animal import *
 
 
 class Cells:
@@ -27,12 +27,9 @@ class Cells:
         self.type = cell_type
         self.f_max = Cells.defauld_food[self.type]
         self.herb_default = list()
-        self.herb_newborn = list()
         self.herb_migrate = list()
         self.carn_default = list()
-        self.carn_newborn = list()
         self.carn_migrate = list()
-        self.carn_eaten = list()
 
     def migration(self, illigal_moves):
         for H in self.herb_default:
@@ -47,10 +44,10 @@ class Cells:
         self.herb_default = [p for p in self.carn_default if p.var["coord"] == self.coord]
 
     def count_herb(self):
-        self.n_herb = len(self.herb_default) + len(self.herb_newborn) + len(self.herb_migrate)
+        self.n_herb = len(self.herb_default) + len(self.herb_migrate)
 
     def count_carn(self):
-        self.n_carn = len(self.carn_default) + len(self.carn_newborn) + len(self.carn_migrate) + len(self.carn_eaten)
+        self.n_carn = len(self.carn_default) + len(self.carn_migrate)
 
     def fill_food(self, food):
         self.food = food
@@ -58,21 +55,11 @@ class Cells:
     def reduce_food(self, amount_eaten):
         self.food -= amount_eaten
 
-    def combine_newborn(self):
-        self.herb_default.extend(self.herb_newborn)
-        self.herb_newborn = list()
-        self.carn_default.extend(self.carn_newborn)
-        self.carn_newborn = list()
-
     def combine_migrate(self):
         self.herb_default.extend(self.herb_migrate)
         self.herb_migrate = list()
         self.carn_default.extend(self.carn_migrate)
         self.herb_migrate = list()
-
-    def combine_eaten(self):
-        self.carn_default.extend(self.carn_eaten)
-        self.carn_eaten = list()
 
 
 if __name__ == '__main__':

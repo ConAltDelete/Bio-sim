@@ -7,8 +7,8 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
-from island import Cells
-from animal import *
+from biosim.island import Cells
+from biosim.animal import *
 from colorama import Fore
 from colorama import Style
 import random
