@@ -154,8 +154,8 @@ def season_migration(cells: dict, illigal_moves: list):
     # moving animals, possibaly her shit hit the fan
     for mov_herb in moving_animals["herb"]:
         cells[mov_herb].herb_default.extend(moving_animals["herb"][mov_herb])
-    for mov_pred in moving_animals["pred"]:
-        cells[mov_pred].carn_default.extend(moving_animals["pred"][mov_pred])
+    for mov_carn in moving_animals["pred"]:
+        cells[mov_carn].carn_default.extend(moving_animals["pred"][mov_carn])
 
 
 
