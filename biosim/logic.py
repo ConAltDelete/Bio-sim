@@ -48,7 +48,7 @@ def fitness_calc():
     pass
 
 
-def season_feeding(f_max_H, f_max_L, cell, herb: list):
+def season_feeding(f_max_H, f_max_L, cell, herb: list, carn: list):
     """
     1. spawns in f_max amount of food in each cell
 
@@ -82,6 +82,20 @@ Carnivores
                 cell.reduce_food(animal.eat(cell.food, return_food=True))
             else:
                 break
+
+    if cell.n_carn != 0:
+        herb.sort(key=lambda o: o.var["sigma"])
+        carn.sort(reverse=True, key=lambda o: o.var["sigma"])
+        for hunter in carn:
+            hunter.food_reset()
+            prey_left = list()
+            for prey in herb:
+                if hunter.hunting_chance(prey) > random.random() and hunter.food != 0:
+                    hunter.eat(prey)
+                else:
+                    prey_left.append(prey)
+            herb = prey_left
+        cell.herb_default = herb
 
 
 def season_breeding(*animal: list):
@@ -175,12 +189,22 @@ def season_death(cell, herb: list, carn: list):
 
     [B.death() for B in carn]
     cell.carn_default = [A for A in carn if A.var["life"]]"""
+    alive_herb = list()
     for animal in herb:
-        if animal.var["w"] == 0 or (animal.var["omega"] * (1 - animal.var["sigma"])) > random.random():
-            herb.remove(animal)
+        if not animal.var["w"] <= 0:
+            if not (animal.var["omega"] * (1 - animal.var["sigma"])) > random.random():
+                alive_herb.append(animal)
+    cell.herb_default = alive_herb
+
+    alive_carn = list()
+    for animal in carn:
+        if not animal.var["w"] <= 0:
+            if not (animal.var["omega"] * (1 - animal.var["sigma"])) > random.random():
+                alive_carn.append(animal)
+    cell.carn_default = alive_carn
 
 
-def yearly_cycle(end_year=100, visual_year=100):
+def yearly_cycle(end_year=200, visual_year=100):
     """
     1. generation of cells
     2. loop through the year
@@ -192,7 +216,8 @@ def yearly_cycle(end_year=100, visual_year=100):
     while start_year < end_year:
         for c in cells:
             c.count_herb()
-            season_feeding(300, 800, c, c.herb_default)
+            c.count_carn()
+            season_feeding(300, 800, c, c.herb_default, c.carn_default)
             sumw = 0.0
             for a in c.herb_default:
                 sumw = sumw + a.var["w"]
@@ -225,15 +250,21 @@ def yearly_cycle(end_year=100, visual_year=100):
             print("sum of weight after death", sumd)
 
         start_year += 1
+        print(f"{Fore.RED}Current year{Style.RESET_ALL}", start_year)
+        if start_year >= 50:
+            cells[0].count_carn()
+            cells[0].count_herb()
+            print(cells[0].n_carn)
+            print(cells[0].n_herb)
         if start_year % visual_year == 0:
-            print(f"{Fore.RED}Current year{Style.RESET_ALL}", start_year)
             if len(cells[0].herb_default) > 0:
                 for a in cells[0].herb_default:
                     print("Age", a.var["a"])
                     print("Weight", a.var["w"])
                     print("Fitness", a.var["sigma"])
                 cells[0].count_herb()
-                print(cells[0].n_herb)
+        if start_year == 50:
+            cells[0].carn_default = [preditor(5, 5) for _ in range(10)]
 
 
 if __name__ == '__main__':
