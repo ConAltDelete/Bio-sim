@@ -177,7 +177,7 @@ def season_loss(*animal: list):
     """
     for species in animal:
         for animals in species:
-            animals.var["w"] -= animals.var["eta"] * animals.var["w"]
+            animals.loss_weight()
 
 
 def season_death(cell, herb: list, carn: list):
