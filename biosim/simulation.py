@@ -1,8 +1,8 @@
 
 
-from animal import herbavor, preditor
+from .animal import herbavor, preditor
 import random as ran
-import visuals as bv
+from .visuals import string2map, set_param
 
 class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
@@ -32,7 +32,7 @@ img_base=None, img_fmt='png'):
 		img_base should contain a path and beginning of a file name.
 		"""
 		ran.seed(seed)
-		self.island, self.illigal_coord = bv.string2map(island_map)
+		self.island, self.illigal_coord = string2map(island_map)
 		
 		temp_population = { pop['loc']: pop['pop'] for pop in ini_pop }
 		
@@ -60,7 +60,7 @@ img_base=None, img_fmt='png'):
 		:param landscape: String, code letter for landscape
 		:param params: Dict with valid parameter specification for landscape
 		"""
-		bv.set_param(self.island,landscape,params)
+		set_param(self.island,landscape,params)
 	
 	def simulate(self, num_years, vis_years=1, img_years=None):
 		"""

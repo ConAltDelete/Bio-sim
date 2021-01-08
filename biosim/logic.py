@@ -7,11 +7,11 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
-from island import Cells
-from animal import *
-from colorama import Fore
-from colorama import Style
-import simulation
+from .island import Cells
+from .animal import *
+#from .colorama import Fore
+#from .colorama import Style
+from .simulation import BioSim
 
 def gen_cells():
     """
@@ -224,7 +224,7 @@ def yearly_cycle(end_year=10, visual_year=1):
 
         start_year += 1
         if start_year % visual_year == 0:
-            print(f"{Fore.RED}Current year{Style.RESET_ALL}", start_year)
+            # print(f"{Fore.RED}Current year{Style.RESET_ALL}", start_year)
             if len(cells[0].herb_default) > 0:
                 for a in cells[0].herb_default:
                     print("Age", a.var["a"])
@@ -232,9 +232,9 @@ def yearly_cycle(end_year=10, visual_year=1):
                     print("Fitness", a.var["sigma"])
                     print("Alive", a.var["life"])
 
-
+"""
 if __name__ == '__main__':
-    this_fucking_thing = simulation.BioSim(island_map = "WWWW\nWLLW\nWWWW", ini_pop = [{'loc':(2,2) , 'pop':[ {"species":"herbivore","age":5,"weight":20} for _ in range(10)] } ] , seed = 1234)
+    this_fucking_thing = BioSim(island_map = "WWWW\nWLLW\nWWWW", ini_pop = [{'loc':(2,2) , 'pop':[ {"species":"herbivore","age":5,"weight":20} for _ in range(10)] } ] , seed = 1234)
     the_map = this_fucking_thing.island
     illigal_moves = this_fucking_thing.illigal_coord
     for _ in range(30):
@@ -242,4 +242,4 @@ if __name__ == '__main__':
     for cell in the_map:
         print("coord:",the_map[cell].coord,"animals:",the_map[cell].herb_default)
         for C in the_map[cell].herb_default:
-            print(C.var["coord"], C.var["a"])
+            print(C.var["coord"], C.var["a"]) """

@@ -234,7 +234,7 @@ class preditor(animal):
             self.var["sigma"] = self.Big_phi()
             if self.var["F"] == 0:
                 break
-        return F_there
+        return [f for f in F_there if f.var["life"]]
 
 
 

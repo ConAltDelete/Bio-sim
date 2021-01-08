@@ -6,7 +6,7 @@
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
-from animal import *
+from .animal import *
 
 
 class Cells:
