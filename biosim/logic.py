@@ -79,7 +79,7 @@ Carnivores
         cell.fill_food(f_max_L)
     elif cell.type == 2:
         cell.fill_food(f_max_H)
-
+    cell.count_herb()
     # assums single cell given, othervise put in loop
     if cell.n_herb != 0:
         for animal in cell.herb_default:
