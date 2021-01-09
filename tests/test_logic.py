@@ -3,7 +3,7 @@ from biosim.simulation import BioSim
 
 
 def test_migrasion_consistensy_one_animal():
-    length = 5
+    length = 15
     this_fucking_thing = BioSim(island_map="WWWW\nWllW\nwllw\nWWWW".upper(), seed=1234,
                                 ini_pop=[{"loc": (2, 2), "pop": [{'species': 'herbivore', 'age': 5, 'weight': 100} for _ in range(length)]}])
     the_map = this_fucking_thing.island
@@ -18,7 +18,7 @@ def test_migrasion_consistensy_one_animal():
 
 
 def test_migrasion_consistensy_two_animals():
-    length = 5
+    length = 15
     ini_herb = [{'species': 'herbivore',
                  'age': 5,
                  'weight': 100} for _ in range(length)]
@@ -38,3 +38,14 @@ def test_migrasion_consistensy_two_animals():
         for specis in the_map[cell].default:
             total_in_map += len(the_map[cell].default[specis])
     assert total_in_map == 2*length
+
+def test_eating_in_cell():
+    ini_herb = [ {'species': 'herbivore',
+                 'age': 5,
+                 'weight': 100} ]
+    ini_pop = [{"loc":(2,2),"pop":ini_herb}]
+    island_setup = BioSim(island_map="WWW\nWLW\nWWW", seed=1234, ini_pop=ini_pop)
+    the_map = island_setup.island
+    season_feeding(the_map[(2,2)])
+    cell = the_map[(2,2)]
+    assert cell.food == 790

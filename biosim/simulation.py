@@ -5,7 +5,7 @@ import random as ran
 from .visuals import string2map, set_param
 
 class BioSim:
-	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
+	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
 		"""
 		:param island_map: Multi-line string specifying island geography
@@ -33,12 +33,13 @@ img_base=None, img_fmt='png'):
 		"""
 		# we set the random seed for future random number generation. In other words,
 		# we make a random simulation consistent.#
-		ran.seed(seed)
+		if seed != None: ran.seed(seed)
+
 		self.island, self.illigal_coord = string2map(island_map)
 		
 		temp_population = { pop['loc']: pop['pop'] for pop in ini_pop }
-		
-		self.population = self.add_population(temp_population,names=["herbivore","carnivore"])
+		self.names=["herbivore","carnivore"]
+		self.population = self.add_population(temp_population)
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -48,7 +49,7 @@ img_base=None, img_fmt='png'):
 		"""
 		# Python abuse at its best.#
 		species = species.lower()
-		eval(f"{species}.var.update(params)")
+		eval("{}.default_var.update({})".format(species,params))
 
 	
 	def set_landscape_parameters(self, landscape, params):
@@ -69,7 +70,7 @@ img_base=None, img_fmt='png'):
 		"""
 		pass
 	
-	def add_population(self, population:dict, names: list):
+	def add_population(self, population:dict):
 		"""
 		Add a population to the island
 		:param population: List of dictionaries specifying population (x,y):[{
@@ -83,7 +84,7 @@ img_base=None, img_fmt='png'):
 			cell = self.island[coord]
 			for animal in population[coord]:
 				animal_name = animal["species"].lower()
-				if animal_name in names:
+				if animal_name in self.names:
 					if animal_name in cell.default:
 						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
 						cell.default[animal_name].append(create_animal)
@@ -91,7 +92,7 @@ img_base=None, img_fmt='png'):
 						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
 						cell.default[animal_name] = [create_animal]
 				else:
-					raise ValueError("Got '{}'; needs {}".format(animal["species"],names))
+					raise ValueError("Got '{}'; needs {}".format(animal["species"],self.names))
 	
 	@property
 	def year(self):

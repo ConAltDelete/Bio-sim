@@ -21,10 +21,10 @@ class Cells:
     }
     def __init__(self, cell_type, coord=None):
         self.coord   = coord if coord is not None else [0, 0]
-        self.food    = 0.0
         self.count   = dict()
         self.type    = cell_type
         self.f_max   = Cells.default_food[self.type]
+        self.food    = self.f_max
         self.default = dict()
         self.migrate = dict()
         self.newborn = dict()
@@ -53,7 +53,6 @@ class Cells:
                         self.migrate[specis] = [animal]
                 else:
                     self.default[specis].insert(0,animal)
-
 
     def count(self):
         """

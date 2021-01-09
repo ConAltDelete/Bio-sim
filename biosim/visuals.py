@@ -36,8 +36,8 @@ def set_param(island, _type: str, parm: dict):
     :param _type: a string witch is either 'L', 'H', 'D', 'W'
     :param parm: a Dict with param (f_max)
     """
-    Cell_type = {"W": 0, "L": 3, "H": 2, "D": 1}
-    Cell_type = Cell_type[_type]
+    Cell_types = {"W": 0, "L": 3, "H": 2, "D": 1}
+    Cell_type = Cell_types[_type]
     for c in (C for C in island if C.type == Cell_type):
         c.f_max = parm["f_max"]
 

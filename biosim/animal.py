@@ -31,7 +31,7 @@ class animal:
         """
         :param a: age of animal.
         :param w: waight of animal.
-        :param coord: The coorddinate of the animal.
+        :param coord: The coordinate of the animal.
         """
         self.var["coord"] = coord
         self.var["w"] = w
@@ -96,6 +96,7 @@ class animal:
     
     def age(self):
         self.var["a"] += 1
+        self.var["sigma"] = self.Big_phi()
 
     def death(self):
         """
@@ -125,6 +126,7 @@ class animal:
             return None
         else:
             self.var["w"] -= self.var["xi"] * k.var["w"]
+            self.var["sigma"] = self.Big_phi()
             return k
 
     def moveto(self, ret):
@@ -171,28 +173,32 @@ class animal:
         self.var["w"] -= self.var["eta"] * self.var["w"]
         self.var["sigma"] = self.Big_phi()
 
+    def feed(self,cell):
+        pass
+
+
 
 class herbivore(animal):
     """
     This is the herbavore class that eats non-meat like vegans.
     """
+    default_var = {
+        "w_birth"     : 8,
+        "sigma_birth" : 1.5,
+        "beta"        : 0.9,
+        "eta"         : 0.05,
+        "a_half"      : 40,
+        "phi_age"     : 0.6,
+        "w_half"      : 10,
+        "phi_weight"  : 0.1,
+        "mu"          : 0.25,
+        "gamma"       : 0.2,
+        "zeta"        : 3.5 ,
+        "xi"          : 1.2,
+        "omega"       : 0.4,
+        "F"           : 10}
     def __init__(self, a: int, w: float, coord = [0,0]):
-        self.var = {"w_birth"     : 8,
-            "sigma_birth" : 1.5,
-            "beta"        : 0.9,
-            "eta"         : 0.05,
-            "a_half"      : 40,
-            "coord"        : [0,0],
-            "phi_age"     : 0.6,
-            "w_half"      : 10,
-            "phi_weight"  : 0.1,
-            "mu"          : 0.25,
-            "gamma"       : 0.2,
-            "zeta"        : 3.5 ,
-            "xi"          : 1.2,
-            "omega"       : 0.4,
-            "F"           : 10,
-            "F_max"       : 10}
+        self.var = dict(herbivore.default_var)
         super().__init__(a, w, coord= coord)
 
     def eat(self, F_there, return_food = False):
@@ -218,22 +224,26 @@ class carnivore(animal):
     """
     This is the carnivore class that eat meat like non-vegans.
     """
-    var = {"w_birth"     : 6,
-    "coord"        : [0,0],
-    "sigma_birth" : 1,
-    "beta"        : 0.75,
-    "eta"         : 0.125,
-    "a_half"      : 40,
-    "phi_age"     : 0.3,
-    "w_half"      : 4,
-    "phi_weight"  : 0.4,
-    "mu"          : 0.4,
-    "gamma"       : 0.8,
-    "zeta"        : 3.5,
-    "xi"          : 1.1,
-    "omega"       : 0.8,
-    "F"           : 50,
-    "DeltaPhiMax" : 10}
+    default_var = {
+        "w_birth"     : 6,
+        "sigma_birth" : 1,
+        "beta"        : 0.75,
+        "eta"         : 0.125,
+        "a_half"      : 40,
+        "phi_age"     : 0.3,
+        "w_half"      : 4,
+        "phi_weight"  : 0.4,
+        "mu"          : 0.4,
+        "gamma"       : 0.8,
+        "zeta"        : 3.5,
+        "xi"          : 1.1,
+        "omega"       : 0.8,
+        "F"           : 50,
+        "DeltaPhiMax" : 10}
+    def __init__(self, a: int, w: float, coord = [0,0]):
+        self.var = dict(carnivore.default_var)
+        self.var["F_max"] = self.var["F"]
+        super().__init__(a, w, coord=coord)
 
     def yield_life(self, L: list):
         """
@@ -260,6 +270,7 @@ class carnivore(animal):
         """
         # Every preditor must try itself on all the pray available given it want to. 
         # We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#
+        F_there.sort(key= lambda O: O.var["sigma"])
         for pray in self.yield_life(F_there):
             F_got = min(self.var["F"], pray.var["w"])
             self.var["w"] += self.var["beta"] * F_got
