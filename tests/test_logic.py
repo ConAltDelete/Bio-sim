@@ -39,3 +39,6 @@ def test_migrasion_consistensy_two_animals():
         total_in_map_carn += len(the_map[cell].carn_default)
     assert total_in_map_herb == length
     assert total_in_map_carn == length
+
+def test_eating_one_animal():
+    pass
