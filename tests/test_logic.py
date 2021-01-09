@@ -3,22 +3,23 @@ from biosim.simulation import BioSim
 
 
 def test_migrasion_consistensy_one_animal():
-    length = 30
-    this_fucking_thing = BioSim(island_map="WWWW\nWllW\nwwww".upper(), seed=1234,
-                                ini_pop=[{"loc": (2, 2), "pop": [{'species': 'herbevore', 'age': 5, 'weight': 100} for _ in range(length)]}])
+    length = 5
+    this_fucking_thing = BioSim(island_map="WWWW\nWllW\nwllw\nWWWW".upper(), seed=1234,
+                                ini_pop=[{"loc": (2, 2), "pop": [{'species': 'herbivore', 'age': 5, 'weight': 100} for _ in range(length)]}])
     the_map = this_fucking_thing.island
     illigal_moves = this_fucking_thing.illigal_coord
     for _ in range(30):
         season_migration(the_map, illigal_moves)
     total_in_map = 0
     for cell in the_map:
-        total_in_map += len(the_map[cell].herb_default)
+        for specis in the_map[cell].default:
+            total_in_map += len(the_map[cell].default[specis])
     assert total_in_map == length
 
 
 def test_migrasion_consistensy_two_animals():
     length = 5
-    ini_herb = [{'species': 'herbevore',
+    ini_herb = [{'species': 'herbivore',
                  'age': 5,
                  'weight': 100} for _ in range(length)]
     ini_carn = [{'species': 'carnivore',
@@ -32,10 +33,8 @@ def test_migrasion_consistensy_two_animals():
     illigal_moves = this_fucking_thing.illigal_coord
     for _ in range(30):
         season_migration(the_map, illigal_moves)
-    total_in_map_herb = 0
-    total_in_map_carn = 0
+    total_in_map = 0
     for cell in the_map:
-        total_in_map_herb += len(the_map[cell].herb_default)
-        total_in_map_carn += len(the_map[cell].carn_default)
-    assert total_in_map_herb == length
-    assert total_in_map_carn == length
+        for specis in the_map[cell].default:
+            total_in_map += len(the_map[cell].default[specis])
+    assert total_in_map == 2*length

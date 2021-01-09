@@ -1,6 +1,6 @@
 
 
-from .animal import herbavor, preditor
+from .animal import herbivore, carnivore
 import random as ran
 from .visuals import string2map, set_param
 
@@ -31,12 +31,14 @@ img_base=None, img_fmt='png'):
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 		"""
+		# we set the random seed for future random number generation. In other words,
+		# we make a random simulation consistent.#
 		ran.seed(seed)
 		self.island, self.illigal_coord = string2map(island_map)
 		
 		temp_population = { pop['loc']: pop['pop'] for pop in ini_pop }
 		
-		self.population = self.add_population(temp_population)
+		self.population = self.add_population(temp_population,names=["herbivore","carnivore"])
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -44,14 +46,9 @@ img_base=None, img_fmt='png'):
 		:param species: String, name of animal species
 		:param params: Dict with valid parameter specification for species
 		"""
+		# Python abuse at its best.#
 		species = species.lower()
-		for dict_key in params:
-			if species == "herbavore":
-				herbavor.var[dict_key] = params[dict_key]
-			elif species == "preditor":
-				preditor.var[dict_key] = params[dict_key]
-				if dict_key == "F":
-					preditor.var["F_max"] = params[dict_key]
+		eval(f"{species}.var.update(params)")
 
 	
 	def set_landscape_parameters(self, landscape, params):
@@ -72,7 +69,7 @@ img_base=None, img_fmt='png'):
 		"""
 		pass
 	
-	def add_population(self, population:dict):
+	def add_population(self, population:dict, names: list):
 		"""
 		Add a population to the island
 		:param population: List of dictionaries specifying population (x,y):[{
@@ -80,16 +77,21 @@ img_base=None, img_fmt='png'):
 			'weight': float,
 			'species': str
 		}]
+		:param names: list of names one can use
 		"""
 		for coord in population:
 			cell = self.island[coord]
 			for animal in population[coord]:
-				if animal["species"].lower() == "herbivore":
-					cell.herb_default.append(herbavor(a = animal["age"], w = animal["weight"]))
-				elif animal["species"].lower() == "carnivore":
-					cell.carn_default.append(preditor(a = animal["age"], w = animal["weight"]))
+				animal_name = animal["species"].lower()
+				if animal_name in names:
+					if animal_name in cell.default:
+						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						cell.default[animal_name].append(create_animal)
+					else:
+						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						cell.default[animal_name] = [create_animal]
 				else:
-					raise ValueError("Got '{}'; needs 'herbivore' or 'carnivore'")
+					raise ValueError("Got '{}'; needs {}".format(animal["species"],names))
 	
 	@property
 	def year(self):

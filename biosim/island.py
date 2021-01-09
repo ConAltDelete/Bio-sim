@@ -13,47 +13,59 @@ class Cells:
     """
     The cells class
     """
-    defauld_food = {
+    default_food = {
         0:0,
         1:0,
         2:300,
         3:800
     }
     def __init__(self, cell_type, coord=None):
-        self.coord = coord if coord is not None else [0, 0]
-        self.food = 0.0
-        self.n_herb = 0
-        self.n_carn = 0
-        self.type = cell_type
-        self.f_max = Cells.defauld_food[self.type]
-        self.herb_default = list()
-        self.herb_newborn = list()
-        self.herb_migrate = list()
-        self.carn_default = list()
-        self.carn_newborn = list()
-        self.carn_migrate = list()
-        self.carn_eaten = list()
+        self.coord   = coord if coord is not None else [0, 0]
+        self.food    = 0.0
+        self.count   = dict()
+        self.type    = cell_type
+        self.f_max   = Cells.default_food[self.type]
+        self.default = dict()
+        self.migrate = dict()
+        self.newborn = dict()
+        self.eaten   = dict()
 
     def migration(self, illigal_moves):
-        for H in self.herb_default:
-            H.var["coord"] = list(self.coord)
-            H.move(illigal_moves)
-        for h in self.herb_default:
-            if h.var["coord"] != self.coord:
-                self.herb_migrate.append(h)
-                self.herb_default.remove(h)
+        """
+        Animals in the cell get the opertunity to move to
+        another cell.
+        :param illigal_moves: a list of tuples with illigal cells
+        """
+        # We tell the animal to move to a resenable spot#
+        for specis in self.default:
+            for animal in self.default[specis]:
+                animal.var["coord"] = list(self.coord)
+                animal.move(illigal_moves)
+        # Now we check if it moves, if it does we move it, else ignore it.#
+        for specis in self.default:
+            len_animal = len(self.default[specis])
+            for _ in range(len_animal):
+                animal = self.default[specis].pop(0)
+                if tuple(animal.var["coord"]) != tuple(self.coord):
+                    if specis in self.migrate:
+                        self.migrate[specis].append(animal)
+                    else:
+                        self.migrate[specis] = [animal]
+                else:
+                    self.default[specis].insert(0,animal)
 
-        for P in self.carn_default:
-            P.var["coord"] = self.coord
-        [P.move(illigal_moves) for P in self.carn_default]
-        self.carn_migrate = [p for p in self.carn_default if p.var["coord"] != self.coord]
-        self.carn_default = [p for p in self.carn_default if p.var["coord"] == self.coord]
 
-    def count_herb(self):
-        self.n_herb = len(self.herb_default) + len(self.herb_newborn) + len(self.herb_migrate)
-
-    def count_carn(self):
-        self.n_carn = len(self.carn_default) + len(self.carn_newborn) + len(self.carn_migrate) + len(self.carn_eaten)
+    def count(self):
+        """
+        We count the number of animals in cell.
+        """
+        self.count = 0
+        for spesis in self.default:
+            self.count += len(self.default[spesis])
+        for spesis in self.newborn:
+            self.count += len(self.newborn[spesis])
+        for spesis in self.migrate:
+            self.count += len(self.migrate[spesis])
 
     def fill_food(self, food):
         self.food = food
@@ -62,36 +74,20 @@ class Cells:
         self.food -= amount_eaten
 
     def combine_newborn(self):
-        self.herb_default.extend(self.herb_newborn)
-        self.herb_newborn = list()
-        self.carn_default.extend(self.carn_newborn)
-        self.carn_newborn = list()
+        for spesis in self.newborn:
+            self.default[spesis].extend(self.newborn[spesis])
+            self.newborn[spesis] = list()
 
     def combine_migrate(self):
-        self.herb_default.extend(self.herb_migrate)
-        self.herb_migrate = list()
-        self.carn_default.extend(self.carn_migrate)
-        self.herb_migrate = list()
+        for spesis in self.migrate:
+            self.default[spesis].extend(self.migrate[spesis])
+            self.migrate[spesis] = list()
 
     def combine_eaten(self):
-        self.carn_default.extend(self.carn_eaten)
-        self.carn_eaten = list()
+        for spesis in self.eaten:
+            self.default[spesis].extend(self.eaten[spesis])
+            self.eaten[spesis] = list()
 
 
 if __name__ == '__main__':
-
-    K = Cells(3)
-    K.herb_default.extend([herbavor(0, 8.0), herbavor(0, 8.0), herbavor(0, 8.0)])
-    print(K.n_herb)
-    K.count_herb()
-    print(K.n_herb)
-    K.herb_newborn.extend([herbavor(0, 8.0), herbavor(0, 8.0)])
-    K.count_herb()
-    print(K.n_herb)
-    print(K.herb_default)
-    print(K.herb_newborn)
-    K.combine_newborn()
-    print(K.herb_default)
-    print(K.herb_newborn)
-    K.count_herb()
-    print(K.n_herb)
+    pass

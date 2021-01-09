@@ -9,8 +9,8 @@ import random as ran
 """
 Module for animal logic. This file contains
 	- class: animal
-	- class (animal) : herbavore
-	- class (animal) : preditor
+	- class (animal) : herbivore
+	- class (animal) : carnivore
 """
 
 
@@ -31,7 +31,7 @@ class animal:
         """
         :param a: age of animal.
         :param w: waight of animal.
-        :param coord, list[int,int]: The coorddinate of the animal.
+        :param coord: The coorddinate of the animal.
         """
         self.var["coord"] = coord
         self.var["w"] = w
@@ -42,17 +42,25 @@ class animal:
     def Big_phi(self):
         """
         'Big_phi' calculates the fitness of the animal based on its age and weight.
-        :return, float: Fitness of animal.
+        :return: Fitness of animal.
         """
 
         def q(S: str):
             """
             Generates a function based on 'S'.
             :param S: 'P' for a smaller value, other for bigger.
+            :return: function
             """
             k = 1 if S == "P" else -1
 
-            def new_q(x, xh, phi):
+            def new_q(x: float, xh: float, phi: float):
+                r"""
+                calculates the function $\frac{1}{1+e^{\pm\phi(x-x_h)}}$
+                :param x: number
+                :parma xh: number
+                :parma phi: number
+                :return: float
+                """
                 return 1 / (1 + np.e ** (k * phi * (x - xh)))
 
             return new_q
@@ -71,7 +79,10 @@ class animal:
         :param p: probability 0<=p<=1
         :return: bool
         """
-        return ran.uniform(0,1) <= p
+        # By using the random.random function we utilise the seed declared in
+        # the BioSim class, assuming uniform distribution since the length from
+        # 0 to p is p, then the probability to hit <= p is p/1 = p
+        return ran.random() <= p
 
     @staticmethod
     def N(w: float, p: float):
@@ -129,6 +140,9 @@ class animal:
         Given a map 'ild' it moves, or not.
         :param ild: list of illigal coorddiants.
         """
+        # Let the animal choose it's diraction based on what it
+        # knows, by that we need not worry about what it must 
+        # rather we let it do what it was born to do #
         do_move = self.bin_choise(self.var["mu"] * self.var["sigma"])
         direct = ran.choice([k for k in animal.ret_moves.keys()])
         direct_list = animal.ret_moves[direct]
@@ -141,7 +155,7 @@ class animal:
         TODO: check if works.
         :param r: The diraction this instance moves to.
         :param ild: Contains illigal coorddinats.
-        :return, bool:
+        :return: bool
         """
         c_coord = [self.var["coord"][0] + r[0], self.var["coord"][1] + r[1]]
         if tuple(c_coord) in ild:
@@ -150,11 +164,15 @@ class animal:
             return True
 
     def loss_weight(self):
+        """
+        calculates the new weight of the animal and
+        reevaluets its fitness.
+        """
         self.var["w"] -= self.var["eta"] * self.var["w"]
         self.var["sigma"] = self.Big_phi()
 
 
-class herbavor(animal):
+class herbivore(animal):
     """
     This is the herbavore class that eats non-meat like vegans.
     """
@@ -180,20 +198,25 @@ class herbavor(animal):
     def eat(self, F_there, return_food = False):
         """
         Instace consumes a portion of F.
-        TODO: determen if return eaten amount
         :param F_there: number of food.
+        :return: returns eaten amount if `return_food` is true.
         """
+        # Animals eat what is available, or can eat...#
+        if not(type(F_there) == int or type(F_there) == float):
+            raise ValueError("animal::herbavore::eat expected number, got {}".format(type(F_there)))
+        # We gain what is possible, whitch is what the animal want or get.#
         self.var["w"] += self.var["beta"] * min(max(F_there,0), self.var["F"])
         self.var["sigma"] = self.Big_phi()
         if return_food:
+            # This is handy when needed.#
             return min(max(F_there,0), self.var["F"])
 
 
 
 
-class preditor(animal):
+class carnivore(animal):
     """
-    This is the preditor class that eat meat like non-vegans.
+    This is the carnivore class that eat meat like non-vegans.
     """
     var = {"w_birth"     : 6,
     "coord"        : [0,0],
@@ -219,7 +242,14 @@ class preditor(animal):
         :yield: A soon to be dead animal.
         """
         for l in L:
-            if l.var["life"] and self.bin_choise(max(0, min(1, (self.var["sigma"] - l.var["sigma"]) / self.var["DeltaPhiMax"]))):
+            # we know that the limits of the function is 0 and 1, and by analyzing the curve of the function with the limits
+            # we can see that on negative values we get 0, note 0 > than a negativ number (excluding -0 for computers sake) and
+            # 1 when the function is greater than the max value (e.i. greater than 1) for that reson we can with comfor use
+            # max(1,min(0,f(x))) to determen the probability.
+            probebility = max(0, min(1, (self.var["sigma"] - l.var["sigma"]) / self.var["DeltaPhiMax"]))
+            # we agree that for a preditor to eat a pray it must be alive and the preditor must choose to accept the pray.
+            # we use the function `bin_choise` to determen if it will.#
+            if l.var["life"] and self.bin_choise(probebility):
                 yield l
 
     def eat(self, F_there: list):
@@ -228,6 +258,8 @@ class preditor(animal):
         :param F_there: A list of herbavores.
         :return: updated list of herbavores.
         """
+        # Every preditor must try itself on all the pray available given it want to. 
+        # We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#
         for pray in self.yield_life(F_there):
             F_got = min(self.var["F"], pray.var["w"])
             self.var["w"] += self.var["beta"] * F_got
@@ -236,16 +268,18 @@ class preditor(animal):
             self.var["sigma"] = self.Big_phi()
             if self.var["F"] == 0:
                 break
+        # Since we don't care for dead animals we will discard all dead animals to the void before returing them to the next 
+        # preditor.#
         return [f for f in F_there if f.var["life"]]
 
 
 
 
 if __name__ == "__main__":
-    H = herbavor(1, 4)
+    H = herbivore(1, 4)
     H.gamma = 4
     print(H.gamma)
-    herbavor.gamma = 3
+    herbivore.gamma = 3
     print(H.gamma)
-    K = herbavor(2, 3)
+    K = herbivore(2, 3)
     print(K.gamma)

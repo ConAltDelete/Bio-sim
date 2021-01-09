@@ -96,7 +96,7 @@ Carnivores
         animal.var["F"] = animal.var["F_max"]
 
 
-def season_breeding(*animal: list):
+def season_breeding(cell: Cells):
     """
     N_herbivore = number of herbivores in cell
     N_carnivore = number of carnivores in cell
@@ -125,6 +125,7 @@ def season_migration(cells: dict, illigal_moves: list):
     Animals moves to desired location if possible, else they don't move from cell.
     :param cells: dictonary with coordinats as key, and Cells objects as value
     :return:
+    """
     """
     moving_animals = {"herb":{},"pred": {} }
     for cell in cells:
@@ -155,7 +156,33 @@ def season_migration(cells: dict, illigal_moves: list):
     for mov_herb in moving_animals["herb"]:
         cells[mov_herb].herb_default.extend(moving_animals["herb"][mov_herb])
     for mov_carn in moving_animals["pred"]:
-        cells[mov_carn].carn_default.extend(moving_animals["pred"][mov_carn])
+        cells[mov_carn].carn_default.extend(moving_animals["pred"][mov_carn])"""
+    moving_animals = dict()
+    for cell in cells:
+        cells[cell].migration(illigal_moves)
+        mig_len = {spesis: len(cells[cell].migrate[spesis]) for spesis in cells[cell].migrate}
+        for spesis in cells[cell].migrate:
+            for _ in range(mig_len[spesis]):
+                try:
+                    moving_animal = cells[cell].migrate[spesis].pop(0)
+                except IndexError:
+                    print("IndexError in logic::season_migration::cells[cell].migrate")
+                    break
+                # if this is a new spesis, we will remember it in the future.#
+                if spesis not in moving_animals:
+                    moving_animals[spesis] = dict()
+
+                if tuple(moving_animal.var["coord"]) not in moving_animals[spesis]:
+                    moving_animals[spesis][tuple(moving_animal.var["coord"])] = [moving_animal]
+                else:
+                    moving_animals[spesis][tuple(moving_animal.var["coord"])].append(moving_animal)
+        for spesis in moving_animals:
+            for coord in moving_animals[spesis]:
+                if spesis not in cells[coord].default:
+                    cells[coord].default[spesis] = moving_animals[spesis][coord]
+                else:
+                    cells[coord].default[spesis].extend(moving_animals[spesis][coord])
+                moving_animals[spesis][coord] = list()
 
 
 
@@ -170,28 +197,30 @@ def season_aging(*animals : list):
             turd.age()
 
 
-def season_loss(*animal: list):
+def season_loss(cell: Cells):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     w -= eta * w
     """
-    for species in animal:
-        for animals in species:
-            animals.loss_weight()
+    for species in cell.default:
+        for animals in cell.default[species]:
+            for animal in animals:
+                animal.loss_weight()
 
 
-def season_death(cell, herb: list, carn: list):
+def season_death(cell: Cells, herb: list, carn: list):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     death = yes if w = 0
         else
         death = omega(1 - Phi)
     """
-    [B.death() for B in herb]
-    cell.herb_default = [A for A in herb if A.var["life"]]
-
-    [B.death() for B in carn]
-    cell.carn_default = [A for A in carn if A.var["life"]]
+    for spesis in cell.default:
+        for animals in cell.default[spesis]:
+            for animal in animals:
+                animal.death()
+    for spesis in cell.default:
+        cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
 
 def yearly_cycle(end_year=10, visual_year=1):
@@ -201,15 +230,15 @@ def yearly_cycle(end_year=10, visual_year=1):
     """
     gen_cells()
     cells = gen_cells()
-    cells[0].herb_default = [herbavor(0, 8.0), herbavor(0, 8.0), herbavor(0, 8.0)]
+    cells[0].herb_default = [herbivore(0, 8.0), herbivore(0, 8.0), herbivore(0, 8.0)]
     start_year = 0
     while start_year < end_year:
         for c in cells:
             c.count_herb()
-            season_feeding(800, 300, c, c.herb_default)
+            season_feeding(800, 300, c)
 
         for c in cells:
-            season_breeding(c.herb_default, c.carn_default)
+            season_breeding(c)
 
         season_migration(cells)
 
@@ -217,10 +246,10 @@ def yearly_cycle(end_year=10, visual_year=1):
             season_aging(c.herb_default, c.carn_default)
 
         for c in cells:
-            season_loss(c.herb_default, c.carn_default)
+            season_loss(c)
 
         for c in cells:
-            season_death(c, c.herb_default, c.carn_default)
+            season_death(c)
 
         start_year += 1
         if start_year % visual_year == 0:
@@ -232,14 +261,6 @@ def yearly_cycle(end_year=10, visual_year=1):
                     print("Fitness", a.var["sigma"])
                     print("Alive", a.var["life"])
 
-"""
+
 if __name__ == '__main__':
-    this_fucking_thing = BioSim(island_map = "WWWW\nWLLW\nWWWW", ini_pop = [{'loc':(2,2) , 'pop':[ {"species":"herbivore","age":5,"weight":20} for _ in range(10)] } ] , seed = 1234)
-    the_map = this_fucking_thing.island
-    illigal_moves = this_fucking_thing.illigal_coord
-    for _ in range(30):
-        season_migration(the_map,illigal_moves)
-    for cell in the_map:
-        print("coord:",the_map[cell].coord,"animals:",the_map[cell].herb_default)
-        for C in the_map[cell].herb_default:
-            print(C.var["coord"], C.var["a"]) """
+    pass
