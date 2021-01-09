@@ -39,13 +39,25 @@ def test_migrasion_consistensy_two_animals():
             total_in_map += len(the_map[cell].default[specis])
     assert total_in_map == 2*length
 
-def test_eating_in_cell():
+def test_eating_herbivore():
+    herb = herbivore(a= 5, w = 100)
+    eaten = herb.eat(100,return_food=True)
+    assert eaten == 10
+
+def test_two_herbivore_eating_in_cell():
     ini_herb = [ {'species': 'herbivore',
                  'age': 5,
-                 'weight': 100} ]
+                 'weight': 100} for _ in range(2)]
     ini_pop = [{"loc":(2,2),"pop":ini_herb}]
     island_setup = BioSim(island_map="WWW\nWLW\nWWW", seed=1234, ini_pop=ini_pop)
     the_map = island_setup.island
     season_feeding(the_map[(2,2)])
     cell = the_map[(2,2)]
-    assert cell.food == 790
+    assert cell.food == 780
+
+def test_eating_carnevore():
+    herd = [herbivore(a=1,w=1)]
+    pred = carnivore(a=5,w=100)
+    pred.var["sigma"] = 20
+    herd = pred.eat(herd)
+    assert herd == []
