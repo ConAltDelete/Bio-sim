@@ -60,8 +60,10 @@ class animal:
         if self.var["w"] <= 0:
             return 0
         else:
-            q_p = q("P")(self.var["a"], self.var["a_half"], self.var["phi_age"])
-            q_n = q("N")(self.var["w"], self.var["w_half"], self.var["phi_weight"])
+            q_p = q("P")(self.var["a"],
+                         self.var["a_half"], self.var["phi_age"])
+            q_n = q("N")(self.var["w"],
+                         self.var["w_half"], self.var["phi_weight"])
             return q_p * q_n
 
     @staticmethod
@@ -71,7 +73,7 @@ class animal:
         :param p: probability 0<=p<=1
         :return: bool
         """
-        return ran.uniform(0,1) <= p
+        return ran.uniform(0, 1) <= p
 
     @staticmethod
     def N(w: float, p: float):
@@ -82,7 +84,7 @@ class animal:
         :return: a float in range [0,1]
         """
         return ran.gauss(w, p)
-    
+
     def age(self):
         self.var["a"] += 1
 
@@ -102,8 +104,11 @@ class animal:
         :param necro_birth: Give birth even when dead.
         :return: either None or a new instace of itself.
         """
+        self.var["sigma"] = self.Big_phi()
         p_pop = min(1, self.var["sigma"] * self.var["gamma"] * (N - 1))
-        if self.var["w"] < self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]) and not self.bin_choise(p_pop):
+        if self.var["w"] < self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]):
+            return None
+        if p_pop < ran.random():
             return None
         class_name = type(self).__name__
         k = eval(
@@ -149,96 +154,90 @@ class animal:
         else:
             return True
 
-    def loss_weight(self):
-        self.var["w"] -= self.var["eta"] * self.var["w"]
-        self.var["sigma"] = self.Big_phi()
-
 
 class herbavor(animal):
     """
     This is the herbavore class that eats non-meat like vegans.
     """
-    def __init__(self, a: int, w: float, coord = [0,0]):
-        self.var = {"w_birth"     : 8,
-            "sigma_birth" : 1.5,
-            "beta"        : 0.9,
-            "eta"         : 0.05,
-            "a_half"      : 40,
-            "coord"        : [0,0],
-            "phi_age"     : 0.6,
-            "w_half"      : 10,
-            "phi_weight"  : 0.1,
-            "mu"          : 0.25,
-            "gamma"       : 0.2,
-            "zeta"        : 3.5 ,
-            "xi"          : 1.2,
-            "omega"       : 0.4,
-            "F"           : 10,
-            "F_max"       : 10}
-        super().__init__(a, w, coord= coord)
 
-    def eat(self, F_there, return_food = False):
+    def __init__(self, a: int, w: float, coord=[0, 0]):
+        self.var = {"w_birth": 8,
+                    "sigma_birth": 1.5,
+                    "beta": 0.9,
+                    "eta": 0.05,
+                    "a_half": 40,
+                    "coord": [0, 0],
+                    "phi_age": 0.6,
+                    "w_half": 10,
+                    "phi_weight": 0.1,
+                    "mu": 0.25,
+                    "gamma": 0.2,
+                    "zeta": 3.5,
+                    "xi": 1.2,
+                    "omega": 0.4,
+                    "F": 10}
+        super().__init__(a, w, coord=coord)
+
+    def eat(self, F_there, return_food=False):
         """
         Instace consumes a portion of F.
         TODO: determen if return eaten amount
         :param F_there: number of food.
         """
-        self.var["w"] += self.var["beta"] * min(max(F_there,0), self.var["F"])
+        self.var["w"] += self.var["beta"] * min(max(F_there, 0), self.var["F"])
         self.var["sigma"] = self.Big_phi()
         if return_food:
-            return min(max(F_there,0), self.var["F"])
-
-
+            return min(max(F_there, 0), self.var["F"])
 
 
 class preditor(animal):
     """
     This is the preditor class that eat meat like non-vegans.
     """
-    var = {"w_birth"     : 6,
-    "coord"        : [0,0],
-    "sigma_birth" : 1,
-    "beta"        : 0.75,
-    "eta"         : 0.125,
-    "a_half"      : 40,
-    "phi_age"     : 0.3,
-    "w_half"      : 4,
-    "phi_weight"  : 0.4,
-    "mu"          : 0.4,
-    "gamma"       : 0.8,
-    "zeta"        : 3.5,
-    "xi"          : 1.1,
-    "omega"       : 0.8,
-    "F"           : 50,
-    "DeltaPhiMax" : 10}
+    def __init__(self, a: int, w: float, coord=[0, 0]):
+        self.food = 50.0
+        self.var = {"w_birth"     : 6,
+            "coord"        : [0,0],
+            "sigma_birth" : 1,
+            "beta"        : 0.75,
+            "eta"         : 0.125,
+            "a_half"      : 40,
+            "phi_age"     : 0.3,
+            "w_half"      : 4,
+            "phi_weight"  : 0.4,
+            "mu"          : 0.4,
+            "gamma"       : 0.8,
+            "zeta"        : 3.5,
+            "xi"          : 1.1,
+            "omega"       : 0.8,
+            "F"           : 50,
+            "DeltaPhiMax" : 10}
+        super().__init__(a, w, coord=coord)
 
-    def yield_life(self, L: list):
+    def food_reset(self):
+        self.food = self.var["F"]
+
+    def hunting_chance(self, prey: object):
         """
         Generator for life.
         :param L: The heard to eat.
-        :yield: A soon to be dead animal.
+        :return: the probability.
         """
-        for l in L:
-            if l.var["life"] and self.bin_choise(max(0, min(1, (self.var["sigma"] - l.var["sigma"]) / self.var["DeltaPhiMax"]))):
-                yield l
+        if self.var["sigma"] <= prey.var["sigma"]:
+            return 0
+        if 0 < self.var["sigma"] - prey.var["sigma"] < self.var["DeltaPhiMax"]:
+            return (self.var["sigma"] - prey.var["sigma"]) / self.var["DeltaPhiMax"]
+        return 1
 
-    def eat(self, F_there: list):
+    def eat(self, F_there: object):
         """
         Animal eats, because it is good.
-        :param F_there: A list of herbavores.
-        :return: updated list of herbavores.
+        :param F_there: A herbivore.
         """
-        for pray in self.yield_life(F_there):
-            F_got = min(self.var["F"], pray.var["w"])
-            self.var["w"] += self.var["beta"] * F_got
-            pray.var["life"] = False
-            self.var["F"] -= F_got
-            self.var["sigma"] = self.Big_phi()
-            if self.var["F"] == 0:
-                break
-        return [f for f in F_there if f.var["life"]]
-
-
+        food_to_eat = min(self.food, F_there.var["w"])
+        self.var["w"] += self.var["beta"] * food_to_eat
+        self.food -= food_to_eat
+        self.var["sigma"] = self.Big_phi()
 
 
 if __name__ == "__main__":
