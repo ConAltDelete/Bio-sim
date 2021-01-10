@@ -82,7 +82,7 @@ class animal:
         # By using the random.random function we utilise the seed declared in
         # the BioSim class, assuming uniform distribution since the length from
         # 0 to p is p, then the probability to hit <= p is p/1 = p
-        return ran.random() <= p
+        return ran.random() < p
 
     @staticmethod
     def N(w: float, p: float):
@@ -115,7 +115,9 @@ class animal:
         :return: either None or a new instace of itself.
         """
         p_pop = min(1, self.var["sigma"] * self.var["gamma"] * (N - 1))
-        if self.var["w"] < self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]) and not self.bin_choise(p_pop):
+        test_w = self.var["w"] < (self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]))
+        test_chanse = self.bin_choise(p_pop)
+        if not (test_w and test_chanse) :
             return None
         class_name = type(self).__name__
         k = eval(
@@ -242,7 +244,6 @@ class carnivore(animal):
         "DeltaPhiMax" : 10}
     def __init__(self, a: int, w: float, coord = [0,0]):
         self.var = dict(carnivore.default_var)
-        self.var["F_max"] = self.var["F"]
         super().__init__(a, w, coord=coord)
 
     def yield_life(self, L: list):
@@ -271,6 +272,7 @@ class carnivore(animal):
         # Every preditor must try itself on all the pray available given it want to. 
         # We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#
         F_there.sort(key= lambda O: O.var["sigma"])
+        default_F = float(self.var["F"])
         for pray in self.yield_life(F_there):
             F_got = min(self.var["F"], pray.var["w"])
             self.var["w"] += self.var["beta"] * F_got
@@ -278,9 +280,11 @@ class carnivore(animal):
             self.var["F"] -= F_got
             self.var["sigma"] = self.Big_phi()
             if self.var["F"] == 0:
+                self.var["F"] = default_F
                 break
         # Since we don't care for dead animals we will discard all dead animals to the void before returing them to the next 
         # preditor.#
+        self.var["F"] = default_F
         return [f for f in F_there if f.var["life"]]
 
 

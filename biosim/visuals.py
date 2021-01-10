@@ -20,9 +20,8 @@ def string2map(map_str: str):
     map_list = [list(map_r) for map_r in map_str.split()]
 
     x_length = len(map_list[0])
-    for row in map_list:
-        if len(row) != x_length:
-            raise ValueError("Inconsistent row lenght")
+    if any( ( len(row) != x_length for row in map_list ) ):
+        raise ValueError("Inconsistent row lenght")
     
     standard_values = {"W": 0, "L": 3, "H": 2, "D": 1}
 

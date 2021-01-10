@@ -36,10 +36,8 @@ img_base=None, img_fmt='png'):
 		if seed != None: ran.seed(seed)
 
 		self.island, self.illigal_coord = string2map(island_map)
-		
-		temp_population = { pop['loc']: pop['pop'] for pop in ini_pop }
 		self.names=["herbivore","carnivore"]
-		self.population = self.add_population(temp_population)
+		self.population = self.add_population(ini_pop)
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -80,6 +78,7 @@ img_base=None, img_fmt='png'):
 		}]
 		:param names: list of names one can use
 		"""
+		population = {popul["loc"]:popul["pop"] for popul in population}
 		for coord in population:
 			cell = self.island[coord]
 			for animal in population[coord]:

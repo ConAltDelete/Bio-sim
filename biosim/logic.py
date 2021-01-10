@@ -89,9 +89,6 @@ Carnivores
             if all( not H.life for H in cell.default["herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
             cell.herb_default = [ h for h in animal.eat(cell.default["herbivore"]) if h.var["life"]] # replace original list with new list with not dead animals
-    # preditor food reset
-        for animal in cell.default["carnivore"]:
-            animal.var["F"] = animal.var["F_max"]
 
 
 def season_breeding(cell: Cells):
@@ -115,7 +112,7 @@ def season_breeding(cell: Cells):
         for animal in cell.default[spesis]:
             new_born.append(animal.birth(len_spesis))
         new_born = [n for n in new_born if n != None]
-        cell.default[spesis].expand(new_born)
+        cell.default[spesis].extend(new_born)
 
 
 

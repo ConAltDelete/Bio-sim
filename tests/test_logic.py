@@ -61,3 +61,29 @@ def test_eating_carnevore():
     pred.var["sigma"] = 20
     herd = pred.eat(herd)
     assert herd == []
+
+def test_birth_one_animal():
+    ini_herb = [ {'species': 'herbivore',
+                 'age': 5,
+                 'weight': 100} for _ in range(1)]
+    island_setup = BioSim(island_map="WWW\nWLW\nWWW", seed=1234, ini_pop=[])
+    island_setup.set_animal_parameters("herbivore",{"gamma":100})
+    ini_pop = [{"loc":(2,2),"pop":ini_herb}]
+    island_setup.add_population(population=ini_pop)
+    the_map = island_setup.island
+    season_breeding(the_map[(2,2)])
+    cell = the_map[(2,2)]
+    assert len(cell.default["herbivore"]) == 1
+
+def test_birth_two_animals():
+    ini_herb = [ {'species': 'herbivore',
+                 'age': 5,
+                 'weight': 100} for _ in range(2)]
+    island_setup = BioSim(island_map="WWW\nWLW\nWWW", seed=1234, ini_pop=[])
+    island_setup.set_animal_parameters("herbivore",{"gamma":100})
+    ini_pop = [{"loc":(2,2),"pop":ini_herb}]
+    island_setup.add_population(population=ini_pop)
+    the_map = island_setup.island
+    season_breeding(the_map[(2,2)])
+    cell = the_map[(2,2)]
+    assert len(cell.default["herbivore"]) == 4
