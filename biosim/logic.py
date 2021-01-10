@@ -7,6 +7,7 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
+from typing import Dict
 from .island import Cells
 from .animal import *
 #from .colorama import Fore
@@ -72,6 +73,9 @@ Carnivores
 
     8. fitness Phi for carnivores gets calculated again
     9. food value for carnivores gets reset
+
+    NOTE:
+        
     """
 
     # assums single cell given, othervise put in loop
@@ -83,12 +87,18 @@ Carnivores
             else:
                 break
     if "carnivore" in cell.default and len(cell.default["carnivore"]) != 0:
+        # We need to sort the list so the fittest goes first. #
         cell.default["carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
         for animal in cell.default["carnivore"]:
             if all( not H.life for H in cell.default["herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
-            cell.herb_default = [ h for h in animal.eat(cell.default["herbivore"]) if h.var["life"]] # replace original list with new list with not dead animals
-
+            # replace original list with new list with not dead animals#
+            cell.default["herbivore"] = [ h for h in animal.eat(cell.default["herbivore"]) if h.var["life"]] 
+    # Resets the food in the cell since we are done for the year. If 
+    # feeding seson happens multiple times per year, or irregulary
+    # , it must either be done at the last iteration of feeding, or
+    # create a 'end of the year' seson that handels anything that must
+    # be reset at the end of the year. #
 
 def season_breeding(cell: Cells):
     """
@@ -102,15 +112,20 @@ def season_breeding(cell: Cells):
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
 
-    :return: [new of what ever you put in first,new of whatever comes second, ...]
+    :param cell: Cells object.
+
+    NOTE:
+        N1: animal.birth(N) returns either a object or None.
     """
 
     for spesis in cell.default:
         new_born = []
+        # Since we are going do this multiple times, we'r going
+        # to just calculate the length once. #
         len_spesis = len(cell.default[spesis])
         for animal in cell.default[spesis]:
             new_born.append(animal.birth(len_spesis))
-        new_born = [n for n in new_born if n != None]
+        new_born = [n for n in new_born if n != None] # N1
         cell.default[spesis].extend(new_born)
 
 
@@ -119,17 +134,21 @@ def season_migration(cells: dict, illigal_moves: list):
     """
     Animals moves to desired location if possible, else they don't move from cell.
     :param cells: dictonary with coordinats as key, and Cells objects as value
-    :return:
+
+    NOTE:
+        N1: we pre-calculate the length since we manipulate the lists
+        N2: This is strictly not nessesery, but if it happens; There is a bug somwhere.
+        N3: Just a safty percausion. Better safe than sorry.
     """
     moving_animals = dict()
     for cell in cells:
         cells[cell].migration(illigal_moves)
-        mig_len = {spesis: len(cells[cell].migrate[spesis]) for spesis in cells[cell].migrate}
+        mig_len = {spesis: len(cells[cell].migrate[spesis]) for spesis in cells[cell].migrate} # N1
         for spesis in cells[cell].migrate:
             for _ in range(mig_len[spesis]):
                 try:
                     moving_animal = cells[cell].migrate[spesis].pop(0)
-                except IndexError:
+                except IndexError: # N2
                     print("IndexError in logic::season_migration::cells[cell].migrate")
                     break
                 # if this is a new spesis, we will remember it in the future.#
@@ -146,7 +165,7 @@ def season_migration(cells: dict, illigal_moves: list):
                     cells[coord].default[spesis] = moving_animals[spesis][coord]
                 else:
                     cells[coord].default[spesis].extend(moving_animals[spesis][coord])
-                moving_animals[spesis][coord] = list()
+                moving_animals[spesis][coord] = list() # N3
 
 
 
@@ -185,6 +204,14 @@ def season_death(cell: Cells):
     for spesis in cell.default:
         cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
+def season_end(island: Dict):
+    """
+    Does 'end of season' procedure.
+    :param island: the entire island.
+    """
+    for coord in island:
+        for cell in island[coord]:
+            cell.food = float(cell.f_max)
 
 def year_cycle(island,illigal_coords,year, visual_year=1):
     """
@@ -208,6 +235,8 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
 
     for c in island:
         season_death(island[c])
+
+    season_end(island=island)
 
     if year % visual_year == 0:
         pass
