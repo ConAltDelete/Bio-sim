@@ -12,8 +12,8 @@ from distutils.core import setup
 setup(name='BioSim',
  version='1.0',
  description='BioSim',
- author='Mats Hoem Olsen',
- author_email='mats.hoem.olsen@nmbu.no',
+ author='Mats Hoem Olsen, Roy Erling Granheim',
+ author_email='mats.hoem.olsen@nmbu.no,roy.erling.granheim@nmbu.no',
  url='',
  requires=['numpy', 'pandas', 'matplotlib'],
  packages=['biosim']
