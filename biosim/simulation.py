@@ -3,7 +3,8 @@
 from .animal import herbivore, carnivore
 import random as ran
 from .visuals import string2map, set_param
-
+import sys
+import re
 class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
@@ -36,7 +37,7 @@ img_base=None, img_fmt='png'):
 		if seed != None: ran.seed(seed)
 
 		self.island, self.illigal_coord = string2map(island_map)
-		self.names=["herbivore","carnivore"]
+		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
 		self.population = self.add_population(ini_pop)
 	
 	def set_animal_parameters(self, species: str, params: dict):

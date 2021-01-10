@@ -1,6 +1,7 @@
 from biosim.logic import *
 from biosim.simulation import BioSim
 
+import pytest
 
 def test_migrasion_consistensy_one_animal():
     length = 15
@@ -75,10 +76,11 @@ def test_birth_one_animal():
     cell = the_map[(2,2)]
     assert len(cell.default["herbivore"]) == 1
 
-def test_birth_two_animals():
+@pytest.mark.parametrize("n_animals",[n for n in range(2,9)])
+def test_birth_two_animals(n_animals):
     ini_herb = [ {'species': 'herbivore',
                  'age': 5,
-                 'weight': 100} for _ in range(2)]
+                 'weight': 100} for _ in range(n_animals)]
     island_setup = BioSim(island_map="WWW\nWLW\nWWW", seed=1234, ini_pop=[])
     island_setup.set_animal_parameters("herbivore",{"gamma":100})
     ini_pop = [{"loc":(2,2),"pop":ini_herb}]
@@ -86,4 +88,4 @@ def test_birth_two_animals():
     the_map = island_setup.island
     season_breeding(the_map[(2,2)])
     cell = the_map[(2,2)]
-    assert len(cell.default["herbivore"]) == 4
+    assert len(cell.default["herbivore"]) == 2*n_animals

@@ -115,7 +115,7 @@ class animal:
         :return: either None or a new instace of itself.
         """
         p_pop = min(1, self.var["sigma"] * self.var["gamma"] * (N - 1))
-        test_w = self.var["w"] < (self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]))
+        test_w = self.var["w"] >= (self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]))
         test_chanse = self.bin_choise(p_pop)
         if not (test_w and test_chanse) :
             return None
@@ -139,7 +139,7 @@ class animal:
         self.var["coord"][0] += animal.ret_moves[ret][0]
         self.var["coord"][1] += animal.ret_moves[ret][1]
 
-    def move(self, ild):
+    def move(self, ild: list):
         """
         Given a map 'ild' it moves, or not.
         :param ild: list of illigal coorddiants.
@@ -153,7 +153,7 @@ class animal:
         if self.check(direct_list, ild) and do_move:
             self.moveto(direct)
 
-    def check(self, r: list, ild):
+    def check(self, r: list, ild: list):
         """
         Checks if possible to move in diraction r
         TODO: check if works.
