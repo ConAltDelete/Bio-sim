@@ -1,6 +1,6 @@
 
 
-from .animal import *
+from .animal import carnivore,herbivore
 import random as ran
 from .visuals import string2map, set_param
 from .logic import year_cycle
@@ -77,7 +77,7 @@ img_base=None, img_fmt='png'):
 		Image files will be numbered consecutively.
 		"""
 		for year in range(num_years):
-			year_cycle(self.island,year=year,visual_year=vis_years)
+			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
 	
 	def add_population(self, population:dict):
 		"""

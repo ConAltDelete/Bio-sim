@@ -11,7 +11,6 @@ from .island import Cells
 from .animal import *
 #from .colorama import Fore
 #from .colorama import Style
-from .simulation import BioSim
 
 def gen_cells():
     """
@@ -187,28 +186,28 @@ def season_death(cell: Cells):
         cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
 
-def year_cycle(island,year, visual_year=1):
+def year_cycle(island,illigal_coords,year, visual_year=1):
     """
     1. generation of cells
     2. loop through the year
     """
 
     for c in island:
-        season_feeding(c)
+        season_feeding(island[c])
 
     for c in island:
-        season_breeding(c)
+        season_breeding(island[c])
 
-    season_migration(island)
-
-    for c in island:
-        season_aging(c)
+    season_migration(island,illigal_coords)
 
     for c in island:
-        season_loss(c)
+        season_aging(island[c])
 
     for c in island:
-        season_death(c)
+        season_loss(island[c])
+
+    for c in island:
+        season_death(island[c])
 
     if year % visual_year == 0:
         pass

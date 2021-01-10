@@ -1,5 +1,5 @@
 from biosim.logic import *
-from biosim.simulation import BioSim
+from biosim.simulation import *
 
 import pytest
 
