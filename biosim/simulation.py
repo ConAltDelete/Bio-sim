@@ -41,6 +41,7 @@ img_base=None, img_fmt='png'):
 		# new animals. This is assuming no global function except in animal superclass. #
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
 		self.population = self.add_population(ini_pop)
+
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -50,6 +51,10 @@ img_base=None, img_fmt='png'):
 		"""
 		# Python abuse at its best.#
 		species = species.lower()
+		check_keys = eval("{}.default_var.keys()".format(species))
+		for key in params.keys():
+			if key not in check_keys:
+				raise ValueError("{} not in {}".format(key,species))
 		eval("{}.default_var.update({})".format(species,params))
 
 	

@@ -25,17 +25,14 @@ import os.path
 
 from biosim.simulation import BioSim
 
-def test_somthiong():
-    """Empty island can be created"""
-    BioSim(island_map="WW\nWW", ini_pop=[], seed=1)
-
 
 def test_minimal_island():
     """Island of single jungle cell"""
     BioSim(island_map="WWW\nWLW\nWWW", ini_pop=[],seed=1)
 
 def test_empty_island(): # added `pass`
-    pass
+    """Empty island can be created"""
+    BioSim(island_map="WW\nWW", ini_pop=[], seed=1)
 
 
 def test_all_types():

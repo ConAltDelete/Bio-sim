@@ -16,10 +16,10 @@ def find_border(x_length,y_length):
     :param x_lenght: lenght of y-axis
     :return: list of all border coordinates
     """
-    fix_x_1: list = [(1,y+1) for y in range(y_length)]
-    fix_x_end: list = [(x_length,y+1) for y in range(y_length)]
-    fix_y_1: list = [(x+1,1) for x in range(x_length)]
-    fix_y_end: list = [(x+1,y_length) for x in range(x_length)]
+    fix_x_1: list = [(y+1,1) for y in range(y_length)]
+    fix_x_end: list = [(y+1,x_length) for y in range(y_length)]
+    fix_y_1: list = [(1,x+1) for x in range(x_length)]
+    fix_y_end: list = [(y_length,x+1) for x in range(x_length)]
 
     all_coord: list = fix_x_1 + fix_x_end + fix_y_1 + fix_y_end
 
@@ -44,7 +44,7 @@ def string2map(map_str: str):
     illigal_coord = []
     for row in enumerate(map_list):
         for colum in enumerate(row[1]):
-            incomming_coord = (colum[0] + 1, row[0] + 1)
+            incomming_coord = (row[0] + 1, colum[0] + 1)
             if colum[1] != "W" and incomming_coord not in border_coord:
                 if colum[1] not in standard_values:
                     raise ValueError("'{}' is not a standard value, expected {}".format(colum[1],standard_values))

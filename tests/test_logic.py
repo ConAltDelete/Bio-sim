@@ -89,3 +89,24 @@ def test_birth_two_animals(n_animals):
     season_breeding(the_map[(2,2)])
     cell = the_map[(2,2)]
     assert len(cell.default["herbivore"]) == 2*n_animals
+
+def test_death_one_animal():
+    herb = herbivore(a=5,w=0)
+    herb.death()
+    assert not(herb.var["life"])
+
+@pytest.mark.parametrize("n_animals",[n for n in range(2,6)])
+def test_death_multi_animal(n_animals):
+    cell = Cells(cell_type=3,coord=[2,2])
+    cell.default["herbivore"] = [herbivore(a=5,w=0) for _ in range(n_animals)]
+    season_death(cell)
+    assert len(cell.default["herbivore"]) == 0
+
+@pytest.mark.parametrize("n_carn",[n for n in range(2,6)])
+@pytest.mark.parametrize("n_herb",[n for n in range(2,6)])
+def test_death_multi_specis(n_herb,n_carn):
+    cell = Cells(cell_type=3,coord=[2,2])
+    cell.default["herbivore"] = [herbivore(a=5,w=0) for _ in range(n_herb)]
+    cell.default["carnevore"] = [carnivore(a=5,w=0) for _ in range(n_carn)]
+    season_death(cell)
+    assert len(cell.default["herbivore"]) == 0 and len(cell.default["carnevore"]) == 0

@@ -173,7 +173,7 @@ def season_loss(cell: Cells):
                 animal.loss_weight()
 
 
-def season_death(cell: Cells, herb: list, carn: list):
+def season_death(cell: Cells):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     death = yes if w = 0
@@ -181,9 +181,8 @@ def season_death(cell: Cells, herb: list, carn: list):
         death = omega(1 - Phi)
     """
     for spesis in cell.default:
-        for animals in cell.default[spesis]:
-            for animal in animals:
-                animal.death()
+        for animal in cell.default[spesis]:
+            animal.death()
     for spesis in cell.default:
         cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
