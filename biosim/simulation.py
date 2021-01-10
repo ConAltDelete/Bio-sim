@@ -1,10 +1,12 @@
 
 
-from .animal import herbivore, carnivore
+from .animal import *
 import random as ran
 from .visuals import string2map, set_param
+from .logic import year_cycle
 import sys
 import re
+
 class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
@@ -74,12 +76,13 @@ img_base=None, img_fmt='png'):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
-		pass
+		for year in range(num_years):
+			year_cycle(self.island,year=year,visual_year=vis_years)
 	
 	def add_population(self, population:dict):
 		"""
 		Add a population to the island
-		:param population: List of dictionaries specifying population (x,y):[{
+		:param population: List of dictionaries specifying population (y,x):[{
 			'age': int,
 			'weight': float,
 			'species': str

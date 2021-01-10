@@ -187,42 +187,31 @@ def season_death(cell: Cells):
         cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
 
-def yearly_cycle(end_year=10, visual_year=1):
+def year_cycle(island,year, visual_year=1):
     """
     1. generation of cells
     2. loop through the year
     """
-    gen_cells()
-    cells = gen_cells()
-    cells[0].herb_default = [herbivore(0, 8.0), herbivore(0, 8.0), herbivore(0, 8.0)]
-    start_year = 0
-    while start_year < end_year:
-        for c in cells:
-            season_feeding(c)
 
-        for c in cells:
-            season_breeding(c)
+    for c in island:
+        season_feeding(c)
 
-        season_migration(cells)
+    for c in island:
+        season_breeding(c)
 
-        for c in cells:
-            season_aging(c)
+    season_migration(island)
 
-        for c in cells:
-            season_loss(c)
+    for c in island:
+        season_aging(c)
 
-        for c in cells:
-            season_death(c)
+    for c in island:
+        season_loss(c)
 
-        start_year += 1
-        if start_year % visual_year == 0:
-            # print(f"{Fore.RED}Current year{Style.RESET_ALL}", start_year)
-            if len(cells[0].herb_default) > 0:
-                for a in cells[0].herb_default:
-                    print("Age", a.var["a"])
-                    print("Weight", a.var["w"])
-                    print("Fitness", a.var["sigma"])
-                    print("Alive", a.var["life"])
+    for c in island:
+        season_death(c)
+
+    if year % visual_year == 0:
+        pass
 
 
 if __name__ == '__main__':
