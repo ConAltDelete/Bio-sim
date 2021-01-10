@@ -37,6 +37,8 @@ img_base=None, img_fmt='png'):
 		if seed != None: ran.seed(seed)
 
 		self.island, self.illigal_coord = string2map(island_map)
+		# We look for posible animals in animals.py, meaning we don't need to add maually
+		# new animals. This is assuming no global function except in animal superclass. #
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
 		self.population = self.add_population(ini_pop)
 	
@@ -51,7 +53,7 @@ img_base=None, img_fmt='png'):
 		eval("{}.default_var.update({})".format(species,params))
 
 	
-	def set_landscape_parameters(self, landscape, params):
+	def set_landscape_parameters(self, landscape : str, params: dict):
 		"""
 		Set parameters for landscape type.
 		:param landscape: String, code letter for landscape
@@ -102,12 +104,19 @@ img_base=None, img_fmt='png'):
 	@property
 	def num_animals(self):
 		"""Total number of animals on island."""
-		pass
+		self.num_animals_per_species()
+		self.total_animals = sum(self.dict_count.values())
 	
 	@property
 	def num_animals_per_species(self):
 		"""Number of animals per species in island, as dictionary."""
-		pass
+		self.dict_count = dict()
+		for coord in self.island:
+			for spesis in self.island[coord].default:
+				if spesis in self.dict_count:
+					self.dict_count[spesis] += len(self.island[coord].default[spesis])
+				else:
+					self.dict_count[spesis] = len(self.island[coord].default[spesis])
 	
 	def make_movie(self):
 		"""Create MPEG4 movie from visualization images saved."""
