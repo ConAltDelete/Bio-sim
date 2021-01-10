@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+This module contains `Cells` class.
 """
 
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'

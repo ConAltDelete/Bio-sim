@@ -1,0 +1,2 @@
+.. automodule:: ..biosim.logic
+   :members:

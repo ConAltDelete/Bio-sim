@@ -169,7 +169,7 @@ def season_migration(cells: dict, illigal_moves: list):
 
 
 
-def season_aging(cell: Cells):
+def season_ageing(cell: Cells):
     """
     for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
     age += 1
@@ -228,7 +228,7 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     season_migration(island,illigal_coords)
 
     for c in island:
-        season_aging(island[c])
+        season_ageing(island[c])
 
     for c in island:
         season_loss(island[c])
