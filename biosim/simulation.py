@@ -78,7 +78,7 @@ img_base=None, img_fmt='png'):
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
 	
-	def add_population(self, population:dict):
+	def add_population(self, population:list):
 		"""
 		Add a population to the island
 		:param population: List of dictionaries specifying population (y,x):[{

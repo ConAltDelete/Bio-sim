@@ -76,16 +76,18 @@ Carnivores
     NOTE:
         
     """
+    herb_test = "Herbivore" in cell.default and len(cell.default["Herbivore"]) != 0
+    carn_test = "Carnivore" in cell.default and len(cell.default["Carnivore"]) != 0
 
     # assums single cell given, othervise put in loop
-    if "Herbivore" in cell.default and len(cell.default["Herbivore"]) != 0:
+    if herb_test:
         ran.shuffle(cell.default["Herbivore"])
         for animal in cell.default["Herbivore"]:
             if cell.food > 0:
                 cell.reduce_food(animal.eat(cell.food, return_food=True))
             else:
                 break
-    if "Carnivore" in cell.default and len(cell.default["Carnivore"]) != 0:
+    if carn_test and herb_test:
         # We need to sort the list so the fittest goes first. #
         cell.default["Carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
         for animal in cell.default["Carnivore"]:
@@ -238,8 +240,9 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     if year % visual_year == 0:
         print("year",year)
         for cell in island:
+            print("\t",cell,":")
             for spesis in island[cell].default:
-                print(spesis,len(island[cell].default[spesis]))
+                print("\t\t",spesis,len(island[cell].default[spesis]))
 
 
 if __name__ == '__main__':
