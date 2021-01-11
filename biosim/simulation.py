@@ -1,6 +1,6 @@
 
 
-from .animal import carnivore,herbivore
+from .animal import Carnivore,Herbivore
 import random as ran
 from .visuals import string2map, set_param
 from .logic import year_cycle
@@ -92,7 +92,7 @@ img_base=None, img_fmt='png'):
 		for coord in population:
 			cell = self.island[coord]
 			for animal in population[coord]:
-				animal_name = animal["species"].lower()
+				animal_name = animal["species"]
 				if animal_name in self.names:
 					if animal_name in cell.default:
 						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))

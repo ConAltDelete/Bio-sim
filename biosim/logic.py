@@ -79,21 +79,21 @@ Carnivores
     """
 
     # assums single cell given, othervise put in loop
-    if "herbivore" in cell.default and len(cell.default["herbivore"]) != 0:
-        ran.shuffle(cell.default["herbivore"])
-        for animal in cell.default["herbivore"]:
+    if "Herbivore" in cell.default and len(cell.default["Herbivore"]) != 0:
+        ran.shuffle(cell.default["Herbivore"])
+        for animal in cell.default["Herbivore"]:
             if cell.food > 0:
                 cell.reduce_food(animal.eat(cell.food, return_food=True))
             else:
                 break
-    if "carnivore" in cell.default and len(cell.default["carnivore"]) != 0:
+    if "Carnivore" in cell.default and len(cell.default["Carnivore"]) != 0:
         # We need to sort the list so the fittest goes first. #
-        cell.default["carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
-        for animal in cell.default["carnivore"]:
-            if all( not H.life for H in cell.default["herbivore"]):
+        cell.default["Carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
+        for animal in cell.default["Carnivore"]:
+            if all( not H.life for H in cell.default["Herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
             # replace original list with new list with not dead animals#
-            cell.default["herbivore"] = [ h for h in animal.eat(cell.default["herbivore"]) if h.var["life"]] 
+            cell.default["Herbivore"] = [ h for h in animal.eat(cell.default["Herbivore"]) if h.var["life"]] 
     # Resets the food in the cell since we are done for the year. If 
     # feeding seson happens multiple times per year, or irregulary
     # , it must either be done at the last iteration of feeding, or
