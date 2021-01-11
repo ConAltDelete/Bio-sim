@@ -210,8 +210,7 @@ def season_end(island: Dict):
     :param island: the entire island.
     """
     for coord in island:
-        for cell in island[coord]:
-            cell.food = float(cell.f_max)
+        island[coord].food = float(island[coord].f_max)
 
 def year_cycle(island,illigal_coords,year, visual_year=1):
     """

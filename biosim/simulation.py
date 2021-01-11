@@ -52,7 +52,6 @@ img_base=None, img_fmt='png'):
 		:param params: Dict with valid parameter specification for species
 		"""
 		# Python abuse at its best.#
-		species = species.lower()
 		check_keys = eval("{}.default_var.keys()".format(species))
 		for key in params.keys():
 			if key not in check_keys:

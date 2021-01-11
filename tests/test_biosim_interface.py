@@ -162,7 +162,8 @@ def test_get_animals_per_species(plain_sim):
 
 
 def test_set_plot_limits():
-    """Test that y-axis and color limits for plots can be set."""
+    """Test that y-axis and color limits for plots can be set.
+    NOTE (11/01-2021): this function has not been implemented as of today."""
     BioSim(island_map='W', ini_pop=[], seed=1, ymax_animals=20,
            cmax_animals={'Herbivore': 10, 'Carnivore': 20})
 
