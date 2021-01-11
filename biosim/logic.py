@@ -12,44 +12,6 @@ from .animal import *
 #from .colorama import Fore
 #from .colorama import Style
 
-def gen_cells():
-    """
-    function for generating cells at the zeroth year
-    1. generates cells based on given map
-    2. generates a cell for each coordinate
-    3. does not generate a cell if the coordinate is a water cell
-    4. for L, H and D generates different food
-
-
-    NOTE: Made code in `visual.py` that generates map from string.
-    """
-    list_of_cells = list()
-    list_of_cells.append(Cells(3, [0, 0]))
-    return list_of_cells
-
-
-def cycling_cells():
-    """
-    function for going through cells on the map as this is required for multiple functions
-    """
-    pass
-
-
-def cycling_animals():
-    """
-    function for going through animals in cells as this is required for multiple functions
-    """
-    pass
-
-
-def fitness_calc():
-    """
-    function for calculating fitness as this is needed ALL THE TIME
-
-    NOTE: animal class has this covered.
-    """
-    pass
-
 
 def season_feeding(cell: Cells):
     """
@@ -136,7 +98,7 @@ def season_migration(cells: dict, illigal_moves: list):
     Animals moves to desired location if possible, else they don't move from cell.
     :param cells: dictonary with coordinats as key, and Cells objects as value
 
-    NOTE:
+    .. note::
         N1: we pre-calculate the length since we manipulate the lists
         N2: This is strictly not nessesery, but if it happens; There is a bug somwhere.
         N3: Just a safty percausion. Better safe than sorry.
