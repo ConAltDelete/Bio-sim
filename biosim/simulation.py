@@ -57,6 +57,12 @@ img_base=None, img_fmt='png'):
 			if key not in check_keys:
 				raise ValueError("{} not in {}".format(key,species))
 		eval("{}.default_var.update({})".format(species,params))
+		for coord in self.island:
+			if species in self.island[coord].default:
+				for animal in self.island[coord].default[species]:
+					animal.var.update(params)
+
+
 
 	
 	def set_landscape_parameters(self, landscape : str, params: dict):

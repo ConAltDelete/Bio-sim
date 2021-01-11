@@ -91,7 +91,7 @@ Carnivores
         # We need to sort the list so the fittest goes first. #
         cell.default["Carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
         for animal in cell.default["Carnivore"]:
-            if all( not H.life for H in cell.default["Herbivore"]):
+            if all( not H.var["life"] for H in cell.default["Herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
             # replace original list with new list with not dead animals#
             cell.default["Herbivore"] = [ h for h in animal.eat(cell.default["Herbivore"]) if h.var["life"]] 
