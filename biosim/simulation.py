@@ -1,6 +1,6 @@
 
 
-from .animal import carnivore,herbivore
+from .animal import Carnivore,Herbivore
 import random as ran
 from .visuals import string2map, set_param
 from .logic import year_cycle
@@ -43,6 +43,7 @@ img_base=None, img_fmt='png'):
 		# new animals. This is assuming no global function except in animal superclass. #
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
 		self.population = self.add_population(ini_pop)
+		self._year = 0
 
 	
 	def set_animal_parameters(self, species: str, params: dict):
@@ -52,7 +53,6 @@ img_base=None, img_fmt='png'):
 		:param params: Dict with valid parameter specification for species
 		"""
 		# Python abuse at its best.#
-		species = species.lower()
 		check_keys = eval("{}.default_var.keys()".format(species))
 		for key in params.keys():
 			if key not in check_keys:
@@ -78,8 +78,9 @@ img_base=None, img_fmt='png'):
 		"""
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
+			self._year += 1
 	
-	def add_population(self, population:dict):
+	def add_population(self, population:list):
 		"""
 		Add a population to the island
 		:param population: List of dictionaries specifying population (y,x):[{
@@ -93,7 +94,7 @@ img_base=None, img_fmt='png'):
 		for coord in population:
 			cell = self.island[coord]
 			for animal in population[coord]:
-				animal_name = animal["species"].lower()
+				animal_name = animal["species"]
 				if animal_name in self.names:
 					if animal_name in cell.default:
 						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
@@ -107,24 +108,24 @@ img_base=None, img_fmt='png'):
 	@property
 	def year(self):
 		"""Last year simulated."""
-		pass
+		return self._year
 	
 	@property
 	def num_animals(self):
 		"""Total number of animals on island."""
-		self.num_animals_per_species()
-		self.total_animals = sum(self.dict_count.values())
+		return sum(self.num_animals_per_species.values())
 	
 	@property
 	def num_animals_per_species(self):
 		"""Number of animals per species in island, as dictionary."""
-		self.dict_count = dict()
+		dict_count = {spesis : 0 for spesis in self.names}
 		for coord in self.island:
 			for spesis in self.island[coord].default:
-				if spesis in self.dict_count:
-					self.dict_count[spesis] += len(self.island[coord].default[spesis])
+				if spesis in dict_count:
+					dict_count[spesis] += len(self.island[coord].default[spesis])
 				else:
-					self.dict_count[spesis] = len(self.island[coord].default[spesis])
+					dict_count[spesis] = len(self.island[coord].default[spesis])
+		return dict_count
 	
 	def make_movie(self):
 		"""Create MPEG4 movie from visualization images saved."""

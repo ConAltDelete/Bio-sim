@@ -3,19 +3,28 @@
 """
 """
 
-from biosim.animal import *
-import sys
-import re
-
-class T:
-    var = {
-        "a":1,
-        "b":2
-    }
+from biosim.simulation import *
 
 if __name__ == "__main__":
-    liste = eval("tuple({}.var.keys())".format("T"))
-    elemets = ["a","b","c"]
-    for element in elemets:
-        if element not in liste:
-            raise ValueError("{} not in liste".format(element))
+    sim = BioSim(island_map="WWWW\nWLLW\nWLLW\nWWWW",ini_pop=[{
+        "loc":(2,2),
+        "pop":[
+            {
+        "species": "Herbivore",
+        "age": 5,
+        "weight": 20} for _ in range(2)]
+    }])
+    sim.simulate(num_years=100,vis_years=1)
+    sim.add_population(population=[
+        {
+            "loc":(2,2),
+            "pop":[
+                {
+                    "species": "Carnivore",
+                    "age": 5,
+                    "weight": 20
+                } for _ in range(5)
+            ]
+        }
+    ])
+    sim.simulate(num_years=100,vis_years=1)

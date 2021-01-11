@@ -111,7 +111,9 @@ class animal:
 
 	def birth(self, N: int, necro_birth: bool = False):
 		"""
-		Determens if chiald is born.
+		Determens if child is born. 
+		This is determend by
+		.. math:: w \leq \zeta ( w_{birth} + \sigma_{birth} )
 		:param N:population number in cell.
 		:param necro_birth: Give birth even when dead.
 		:return: either None or a new instace of itself.
@@ -182,7 +184,7 @@ class animal:
 
 
 
-class herbivore(animal):
+class Herbivore(animal):
 	"""
 	This is the herbavore class that eats non-meat like vegans.
 	"""
@@ -202,7 +204,7 @@ class herbivore(animal):
 		"omega"       : 0.4,
 		"F"           : 10}
 	def __init__(self, a: int, w: float, coord = [0,0]):
-		self.var = dict(herbivore.default_var)
+		self.var = dict(Herbivore.default_var)
 		super().__init__(a, w, coord= coord)
 
 	def eat(self, F_there, return_food = False):
@@ -213,7 +215,7 @@ class herbivore(animal):
 		"""
 		# Animals eat what is available, or can eat...#
 		if not(type(F_there) == int or type(F_there) == float):
-			raise ValueError("animal::herbavore::eat expected number, got {}".format(type(F_there)))
+			raise ValueError("animal::Herbivore::eat expected number, got {}".format(type(F_there)))
 		# We gain what is possible, whitch is what the animal want or get.#
 		self.var["w"] += self.var["beta"] * min(max(F_there,0), self.var["F"])
 		self.var["sigma"] = self.Big_phi()
@@ -224,7 +226,7 @@ class herbivore(animal):
 
 
 
-class carnivore(animal):
+class Carnivore(animal):
 	"""
 	This is the carnivore class that eat meat like non-vegans.
 	"""
@@ -245,7 +247,7 @@ class carnivore(animal):
 		"F"           : 50,
 		"DeltaPhiMax" : 10}
 	def __init__(self, a: int, w: float, coord = [0,0]):
-		self.var = dict(carnivore.default_var)
+		self.var = dict(Carnivore.default_var)
 		super().__init__(a, w, coord=coord)
 
 	def yield_life(self, L: list):
@@ -291,10 +293,10 @@ class carnivore(animal):
 
 
 if __name__ == "__main__":
-	H = herbivore(1, 4)
+	H = Herbivore(1, 4)
 	H.gamma = 4
 	print(H.gamma)
-	herbivore.gamma = 3
+	Herbivore.gamma = 3
 	print(H.gamma)
-	K = herbivore(2, 3)
+	K = Herbivore(2, 3)
 	print(K.gamma)

@@ -7,7 +7,6 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
-from typing import Dict
 from .island import Cells
 from .animal import *
 #from .colorama import Fore
@@ -77,23 +76,25 @@ Carnivores
     NOTE:
         
     """
+    herb_test = "Herbivore" in cell.default and len(cell.default["Herbivore"]) != 0
+    carn_test = "Carnivore" in cell.default and len(cell.default["Carnivore"]) != 0
 
     # assums single cell given, othervise put in loop
-    if "herbivore" in cell.default and len(cell.default["herbivore"]) != 0:
-        ran.shuffle(cell.default["herbivore"])
-        for animal in cell.default["herbivore"]:
+    if herb_test:
+        ran.shuffle(cell.default["Herbivore"])
+        for animal in cell.default["Herbivore"]:
             if cell.food > 0:
                 cell.reduce_food(animal.eat(cell.food, return_food=True))
             else:
                 break
-    if "carnivore" in cell.default and len(cell.default["carnivore"]) != 0:
+    if carn_test and herb_test:
         # We need to sort the list so the fittest goes first. #
-        cell.default["carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
-        for animal in cell.default["carnivore"]:
-            if all( not H.life for H in cell.default["herbivore"]):
+        cell.default["Carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
+        for animal in cell.default["Carnivore"]:
+            if all( not H.life for H in cell.default["Herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
             # replace original list with new list with not dead animals#
-            cell.default["herbivore"] = [ h for h in animal.eat(cell.default["herbivore"]) if h.var["life"]] 
+            cell.default["Herbivore"] = [ h for h in animal.eat(cell.default["Herbivore"]) if h.var["life"]] 
     # Resets the food in the cell since we are done for the year. If 
     # feeding seson happens multiple times per year, or irregulary
     # , it must either be done at the last iteration of feeding, or
@@ -186,9 +187,8 @@ def season_loss(cell: Cells):
     w -= eta * w
     """
     for species in cell.default:
-        for animals in cell.default[species]:
-            for animal in animals:
-                animal.loss_weight()
+        for animal in cell.default[species]:
+            animal.loss_weight()
 
 
 def season_death(cell: Cells):
@@ -204,14 +204,13 @@ def season_death(cell: Cells):
     for spesis in cell.default:
         cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
-def season_end(island: Dict):
+def season_end(island: dict):
     """
     Does 'end of season' procedure.
     :param island: the entire island.
     """
     for coord in island:
-        for cell in island[coord]:
-            cell.food = float(cell.f_max)
+        island[coord].food = float(island[coord].f_max)
 
 def year_cycle(island,illigal_coords,year, visual_year=1):
     """
@@ -239,7 +238,11 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     season_end(island=island)
 
     if year % visual_year == 0:
-        pass
+        print("year",year)
+        for cell in island:
+            print("\t",cell,":")
+            for spesis in island[cell].default:
+                print("\t\t",spesis,len(island[cell].default[spesis]))
 
 
 if __name__ == '__main__':
