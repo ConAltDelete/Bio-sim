@@ -107,6 +107,6 @@ def test_death_multi_animal(n_animals):
 def test_death_multi_specis(n_herb,n_carn):
     cell = Cells(cell_type=3,coord=[2,2])
     cell.default["Herbivore"] = [Herbivore(a=5,w=0) for _ in range(n_herb)]
-    cell.default["carnevore"] = [Carnivore(a=5,w=0) for _ in range(n_carn)]
+    cell.default["Carnivore"] = [Carnivore(a=5,w=0) for _ in range(n_carn)]
     season_death(cell)
-    assert len(cell.default["Herbivore"]) == 0 and len(cell.default["carnevore"]) == 0
+    assert len(cell.default["Herbivore"]) == 0 and len(cell.default["Carnivore"]) == 0

@@ -7,7 +7,6 @@ functioning logic of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
-from typing import Dict
 from .island import Cells
 from .animal import *
 #from .colorama import Fore
@@ -186,9 +185,8 @@ def season_loss(cell: Cells):
     w -= eta * w
     """
     for species in cell.default:
-        for animals in cell.default[species]:
-            for animal in animals:
-                animal.loss_weight()
+        for animal in cell.default[species]:
+            animal.loss_weight()
 
 
 def season_death(cell: Cells):
@@ -204,7 +202,7 @@ def season_death(cell: Cells):
     for spesis in cell.default:
         cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
-def season_end(island: Dict):
+def season_end(island: dict):
     """
     Does 'end of season' procedure.
     :param island: the entire island.
@@ -238,7 +236,10 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     season_end(island=island)
 
     if year % visual_year == 0:
-        pass
+        print("year",year)
+        for cell in island:
+            for spesis in island[cell].default:
+                print(spesis,len(island[cell].default[spesis]))
 
 
 if __name__ == '__main__':

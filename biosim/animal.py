@@ -215,7 +215,7 @@ class Herbivore(animal):
 		"""
 		# Animals eat what is available, or can eat...#
 		if not(type(F_there) == int or type(F_there) == float):
-			raise ValueError("animal::herbavore::eat expected number, got {}".format(type(F_there)))
+			raise ValueError("animal::Herbivore::eat expected number, got {}".format(type(F_there)))
 		# We gain what is possible, whitch is what the animal want or get.#
 		self.var["w"] += self.var["beta"] * min(max(F_there,0), self.var["F"])
 		self.var["sigma"] = self.Big_phi()
