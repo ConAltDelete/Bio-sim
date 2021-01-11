@@ -25,17 +25,14 @@ import os.path
 
 from biosim.simulation import BioSim
 
-def test_somthiong():
-    """Empty island can be created"""
-    BioSim(island_map="WW\nWW", ini_pop=[], seed=1)
-
 
 def test_minimal_island():
     """Island of single jungle cell"""
     BioSim(island_map="WWW\nWLW\nWWW", ini_pop=[],seed=1)
 
 def test_empty_island(): # added `pass`
-    pass
+    """Empty island can be created"""
+    BioSim(island_map="WW\nWW", ini_pop=[], seed=1)
 
 
 def test_all_types():
@@ -165,7 +162,8 @@ def test_get_animals_per_species(plain_sim):
 
 
 def test_set_plot_limits():
-    """Test that y-axis and color limits for plots can be set."""
+    """Test that y-axis and color limits for plots can be set.
+    NOTE (11/01-2021): this function has not been implemented as of today."""
     BioSim(island_map='W', ini_pop=[], seed=1, ymax_animals=20,
            cmax_animals={'Herbivore': 10, 'Carnivore': 20})
 

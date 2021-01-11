@@ -3,7 +3,7 @@
 \usepackage{lmodern}
 \usepackage[english]{babel}
 \usetheme{Copenhagen}
-
+\usepackage{listings}
 
 \begin{document}
 \author{Mats Hoem Olsen, Roy Granheim}
@@ -44,10 +44,10 @@
 
 \begin{frame}{general}
 \begin{block}{feeding}
-Herbavore eat what they can, preditors eat what's left.
+Herbivore eat what they can, carnivore eat what's left.
 \end{block}
 
-\begin{block}{beading}
+\begin{block}{breeding}
 \begin{enumerate}[<+->]
 \item birth if fit
 \item have enough fat
@@ -60,9 +60,21 @@ Herbavore eat what they can, preditors eat what's left.
 \end{block}
 \end{frame}
 
-\subsection{Nope nope}
+\subsection{programming theory}
 
 \begin{frame}{Theory}
+\begin{enumerate}
+\item type-casting to avoid pointer bugs
+\item eval() to create general code.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{lstlisting}[language=Python,basicstyle=\small]
+[n for n in dir(sys.modules["biosim.animal"]) 
+if not re.match("(__)|(np)|(ran)|(animal)",n)]
+\end{lstlisting}
 
 \end{frame}
 
