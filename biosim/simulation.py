@@ -43,6 +43,7 @@ img_base=None, img_fmt='png'):
 		# new animals. This is assuming no global function except in animal superclass. #
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
 		self.population = self.add_population(ini_pop)
+		self._year = 0
 
 	
 	def set_animal_parameters(self, species: str, params: dict):
@@ -77,6 +78,7 @@ img_base=None, img_fmt='png'):
 		"""
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
+			self._year += 1
 	
 	def add_population(self, population:list):
 		"""
@@ -106,24 +108,24 @@ img_base=None, img_fmt='png'):
 	@property
 	def year(self):
 		"""Last year simulated."""
-		pass
+		return self._year
 	
 	@property
 	def num_animals(self):
 		"""Total number of animals on island."""
-		self.num_animals_per_species()
-		self.total_animals = sum(self.dict_count.values())
+		return sum(self.num_animals_per_species.values())
 	
 	@property
 	def num_animals_per_species(self):
 		"""Number of animals per species in island, as dictionary."""
-		self.dict_count = dict()
+		dict_count = {spesis : 0 for spesis in self.names}
 		for coord in self.island:
 			for spesis in self.island[coord].default:
-				if spesis in self.dict_count:
-					self.dict_count[spesis] += len(self.island[coord].default[spesis])
+				if spesis in dict_count:
+					dict_count[spesis] += len(self.island[coord].default[spesis])
 				else:
-					self.dict_count[spesis] = len(self.island[coord].default[spesis])
+					dict_count[spesis] = len(self.island[coord].default[spesis])
+		return dict_count
 	
 	def make_movie(self):
 		"""Create MPEG4 movie from visualization images saved."""
