@@ -240,9 +240,10 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     if year % visual_year == 0:
         print("year",year)
         for cell in island:
-            print("\t",cell,":")
-            for spesis in island[cell].default:
-                print("\t\t",spesis,len(island[cell].default[spesis]))
+            if len(island[cell].default) != 0:
+                print("\t",cell,":")
+                for spesis in island[cell].default:
+                    print("\t\t",spesis,len(island[cell].default[spesis]))
 
 
 if __name__ == '__main__':
