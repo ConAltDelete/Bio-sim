@@ -1,11 +1,14 @@
 
 
-from .animal import herbavor, preditor
+from .animal import Carnivore,Herbivore
 import random as ran
 from .visuals import string2map, set_param
+from .logic import year_cycle
+import sys
+import re
 
 class BioSim:
-	def __init__(self, island_map : str, ini_pop : list, seed : int,ymax_animals=None, cmax_animals=None, hist_specs=None,
+	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
 		"""
 		:param island_map: Multi-line string specifying island geography
@@ -31,12 +34,16 @@ img_base=None, img_fmt='png'):
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 		"""
-		ran.seed(seed)
+		# we set the random seed for future random number generation. In other words,
+		# we make a random simulation consistent.#
+		if seed != None: ran.seed(seed)
+
 		self.island, self.illigal_coord = string2map(island_map)
-		
-		temp_population = { pop['loc']: pop['pop'] for pop in ini_pop }
-		
-		self.population = self.add_population(temp_population)
+		# We look for posible animals in animals.py, meaning we don't need to add maually
+		# new animals. This is assuming no global function except in animal superclass. #
+		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
+		self.population = self.add_population(ini_pop)
+
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -44,17 +51,15 @@ img_base=None, img_fmt='png'):
 		:param species: String, name of animal species
 		:param params: Dict with valid parameter specification for species
 		"""
-		species = species.lower()
-		for dict_key in params:
-			if species == "herbavore":
-				herbavor.var[dict_key] = params[dict_key]
-			elif species == "preditor":
-				preditor.var[dict_key] = params[dict_key]
-				if dict_key == "F":
-					preditor.var["F_max"] = params[dict_key]
+		# Python abuse at its best.#
+		check_keys = eval("{}.default_var.keys()".format(species))
+		for key in params.keys():
+			if key not in check_keys:
+				raise ValueError("{} not in {}".format(key,species))
+		eval("{}.default_var.update({})".format(species,params))
 
 	
-	def set_landscape_parameters(self, landscape, params):
+	def set_landscape_parameters(self, landscape : str, params: dict):
 		"""
 		Set parameters for landscape type.
 		:param landscape: String, code letter for landscape
@@ -70,26 +75,33 @@ img_base=None, img_fmt='png'):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
-		pass
+		for year in range(num_years):
+			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
 	
-	def add_population(self, population:dict):
+	def add_population(self, population:list):
 		"""
 		Add a population to the island
-		:param population: List of dictionaries specifying population (x,y):[{
+		:param population: List of dictionaries specifying population (y,x):[{
 			'age': int,
 			'weight': float,
 			'species': str
 		}]
+		:param names: list of names one can use
 		"""
+		population = {popul["loc"]:popul["pop"] for popul in population}
 		for coord in population:
 			cell = self.island[coord]
 			for animal in population[coord]:
-				if animal["species"].lower() == "herbivore":
-					cell.herb_default.append(herbavor(a = animal["age"], w = animal["weight"]))
-				elif animal["species"].lower() == "carnivore":
-					cell.carn_default.append(preditor(a = animal["age"], w = animal["weight"]))
+				animal_name = animal["species"]
+				if animal_name in self.names:
+					if animal_name in cell.default:
+						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						cell.default[animal_name].append(create_animal)
+					else:
+						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						cell.default[animal_name] = [create_animal]
 				else:
-					raise ValueError("Got '{}'; needs 'herbivore' or 'carnivore'")
+					raise ValueError("Got '{}'; needs {}".format(animal["species"],self.names))
 	
 	@property
 	def year(self):
@@ -99,12 +111,19 @@ img_base=None, img_fmt='png'):
 	@property
 	def num_animals(self):
 		"""Total number of animals on island."""
-		pass
+		self.num_animals_per_species()
+		self.total_animals = sum(self.dict_count.values())
 	
 	@property
 	def num_animals_per_species(self):
 		"""Number of animals per species in island, as dictionary."""
-		pass
+		self.dict_count = dict()
+		for coord in self.island:
+			for spesis in self.island[coord].default:
+				if spesis in self.dict_count:
+					self.dict_count[spesis] += len(self.island[coord].default[spesis])
+				else:
+					self.dict_count[spesis] = len(self.island[coord].default[spesis])
 	
 	def make_movie(self):
 		"""Create MPEG4 movie from visualization images saved."""
