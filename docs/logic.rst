@@ -1,2 +1,2 @@
-.. automodule:: ..biosim.logic
+.. automodule:: biosim.logic
    :members:

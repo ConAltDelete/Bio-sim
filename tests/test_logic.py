@@ -21,7 +21,7 @@ def test_ageing_animals(n):
     sim = BioSim(island_map=the_map, ini_pop=ini_pop)
     island = sim.island
     for cell in island:
-        season_aging(island[cell])
+        season_ageing(island[cell])
     for coord in island:
         for spesis in island[coord].default:
             check = [animal.var["a"] == 1 for animal in island[coord].default[spesis]]

@@ -111,10 +111,8 @@ class animal:
 
 	def birth(self, N: int, necro_birth: bool = False):
 		"""
-		Determens if child is born. 
-		This is determend by
-		.. math:: w \leq \zeta ( w_{birth} + \sigma_{birth} )
-		:param N:population number in cell.
+		Determens if child is born.
+		:param N: population number in cell.
 		:param necro_birth: Give birth even when dead.
 		:return: either None or a new instace of itself.
 		"""

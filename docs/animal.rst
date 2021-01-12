@@ -1,0 +1,2 @@
+.. automodule:: biosim.animal
+	:members:

@@ -10,6 +10,10 @@ Welcome to Simulation of island's documentation!
    :maxdepth: 2
    :caption: Contents:
    logic
+   visuals
+   simulation
+   island
+   animal
 
 
 Indices and tables

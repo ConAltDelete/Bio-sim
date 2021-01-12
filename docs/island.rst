@@ -1,0 +1,2 @@
+.. automodule:: biosim.island
+	:members:
