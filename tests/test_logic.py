@@ -40,6 +40,72 @@ def test_migrasion_consistensy_two_animals():
             total_in_map += len(the_map[cell].default[specis])
     assert total_in_map == 2*length
 
+def test_migrasion_one_species():
+    length = 20
+    this_fucking_thing = BioSim(island_map="WWWWW\nWLllW\nwlllw\nwlllw\nWWwWW".upper(), seed=1234,
+                                ini_pop=[{"loc": (3, 3), "pop": [{'species': 'Herbivore', 'age': 5, 'weight': 100} for _ in range(length)]}])
+    this_fucking_thing.set_animal_parameters("Herbivore",{
+        'mu': 1,
+        'omega': 0,
+        'gamma': 0,
+        'a_half': 1000})
+    the_map = this_fucking_thing.island
+    illigal_moves = this_fucking_thing.illigal_coord
+    season_migration(the_map, illigal_moves)
+    count_cells = dict()
+    for cell in the_map:
+        if "Herbivore" in the_map[cell].default:
+            count_cells[cell] = len(the_map[cell].default["Herbivore"])
+    antall_dyr = sum(count_cells.values())
+    antall_celler = len(count_cells.keys())
+    total = antall_dyr/antall_celler
+    assert total == pytest.approx(5,1.4)
+
+def test_migrasion_two_species():
+    length = 20
+    ini_herb = [{'species': 'Herbivore',
+                 'age': 5,
+                 'weight': 100} for _ in range(length)]
+    ini_carn = [{'species': 'Carnivore',
+                 'age': 5,
+                 'weight': 100} for _ in range(length)]
+    ini_pop = ini_herb + ini_carn
+    fin_pop = [{"loc": (3, 3), "pop": ini_pop}]
+    this_fucking_thing = BioSim(island_map="WWWWW\nWLllW\nwlllw\nwlllw\nWWwWW".upper(),
+            ini_pop=fin_pop
+                )
+    this_fucking_thing.set_animal_parameters("Herbivore",{
+        'mu': 1,
+        'omega': 0,
+        'gamma': 0,
+        'a_half': 1000})
+    this_fucking_thing.set_animal_parameters("Carnivore",{
+        'mu': 1,
+        'omega': 0,
+        'gamma': 0,
+        'a_half': 1000})
+    the_map = this_fucking_thing.island
+    illigal_moves = this_fucking_thing.illigal_coord
+    season_migration(the_map, illigal_moves)
+    count_cells = dict()
+    for cell in the_map:
+        if cell == (3,3):
+            continue
+        if "Herbivore" in the_map[cell].default:
+            if cell not in count_cells:
+                count_cells[cell] = len(the_map[cell].default["Herbivore"])
+            else:
+                count_cells[cell] += len(the_map[cell].default["Herbivore"])
+        if "Carnivore" in the_map[cell].default:
+            if cell not in count_cells:
+                count_cells[cell] = len(the_map[cell].default["Carnivore"])
+            else:
+                count_cells[cell] += len(the_map[cell].default["Carnivore"])
+    antall_dyr = sum(count_cells.values())
+    antall_celler = len(count_cells.keys())
+    total = antall_dyr/antall_celler
+    assert total == pytest.approx(10,rel=0.1)
+
 def test_eating_Herbivore():
     herb = Herbivore(a= 5, w = 100)
     eaten = herb.eat(100,return_food=True)

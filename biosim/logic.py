@@ -122,13 +122,13 @@ def season_migration(cells: dict, illigal_moves: list):
                     moving_animals[spesis][tuple(moving_animal.var["coord"])] = [moving_animal]
                 else:
                     moving_animals[spesis][tuple(moving_animal.var["coord"])].append(moving_animal)
-        for spesis in moving_animals:
-            for coord in moving_animals[spesis]:
-                if spesis not in cells[coord].default:
-                    cells[coord].default[spesis] = moving_animals[spesis][coord]
-                else:
-                    cells[coord].default[spesis].extend(moving_animals[spesis][coord])
-                moving_animals[spesis][coord] = list() # N3
+    for spesis in moving_animals:
+        for coord in moving_animals[spesis]:
+            if spesis not in cells[coord].default:
+                cells[coord].default[spesis] = moving_animals[spesis][coord]
+            else:
+                cells[coord].default[spesis].extend(moving_animals[spesis][coord])
+            moving_animals[spesis][coord] = list() # N3
 
 
 
