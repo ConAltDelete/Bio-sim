@@ -3,6 +3,30 @@ from biosim.simulation import *
 
 import pytest
 
+@pytest.mark.parametrize("n",[n for n in range(1,6)])
+def test_ageing_animals(n):
+    length = 15
+    the_map = """
+        WWW
+        WLW
+        WWW
+    """
+    ini_herb = [{'species': 'Herbivore',
+                 'age': 0,
+                 'weight': 100} for _ in range(length)]
+    ini_carn = [{'species': 'Carnivore',
+                 'age': 0,
+                 'weight': 100} for _ in range(length)]
+    ini_pop = [{"loc":(2,2), "pop":ini_herb+ini_carn}]
+    sim = BioSim(island_map=the_map, ini_pop=ini_pop)
+    island = sim.island
+    for cell in island:
+        season_aging(island[cell])
+    for coord in island:
+        for spesis in island[coord].default:
+            assert all([animal.var["a"] == 1 for animal in island[coord].default[spesis]])
+
+
 def test_migrasion_consistensy_one_animal():
     length = 15
     this_fucking_thing = BioSim(island_map="WWWW\nWllW\nwllw\nWWWW".upper(), seed=1234,
@@ -128,6 +152,33 @@ def test_eating_carnevore():
     pred.var["sigma"] = 20
     herd = pred.eat(herd)
     assert herd == []
+
+def test_weight_loss():
+    sim = BioSim(island_map="""WWW\nWLW\nWWW""", ini_pop=[{
+        "loc":(2,2),
+        "pop": [
+            {
+                "species": "Herbivore",
+                'age': 5,
+                'weight': 20
+
+            } for _ in range(20)
+        ]
+    }])
+    island = sim.island
+    for cell in island:
+        season_loss(island[cell])
+    for coord in island:
+        for spesis in island[coord].default:
+            check = [animal.var["w"] == 19 for animal in island[coord].default[spesis]]
+            assert all(check)
+
+def test_season_end():
+    sim = BioSim(island_map="WWW\nWLW\nWWW",ini_pop=[])
+    sim.island[(2,2)].food = 0
+    island = sim.island
+    season_end(island)
+    assert island[(2,2)].food == island[(2,2)].f_max
 
 def test_birth_one_animal():
     ini_herb = [ {'species': 'Herbivore',

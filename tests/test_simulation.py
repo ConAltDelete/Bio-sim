@@ -9,7 +9,7 @@ def test_consistensy_simulation_one_cell_one_species():
 		"species": "Herbivore",
 		"age": 5,
 		"weight": 20} for _ in range(2)]
-	}])
+	}], seed=1234)
 	sim.simulate(num_years=200,vis_years=1)
 	n_animals = len(sim.island[(2,2)].default["Herbivore"])
 	assert n_animals == pt.approx(200,abs=25)

@@ -23,3 +23,37 @@ def test_set_param_on_single_animal():
 				 'weight': 100} for _ in range(1)] } ] )
 	animal = island_setup.island[(2,2)].default["Herbivore"][0]
 	assert animal.var["beta"] == 20 and animal.var["gamma"] == 100
+
+def test_set_param_more_animals():
+	island_setup = BioSim(island_map="WWW\nWLW\nWWW", seed=1234, ini_pop=[])
+	island_setup.set_animal_parameters("Herbivore",{
+		"beta":20,
+		"gamma":100
+		})
+	island_setup.set_animal_parameters("Carnivore",{
+		"eta":20,
+		"a_half":100
+	})
+	island_setup.add_population([ {"loc":(2,2),"pop": [{'species': 'Herbivore',
+				 'age': 5,
+				 'weight': 100},{
+					 'species': 'Carnivore',
+				 'age': 5,
+				 'weight': 100
+				 } ] } ] )
+	herb = island_setup.island[(2,2)].default["Herbivore"][0]
+	carn = island_setup.island[(2,2)].default["Carnivore"][0]
+	assert herb.var["beta"] == 20 and herb.var["gamma"] == 100
+	assert carn.var["eta"] == 20 and carn.var["a_half"] == 100
+
+def test_illigal_border():
+	coords = find_border(2,2)
+	expected = [(1,1),(1,2),(2,1),(2,2)]
+	for coord in coords:
+		assert coord in expected
+
+def test_border_not_center():
+	coords = find_border(3,3)
+	expected = [(2,2)]
+	for coord in coords:
+		assert coord not in expected
