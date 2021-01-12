@@ -73,7 +73,7 @@ class Visualization:
 
         ax5 = self.fig.add_subplot(2, 3, 6)
 
-        self.histogram_age.hist([1,1,1,2,3,4,4,5])
+        self.histogram_age.hist(x=np.random.randint(60, size=8000), bins=30, histtype='step')
 
         # axes for text
         # llx, lly, w, h
@@ -121,7 +121,7 @@ class Visualization:
 if __name__ == "__main__":
     v = Visualization()
     v.setup_graphics()
-    for k in range(50):
+    for k in range(300):
         sim = {'herbivore': random.randint(2000, 8000), 'carnivore': random.randint(1, 6000)}
         v.get_data(sim)
         v.update_graphics(k)
