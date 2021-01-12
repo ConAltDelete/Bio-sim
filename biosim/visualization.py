@@ -25,69 +25,104 @@ import numpy as np
 """
 
 
-def random_numbers():
-    return random.random()
-
-
 class Visualization:
     """
     Visualization
     """
-    def __init__(self): ...
+    def __init__(self):
+        self.histogram_age = None
+        self.histogram_weight = None
+        self.histogram_fitness = None
+        self.heatmap = dict()
+        self.pop = None
+        self.n_carn = list()
+        self.n_herb = list()
+        self.count_carn = int()
+        self.count_herb = int()
+        self.fig = plt.figure()
+        self.year = None
+        self.year_current = 0
+        self.axt = self.fig.add_axes([0.4, 0.8, 0.2, 0.2])
 
-    @staticmethod
-    def setup_graphics():
+    def setup_graphics(self, n_steps=300):
         """
         setups a graphics interface with heat maps, line graphs and histograms
         """
-        fig = plt.figure()
-
         # normal subplots
-        ax1 = fig.add_subplot(2, 3, 1)
-        ax2 = fig.add_subplot(2, 3, 3)
-        ax3 = fig.add_subplot(2, 3, 4)
-        ax4 = fig.add_subplot(2, 3, 5)
-        ax5 = fig.add_subplot(2, 3, 6)
+        if self.pop is None:
+            self.pop = self.fig.add_subplot(2, 3, 1)
+            self.pop.set_xlim(0, 300)
+            self.pop.set_ylim(0, 8000)
+
+        self.n_herb = self.pop.plot(np.arange(n_steps),
+                                    np.full(n_steps, np.nan), 'b-')[0]
+        self.n_carn = self.pop.plot(np.arange(n_steps),
+                                    np.full(n_steps, np.nan), 'r-')[0]
+        if self.histogram_age is None:
+            self.histogram_age = self.fig.add_subplot(2, 3, 3)
+            self.histogram_age.set_xlim(0, 60)
+            self.histogram_age.set_ylim(0, 2000)
+        if self.histogram_weight is None:
+            self.histogram_weight = self.fig.add_subplot(2, 3, 4)
+            self.histogram_weight.set_xlim(0, 60)
+            self.histogram_weight.set_ylim(0, 1000)
+        if self.histogram_fitness is None:
+            self.histogram_fitness = self.fig.add_subplot(2, 3, 5)
+            self.histogram_fitness.set_xlim(0, 1.0)
+            self.histogram_fitness.set_ylim(0, 2000)
+
+        ax5 = self.fig.add_subplot(2, 3, 6)
+
+        self.histogram_age.hist([1,1,1,2,3,4,4,5])
 
         # axes for text
-        axt = fig.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
-        axt.axis('off')  # turn off coordinate system
+        # llx, lly, w, h
+        self.axt.axis('off')  # turn off coordinate system
 
         template = 'Count: {:5}'
-        txt = axt.text(0.5, 0.5, template.format(0),
-                       horizontalalignment='center',
-                       verticalalignment='center',
-                       transform=axt.transAxes)  # relative coordinates
+        self.year = self.axt.text(0.5, 0.5, template.format(0),
+                            horizontalalignment='center',
+                            verticalalignment='center',
+                            transform=self.axt.transAxes)  # relative coordinates
 
         plt.pause(1e-6)  # pause required to make figure visible
 
-        input('Press ENTER to begin counting')
+        """input('Press ENTER to begin counting')
 
         for k in range(40):
             txt.set_text(template.format(k))
-            plt.pause(0.1)
+            plt.pause(0.1)"""
 
-        plt.show()
+        plt.ion()
 
-    def update_graphics(self, n_steps):
+    def update_graphics(self, current_year):
         """
         updates the graphics interface with new data and shows it live
         """
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_xlim(0, n_steps)
-        ax.set_ylim(0, 1)
 
-        line = ax.plot(np.arange(n_steps),
-                       np.full(n_steps, np.nan), 'b-')[0]
+        self.year.set_text('Count:{:5}'.format(self.year_current))
+        self.year_current = current_year
 
-        for n in range(n_steps):
-            ydata = line.get_ydata()
-            ydata[n] = np.random.random()
-            line.set_ydata(ydata)
-            fig.canvas.flush_events()
-            plt.pause(1e-6)
+        herbdata = self.n_herb.get_ydata()
+        carndata = self.n_carn.get_ydata()
+        herbdata[current_year] = self.count_herb
+        carndata[current_year] = self.count_carn
+        self.n_herb.set_ydata(herbdata)
+        self.n_carn.set_ydata(carndata)
+        self.fig.canvas.flush_events()
+
+        plt.pause(1e-6)
+
+    def get_data(self, n_species: dict, cells=None):
+        self.count_herb = n_species["herbivore"]
+        self.count_carn = n_species["carnivore"]
 
 
 if __name__ == "__main__":
-    Visualization.setup_graphics()
+    v = Visualization()
+    v.setup_graphics()
+    for k in range(50):
+        sim = {'herbivore': random.randint(2000, 8000), 'carnivore': random.randint(1, 6000)}
+        v.get_data(sim)
+        v.update_graphics(k)
+    plt.show()
