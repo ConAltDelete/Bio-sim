@@ -24,7 +24,8 @@ def test_ageing_animals(n):
         season_aging(island[cell])
     for coord in island:
         for spesis in island[coord].default:
-            assert all([animal.var["a"] == 1 for animal in island[coord].default[spesis]])
+            check = [animal.var["a"] == 1 for animal in island[coord].default[spesis]]
+            assert all(check)
 
 
 def test_migrasion_consistensy_one_animal():
@@ -199,7 +200,7 @@ def test_birth_two_animals(n_animals):
                  'age': 5,
                  'weight': 100} for _ in range(n_animals)]
     island_setup = BioSim(island_map="WWW\nWLW\nWWW", seed=1234, ini_pop=[])
-    island_setup.set_animal_parameters("Herbivore",{"gamma":100})
+    island_setup.set_animal_parameters("Herbivore",{"gamma":1000})
     ini_pop = [{"loc":(2,2),"pop":ini_herb}]
     island_setup.add_population(population=ini_pop)
     the_map = island_setup.island

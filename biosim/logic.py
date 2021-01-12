@@ -206,6 +206,8 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
                 print("\t",cell,":")
                 for spesis in island[cell].default:
                     print("\t\t",spesis,len(island[cell].default[spesis]))
+                    for animal in island[cell].default[spesis]:
+                        print("\t\t\t",animal.var)
 
 
 if __name__ == '__main__':
