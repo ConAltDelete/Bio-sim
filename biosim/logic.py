@@ -12,44 +12,6 @@ from .animal import *
 #from .colorama import Fore
 #from .colorama import Style
 
-def gen_cells():
-    """
-    function for generating cells at the zeroth year
-    1. generates cells based on given map
-    2. generates a cell for each coordinate
-    3. does not generate a cell if the coordinate is a water cell
-    4. for L, H and D generates different food
-
-
-    NOTE: Made code in `visual.py` that generates map from string.
-    """
-    list_of_cells = list()
-    list_of_cells.append(Cells(3, [0, 0]))
-    return list_of_cells
-
-
-def cycling_cells():
-    """
-    function for going through cells on the map as this is required for multiple functions
-    """
-    pass
-
-
-def cycling_animals():
-    """
-    function for going through animals in cells as this is required for multiple functions
-    """
-    pass
-
-
-def fitness_calc():
-    """
-    function for calculating fitness as this is needed ALL THE TIME
-
-    NOTE: animal class has this covered.
-    """
-    pass
-
 
 def season_feeding(cell: Cells):
     """
@@ -91,7 +53,7 @@ Carnivores
         # We need to sort the list so the fittest goes first. #
         cell.default["Carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
         for animal in cell.default["Carnivore"]:
-            if all( not H.life for H in cell.default["Herbivore"]):
+            if all( not H.var["life"] for H in cell.default["Herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
             # replace original list with new list with not dead animals#
             cell.default["Herbivore"] = [ h for h in animal.eat(cell.default["Herbivore"]) if h.var["life"]] 
@@ -136,7 +98,7 @@ def season_migration(cells: dict, illigal_moves: list):
     Animals moves to desired location if possible, else they don't move from cell.
     :param cells: dictonary with coordinats as key, and Cells objects as value
 
-    NOTE:
+    .. note::
         N1: we pre-calculate the length since we manipulate the lists
         N2: This is strictly not nessesery, but if it happens; There is a bug somwhere.
         N3: Just a safty percausion. Better safe than sorry.
@@ -160,13 +122,13 @@ def season_migration(cells: dict, illigal_moves: list):
                     moving_animals[spesis][tuple(moving_animal.var["coord"])] = [moving_animal]
                 else:
                     moving_animals[spesis][tuple(moving_animal.var["coord"])].append(moving_animal)
-        for spesis in moving_animals:
-            for coord in moving_animals[spesis]:
-                if spesis not in cells[coord].default:
-                    cells[coord].default[spesis] = moving_animals[spesis][coord]
-                else:
-                    cells[coord].default[spesis].extend(moving_animals[spesis][coord])
-                moving_animals[spesis][coord] = list() # N3
+    for spesis in moving_animals:
+        for coord in moving_animals[spesis]:
+            if spesis not in cells[coord].default:
+                cells[coord].default[spesis] = moving_animals[spesis][coord]
+            else:
+                cells[coord].default[spesis].extend(moving_animals[spesis][coord])
+            moving_animals[spesis][coord] = list() # N3
 
 
 
@@ -240,9 +202,12 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     if year % visual_year == 0:
         print("year",year)
         for cell in island:
-            print("\t",cell,":")
-            for spesis in island[cell].default:
-                print("\t\t",spesis,len(island[cell].default[spesis]))
+            if len(island[cell].default) != 0:
+                print("\t",cell,":")
+                for spesis in island[cell].default:
+                    print("\t\t",spesis,len(island[cell].default[spesis]))
+                    for animal in island[cell].default[spesis]:
+                        print("\t\t\t",animal.var)
 
 
 if __name__ == '__main__':

@@ -65,8 +65,9 @@ def set_param(island, _type: str, parm: dict):
     """
     Cell_types = {"W": 0, "L": 3, "H": 2, "D": 1}
     Cell_type = Cell_types[_type]
-    for c in (C for C in island if C.type == Cell_type):
-        c.f_max = parm["f_max"]
+    for coord in island:
+        if island[coord].type == Cell_type:
+            island[coord].f_max = parm["f_max"]
 
 
 if __name__ == '__main__':

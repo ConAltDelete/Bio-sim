@@ -123,9 +123,8 @@ class animal:
 		test_chanse = self.bin_choise(p_pop)
 		if not (test_w and test_chanse) :
 			return None
-		class_name = type(self).__name__
-		k = eval(
-			"{}(a = 0, w = self.N(self.var['w_birth'],self.var['sigma_birth']))".format(class_name))
+		class_name = type(self)
+		k = class_name(a = 0, w = self.N(self.var['w_birth'],self.var['sigma_birth']))
 		if not necro_birth:
 			k.life = self.var["life"]
 		if self.var["w"] <= self.var["xi"] * k.var["w"]:

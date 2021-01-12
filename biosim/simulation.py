@@ -42,6 +42,7 @@ img_base=None, img_fmt='png'):
 		# We look for posible animals in animals.py, meaning we don't need to add maually
 		# new animals. This is assuming no global function except in animal superclass. #
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
+		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
 		self.population = self.add_population(ini_pop)
 		self._year = 0
 
@@ -52,12 +53,17 @@ img_base=None, img_fmt='png'):
 		:param species: String, name of animal species
 		:param params: Dict with valid parameter specification for species
 		"""
-		# Python abuse at its best.#
-		check_keys = eval("{}.default_var.keys()".format(species))
+
 		for key in params.keys():
-			if key not in check_keys:
+			if key not in self.default_values_species[species]:
 				raise ValueError("{} not in {}".format(key,species))
-		eval("{}.default_var.update({})".format(species,params))
+		self.default_values_species[species].update(params)
+		for coord in self.island:
+			if species in self.island[coord].default:
+				for animal in self.island[coord].default[species]:
+					animal.var.update(self.default_values_species[species])
+
+
 
 	
 	def set_landscape_parameters(self, landscape : str, params: dict):
@@ -98,9 +104,11 @@ img_base=None, img_fmt='png'):
 				if animal_name in self.names:
 					if animal_name in cell.default:
 						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						create_animal.var.update(self.default_values_species[animal_name])
 						cell.default[animal_name].append(create_animal)
 					else:
 						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						create_animal.var.update(self.default_values_species[animal_name])
 						cell.default[animal_name] = [create_animal]
 				else:
 					raise ValueError("Got '{}'; needs {}".format(animal["species"],self.names))

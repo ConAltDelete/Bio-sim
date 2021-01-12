@@ -130,22 +130,22 @@ def test_add_population(plain_sim):
 def test_simulate(plain_sim):
     """Test that simulation can be called with visualization step values"""
 
-    plain_sim.simulate(num_years=10, vis_years=100, img_years=100)
+    plain_sim.simulate(num_years=10,  img_years=100)
 
 
 def test_multi_simulate(plain_sim):
     """Test that simulation can be called repeatedly"""
 
-    plain_sim.simulate(num_years=10, vis_years=100, img_years=100)
-    plain_sim.simulate(num_years=10, vis_years=100, img_years=100)
+    plain_sim.simulate(num_years=10,  img_years=100)
+    plain_sim.simulate(num_years=10,  img_years=100)
 
 
 def test_get_years(plain_sim):
     """Test that number of years simulated is available"""
 
-    plain_sim.simulate(num_years=2, vis_years=100, img_years=100)
+    plain_sim.simulate(num_years=2,  img_years=100)
     assert plain_sim.year == 2
-    plain_sim.simulate(num_years=3, vis_years=100, img_years=100)
+    plain_sim.simulate(num_years=3,  img_years=100)
     assert plain_sim.year == 5
 
 
@@ -197,7 +197,7 @@ def test_figure_saved(figfile_root):
                  seed=1,
                  img_base=figfile_root,
                  img_fmt='png')
-    sim.simulate(2, vis_years=1, img_years=1)
+    sim.simulate(2,  img_years=1)
 
     assert os.path.isfile(figfile_root + '_00000.png')
     assert os.path.isfile(figfile_root + '_00001.png')
