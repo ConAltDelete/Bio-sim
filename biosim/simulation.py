@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 
+__author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
+__email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
-from .animal import Carnivore,Herbivore
+from .animal import *
 import random as ran
 from .visuals import string2map, set_param
 from .logic import year_cycle
@@ -8,9 +11,7 @@ import sys
 import re
 
 class BioSim:
-	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
-img_base=None, img_fmt='png'):
-		"""
+	"""
 		BioSim is an closed enviroment that can simulate animals on an given map.
 		The animals that can be simulated is listed under `biosim.animal`.
 
@@ -37,7 +38,9 @@ img_base=None, img_fmt='png'):
 		'{}_{:05d}.{}'.format(img_base, img_no, img_fmt)
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
-		"""
+	"""
+	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
+img_base=None, img_fmt='png'):
 		# we set the random seed for future random number generation. In other words,
 		# we make a random simulation consistent.#
 		if seed: ran.seed(seed)

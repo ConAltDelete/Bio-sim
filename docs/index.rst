@@ -9,10 +9,11 @@ Welcome to Simulation of island's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   logic
-   visuals
+
    simulation
+   logic
    island
+   visuals
    animal
 
 
