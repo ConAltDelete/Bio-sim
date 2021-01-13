@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-This file handels visuals.
+This file handels creation of the map, that includes a list of coordinates that an animal can't walk on.
 """
 
 from .island import Cells
@@ -12,6 +12,8 @@ __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 def find_border(x_length,y_length):
     """
     Creates a list of border coordinates based on a rectangle.
+
+
     :param x_lenght: lenght of x-axis
     :param x_lenght: lenght of y-axis
     :return: list of all border coordinates
@@ -29,6 +31,8 @@ def string2map(map_str: str):
     """
     This file converts map to a readable map.
     Assumes class 'Cells' handels strings at __init__.
+
+
     :param map_str: a string that represents the map.
     :return: a new map, and illigal coordinates
     """
@@ -60,14 +64,16 @@ def string2map(map_str: str):
 def set_param(island, _type: str, parm: dict):
     """
     This function adjust the cells of a given type (_type) with paramaters (parm)
-    :param _type: a string witch is either 'L', 'H', 'D', 'W'
-    :param parm: a Dict with param (f_max)
+
+
+    :param str _type: a string witch is either 'L', 'H', 'D', 'W'
+    :param dict[str:int/float] parm: a Dict with param (f_max)
     """
     Cell_types = {"W": 0, "L": 3, "H": 2, "D": 1}
     Cell_type = Cell_types[_type]
     for coord in island:
         if island[coord].type == Cell_type:
-            island[coord].f_max = parm["f_max"]
+            island[coord].f_max = float(parm["f_max"])
 
 
 if __name__ == '__main__':

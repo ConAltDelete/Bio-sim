@@ -9,8 +9,6 @@ __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
 from .island import Cells
 from .animal import *
-#from .colorama import Fore
-#from .colorama import Style
 
 
 def season_feeding(cell: Cells):
@@ -46,7 +44,7 @@ Carnivores
         ran.shuffle(cell.default["Herbivore"])
         for animal in cell.default["Herbivore"]:
             if cell.food > 0:
-                cell.reduce_food(animal.eat(cell.food, return_food=True))
+                cell.food -= animal.eat(cell.food, return_food=True)
             else:
                 break
     if carn_test and herb_test:
@@ -75,9 +73,10 @@ def season_breeding(cell: Cells):
     4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
        then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
 
-    :param cell: Cells object.
 
-    NOTE:
+    :param Cells cell: Cells object.
+
+    .. note::
         N1: animal.birth(N) returns either a object or None.
     """
 
@@ -112,8 +111,7 @@ def season_migration(cells: dict, illigal_moves: list):
                 try:
                     moving_animal = cells[cell].migrate[spesis].pop(0)
                 except IndexError: # N2
-                    print("IndexError in logic::season_migration::cells[cell].migrate")
-                    break
+                    raise IndexError("IndexError in logic::season_migration::cells[cell].migrate")
                 # if this is a new spesis, we will remember it in the future.#
                 if spesis not in moving_animals:
                     moving_animals[spesis] = dict()
@@ -169,6 +167,8 @@ def season_death(cell: Cells):
 def season_end(island: dict):
     """
     Does 'end of season' procedure.
+
+
     :param island: the entire island.
     """
     for coord in island:
@@ -178,6 +178,11 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     """
     1. generation of cells
     2. loop through the year
+
+    :param dict[tuple[int,int]:Cells] island: The map of the island.
+    :param list[tuple[int,int]]: Every coordinates that an animal can't walk on.
+    :param int year: The current year.
+    :param int visual_year: send data after n years.
     """
 
     for c in island:
@@ -200,14 +205,7 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     season_end(island=island)
 
     if year % visual_year == 0:
-        print("year",year)
-        for cell in island:
-            if len(island[cell].default) != 0:
-                print("\t",cell,":")
-                for spesis in island[cell].default:
-                    print("\t\t",spesis,len(island[cell].default[spesis]))
-                    for animal in island[cell].default[spesis]:
-                        print("\t\t\t",animal.var)
+        pass
 
 
 if __name__ == '__main__':

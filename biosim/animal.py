@@ -31,9 +31,11 @@ class animal:
 
 	def __init__(self, a: int, w: float, coord=[0, 0]):
 		"""
-		:param a: age of animal.
-		:param w: waight of animal.
-		:param coord: The coordinate of the animal.
+		Inisializasion of the animal.
+
+		:param int a: age of animal.
+		:param float w: waight of animal.
+		:param list[int,int] coord: The coordinate of the animal.
 		"""
 		self.var["coord"] = coord
 		self.var["w"] = w
@@ -44,12 +46,16 @@ class animal:
 	def Big_phi(self):
 		"""
 		'Big_phi' calculates the fitness of the animal based on its age and weight.
+
+
 		:return: Fitness of animal.
 		"""
 
 		def q(S: str):
 			"""
 			Generates a function based on 'S'.
+
+
 			:param S: 'P' for a smaller value, other for bigger.
 			:return: function
 			"""
@@ -58,6 +64,8 @@ class animal:
 			def new_q(x: float, xh: float, phi: float):
 				r"""
 				calculates the function $\frac{1}{1+e^{\pm\phi(x-x_h)}}$
+
+
 				:param x: number
 				:parma xh: number
 				:parma phi: number
@@ -78,6 +86,8 @@ class animal:
 	def bin_choise(p):
 		"""
 		Gives True by random choise.
+
+
 		:param p: probability 0<=p<=1
 		:return: bool
 		"""
@@ -90,6 +100,8 @@ class animal:
 	def N(w: float, p: float):
 		"""
 		Gauss distrebution.
+
+
 		:param w: mean
 		:param p: standard deviance
 		:return: a float in range [0,1]
@@ -112,6 +124,8 @@ class animal:
 	def birth(self, N: int, necro_birth: bool = False):
 		"""
 		Determens if child is born.
+
+
 		:param N: population number in cell.
 		:param necro_birth: Give birth even when dead.
 		:return: either None or a new instace of itself.
@@ -132,9 +146,11 @@ class animal:
 			self.var["sigma"] = self.Big_phi()
 			return k
 
-	def moveto(self, ret):
+	def moveto(self, ret: str):
 		"""
 		Animal moves in a given diraction 'ret'
+
+
 		:param ret: a key from 'ret_moves'.
 		"""
 		self.var["coord"][0] += animal.ret_moves[ret][0]
@@ -143,6 +159,8 @@ class animal:
 	def move(self, ild: list):
 		"""
 		Given a map 'ild' it moves, or not.
+
+
 		:param ild: list of illigal coorddiants.
 		"""
 		# Let the animal choose it's diraction based on what it
@@ -156,8 +174,9 @@ class animal:
 
 	def check(self, r: list, ild: list):
 		"""
-		Checks if possible to move in diraction r
-		TODO: check if works.
+		Checks if possible to move in diraction `r`
+
+
 		:param r: The diraction this instance moves to.
 		:param ild: Contains illigal coorddinats.
 		:return: bool
@@ -207,6 +226,8 @@ class Herbivore(animal):
 	def eat(self, F_there, return_food = False):
 		"""
 		Instace consumes a portion of F.
+
+
 		:param F_there: number of food.
 		:return: returns eaten amount if `return_food` is true.
 		"""
@@ -247,9 +268,11 @@ class Carnivore(animal):
 		self.var = dict(Carnivore.default_var)
 		super().__init__(a, w, coord=coord)
 
-	def yield_life(self, L: list):
+	def _yield_life(self, L: list):
 		"""
 		Generator for life.
+
+
 		:param L: The heard to eat.
 		:yield: A soon to be dead animal.
 		"""
@@ -267,6 +290,8 @@ class Carnivore(animal):
 	def eat(self, F_there: list):
 		"""
 		Animal eats, because it is good.
+
+
 		:param F_there: A list of herbavores.
 		:return: updated list of herbavores.
 		"""
@@ -274,7 +299,7 @@ class Carnivore(animal):
 		# We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#
 		F_there.sort(key= lambda O: O.var["sigma"])
 		default_F = float(self.var["F"])
-		for pray in self.yield_life(F_there):
+		for pray in self._yield_life(F_there):
 			F_got = min(self.var["F"], pray.var["w"])
 			self.var["w"] += self.var["beta"] * F_got
 			pray.var["life"] = False

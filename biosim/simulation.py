@@ -11,6 +11,10 @@ class BioSim:
 	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png'):
 		"""
+		BioSim is an closed enviroment that can simulate animals on an given map.
+		The animals that can be simulated is listed under `biosim.animal`.
+
+
 		:param island_map: Multi-line string specifying island geography
 		:param ini_pop: List of dictionaries specifying initial population
 		:param seed: Integer used as random number seed
@@ -36,7 +40,7 @@ img_base=None, img_fmt='png'):
 		"""
 		# we set the random seed for future random number generation. In other words,
 		# we make a random simulation consistent.#
-		if seed != None: ran.seed(seed)
+		if seed: ran.seed(seed)
 
 		self.island, self.illigal_coord = string2map(island_map)
 		# We look for posible animals in animals.py, meaning we don't need to add maually
@@ -50,6 +54,8 @@ img_base=None, img_fmt='png'):
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
 		Set parameters for animal species.
+
+
 		:param species: String, name of animal species
 		:param params: Dict with valid parameter specification for species
 		"""
@@ -69,16 +75,20 @@ img_base=None, img_fmt='png'):
 	def set_landscape_parameters(self, landscape : str, params: dict):
 		"""
 		Set parameters for landscape type.
-		:param landscape: String, code letter for landscape
-		:param params: Dict with valid parameter specification for landscape
+
+
+		:param str landscape: String, code letter for landscape
+		:param dict[str:float] params: Dict with valid parameter specification for landscape
 		"""
 		set_param(self.island,landscape,params)
 	
 	def simulate(self, num_years, vis_years=1, img_years=None):
 		"""
 		Run simulation while visualizing the result.
-		:param num_years: number of years to simulate
-		:param vis_years: years between visualization updates
+
+
+		:param int num_years: number of years to simulate
+		:param int vis_years: years between visualization updates
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
@@ -89,7 +99,9 @@ img_base=None, img_fmt='png'):
 	def add_population(self, population:list):
 		"""
 		Add a population to the island
-		:param population: List of dictionaries specifying population (y,x):[{
+
+
+		:param list population: List of dictionaries specifying population (y,x):[{
 			'age': int,
 			'weight': float,
 			'species': str

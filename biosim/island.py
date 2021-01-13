@@ -24,17 +24,17 @@ class Cells:
         self.coord   = coord if coord is not None else [0, 0]
         self.count   = dict()
         self.type    = cell_type
-        self.f_max   = Cells.default_food[self.type]
+        self.f_max   = float(Cells.default_food[self.type])
         self.food    = self.f_max
         self.default = dict()
         self.migrate = dict()
-        self.newborn = dict()
-        self.eaten   = dict()
 
     def migration(self, illigal_moves):
         """
         Animals in the cell get the opertunity to move to
         another cell.
+
+
         :param illigal_moves: a list of tuples with illigal cells
         """
         # We tell the animal to move to a resenable spot#
@@ -62,32 +62,8 @@ class Cells:
         self.count = 0
         for spesis in self.default:
             self.count += len(self.default[spesis])
-        for spesis in self.newborn:
-            self.count += len(self.newborn[spesis])
         for spesis in self.migrate:
             self.count += len(self.migrate[spesis])
-
-    def fill_food(self, food):
-        self.food = food
-
-    def reduce_food(self, amount_eaten):
-        self.food -= amount_eaten
-
-    def combine_newborn(self):
-        for spesis in self.newborn:
-            self.default[spesis].extend(self.newborn[spesis])
-            self.newborn[spesis] = list()
-
-    def combine_migrate(self):
-        for spesis in self.migrate:
-            self.default[spesis].extend(self.migrate[spesis])
-            self.migrate[spesis] = list()
-
-    def combine_eaten(self):
-        for spesis in self.eaten:
-            self.default[spesis].extend(self.eaten[spesis])
-            self.eaten[spesis] = list()
-
 
 if __name__ == '__main__':
     pass
