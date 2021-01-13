@@ -191,10 +191,10 @@ class Visualization:
         self.fitness = np.random.random(8000)
 
     def convert_map(self, map_str: str):
-        rgb_value = {'W': (0, 171, 245),
-                     'D': (249, 209, 101),
-                     'H': (0, 200, 0),
-                     'L': (0, 100, 0)}
+        rgb_value = {'W': (0, 0.5, 1),
+                     'D': (1, 1, 0.3),
+                     'H': (0, 0.6, 0),
+                     'L': (0, 0.3, 0)}
 
         self.rgb_map = [[rgb_value[column] for column in row]
                         for row in map_str.split()]
