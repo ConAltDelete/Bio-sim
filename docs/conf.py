@@ -23,7 +23,7 @@ copyright = '2021, Mats Hoem Olsen, Roy Erling Granheim'
 author = 'Mats Hoem Olsen, Roy Erling Granheim'
 
 # The full version, including alpha/beta/rc tags
-release = '0.58'
+release = '0.87'
 
 
 # -- General configuration ---------------------------------------------------

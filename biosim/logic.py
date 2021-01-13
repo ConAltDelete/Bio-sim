@@ -13,28 +13,9 @@ from .animal import *
 
 def season_feeding(cell: Cells):
     """
-    1. spawns in f_max amount of food in each cell
+    ´´season_feeding´´ goes over the animals ´´Herbivore´´, and ´´Carnivore´´ (in that order) and feeds them. The Herbavore eats off the cell while Carnivore eats Herbivore after they have eaten.
 
-Herbivores
-    2. herbivores eat an amount F in a residing cell in random order
-    3. each time an herbivore eats F, f_max changes in the given cell
-    4. herbivores gain weight beta * F~ where F~ = F if F < f_max and F~ = f_max if F > f_max
-    -  loops for every herbivore until f_max = 0 in the given cell then the next cell
-
-Carnivores
-    5. fitness Phi gets calculated for each carnivore and herbivore and gets sorted by Phi
-       (fitness for herbivores gets calculated once)
-    6. each carnivore hunts a herbivore in order of Phi with success p (each herbivore gets hunted once?)
-       on success carnivores gain weight beta * w_herb up to threshold F that year and targeted herbivore dies
-    7. carnivores stop hunting until the sum of beta * w_herb => F for the given carnivore or all herbivores in a given
-       cell has been targeted
-    -  loops until all carnivores stop
-
-    8. fitness Phi for carnivores gets calculated again
-    9. food value for carnivores gets reset
-
-    NOTE:
-        
+    :param Cells cell: The cell of the island.
     """
     herb_test = "Herbivore" in cell.default and len(cell.default["Herbivore"]) != 0
     carn_test = "Carnivore" in cell.default and len(cell.default["Carnivore"]) != 0
@@ -63,21 +44,9 @@ Carnivores
 
 def season_breeding(cell: Cells):
     """
-    N_herbivore = number of herbivores in cell
-    N_carnivore = number of carnivores in cell
-
-    1. check cells where animals can breed, N > 1
-    2. check every animal in given cell if they can breed, w < zeta * (w_birth + sigma_birth)
-
-    3. loops through all animals that can breed and randomly gives birth given by min(1, gamma * Phi * (N_species - 1))
-    4. on each success give the newborn a random weight w based on normal distribution N(w_birth, sigma_birth)
-       then the mothers w = w - xi * w_newborn, if w < xi * w_newborn then no one is born
-
+    ``season_breeding`` goes through all of the species in the cell and tells them to give birth.
 
     :param Cells cell: Cells object.
-
-    .. note::
-        N1: animal.birth(N) returns either a object or None.
     """
 
     for spesis in cell.default:
@@ -94,8 +63,8 @@ def season_breeding(cell: Cells):
 
 def season_migration(cells: dict, illigal_moves: list):
     """
-    Animals moves to desired location if possible, else they don't move from cell.
-    :param cells: dictonary with coordinats as key, and Cells objects as value
+    Animals moves to desired location if possible, else they don't move from cell and remain in ´´Cells.default´´.
+    :param dict[tuple[int,int] : Cells] cells: dictonary with coordinats as key, and Cells objects as value
 
     .. note::
         N1: we pre-calculate the length since we manipulate the lists
@@ -132,8 +101,9 @@ def season_migration(cells: dict, illigal_moves: list):
 
 def season_ageing(cell: Cells):
     """
-    for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
-    age += 1
+    ´´season_ageing´´ goes through all of the species and tells them to get old.
+
+    :param Cells cell: Cells object.
     """
 
     for spesis in cell.default:
@@ -143,8 +113,9 @@ def season_ageing(cell: Cells):
 
 def season_loss(cell: Cells):
     """
-    for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
-    w -= eta * w
+    ``season_loss`` goes through all the species in a cell and tells them to lose weight. This is done by ´´w -= eta * w´´.
+
+    :param Cells cell: cells object
     """
     for species in cell.default:
         for animal in cell.default[species]:
@@ -153,10 +124,9 @@ def season_loss(cell: Cells):
 
 def season_death(cell: Cells):
     """
-    for loop outside of function that check every cell and animals:list = cells.herb_default of that cell
-    death = yes if w = 0
-        else
-        death = omega(1 - Phi)
+    ``season_death`` goes through every species and kills them by chance.
+
+    :param Cells cell: cells object
     """
     for spesis in cell.default:
         for animal in cell.default[spesis]:
@@ -166,7 +136,7 @@ def season_death(cell: Cells):
 
 def season_end(island: dict):
     """
-    Does 'end of season' procedure.
+    Does 'end of season' procedure. Anything that needs manual wrap-up get done here.
 
 
     :param island: the entire island.
@@ -176,8 +146,7 @@ def season_end(island: dict):
 
 def year_cycle(island,illigal_coords,year, visual_year=1):
     """
-    1. generation of cells
-    2. loop through the year
+    
 
     :param dict[tuple[int,int]:Cells] island: The map of the island.
     :param list[tuple[int,int]]: Every coordinates that an animal can't walk on.

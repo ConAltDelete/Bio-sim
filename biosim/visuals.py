@@ -2,9 +2,6 @@
 
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
-"""
-This file handels creation of the map, that includes a list of coordinates that an animal can't walk on.
-"""
 
 from .island import Cells
 
@@ -14,6 +11,8 @@ __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 def find_border(x_length,y_length):
     """
     Creates a list of border coordinates based on a rectangle.
+
+    Starting index is 1.
 
 
     :param x_lenght: lenght of x-axis
@@ -32,7 +31,6 @@ def find_border(x_length,y_length):
 def string2map(map_str: str):
     """
     This file converts map to a readable map.
-    Assumes class 'Cells' handels strings at __init__.
 
 
     :param map_str: a string that represents the map.

@@ -23,19 +23,21 @@ class BioSim:
 		:param cmax_animals: Dict specifying color-code limits for animal densities
 		:param hist_specs: Specifications for histograms, see below
 		:param img_base: String with beginning of file name for figures, including path
-		:param img_fmt: String with file type for figures, e.g. 'png'
+		:param img_fmt: String with file type for figures, e.g. 'png'`
+
+
 		If ymax_animals is None, the y-axis limit should be adjusted automatically.
 		If cmax_animals is None, sensible, fixed default values should be used.
 		cmax_animals is a dict mapping species names to numbers, e.g.,
-		{'Herbivore': 50, 'Carnivore': 20}
+		``{'Herbivore': 50, 'Carnivore': 20}``
 		hist_specs is a dictionary with one entry per property for which a histogram shall be shown.
 		For each property, a dictionary providing the maximum value and the bin width must be
 		given, e.g.,
-		{'weight': {'max': 80, 'delta': 2}, 'fitness': {'max': 1.0, 'delta': 0.05}}
-		Permitted properties are 'weight', 'age', 'fitness'.
+		``{'weight': {'max': 80, 'delta': 2}, 'fitness': {'max': 1.0, 'delta': 0.05}}``
+		Permitted properties are ``'weight'``, ``'age'``, ``'fitness'``.
 		If img_base is None, no figures are written to file.
 		Filenames are formed as
-		'{}_{:05d}.{}'.format(img_base, img_no, img_fmt)
+		``'{}_{:05d}.{}'.format(img_base, img_no, img_fmt)``
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 	"""
@@ -45,10 +47,12 @@ img_base=None, img_fmt='png'):
 		# we make a random simulation consistent.#
 		if seed: ran.seed(seed)
 
+		self.str_map = island_map.strip()
+
 		self.island, self.illigal_coord = string2map(island_map)
 		# We look for posible animals in animals.py, meaning we don't need to add maually
 		# new animals. This is assuming no global function except in animal superclass. #
-		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(__)|(np)|(ran)|(animal)",n)]
+		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(\w*__\w*)|(np)|(ran)|(animal)",n)]
 		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
 		self.population = self.add_population(ini_pop)
 		self._year = 0
@@ -66,6 +70,8 @@ img_base=None, img_fmt='png'):
 		for key in params.keys():
 			if key not in self.default_values_species[species]:
 				raise ValueError("{} not in {}".format(key,species))
+			if params[key] < 0:
+				raise ValueError("{} is less than zero".format(key))
 		self.default_values_species[species].update(params)
 		for coord in self.island:
 			if species in self.island[coord].default:
@@ -116,6 +122,10 @@ img_base=None, img_fmt='png'):
 			cell = self.island[coord]
 			for animal in population[coord]:
 				animal_name = animal["species"]
+				if animal["age"] < 0:
+							raise ValueError("age is less than zero")
+				elif animal["weight"] < 0:
+					raise ValueError("weight is less than zero")
 				if animal_name in self.names:
 					if animal_name in cell.default:
 						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))

@@ -22,6 +22,21 @@ class animal:
 	Can be used to create other animals however can't be used
 	by it self.
 	"""
+	default_var = {
+		"w_birth"     : 10,
+		"sigma_birth" : 1,
+		"beta"        : 0.5,
+		"eta"         : 0.5,
+		"a_half"      : 43,
+		"phi_age"     : 0.4,
+		"w_half"      : 5,
+		"phi_weight"  : 0.001,
+		"mu"          : 0.3,
+		"gamma"       : 2000,
+		"zeta"        : 1233,
+		"xi"          : 1,
+		"omega"       : 0.2,
+		"F"           : 0}
 	ret_moves = {
 		'N': [1, 0],
 		'S': [-1, 0],
@@ -194,10 +209,6 @@ class animal:
 		"""
 		self.var["w"] -= self.var["eta"] * self.var["w"]
 		self.var["sigma"] = self.Big_phi()
-
-	def feed(self,cell):
-		pass
-
 
 
 class Herbivore(animal):

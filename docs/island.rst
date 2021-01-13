@@ -1,10 +1,9 @@
 =============
 Island module
 =============
-
-This module contains the ``Cells`` object.
-
-Thsi object has 7 values that it stores
+Indroduction
+-------------
+This module contains the class ``Cells``.
 
 .. automodule:: biosim.island
 	:members:

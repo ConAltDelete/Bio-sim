@@ -8,7 +8,7 @@ from .animal import *
 
 class Cells:
     """
-    The cells class
+    The ``Cells`` class keeps track of informasion of the cells on the island.
     """
     default_food = {
         0:0,
@@ -16,7 +16,11 @@ class Cells:
         2:300,
         3:800
     }
-    def __init__(self, cell_type, coord=None):
+    def __init__(self, cell_type: int, coord=None):
+        """
+        :param int cell_type: Describes the cell type as an integer.
+        :param list/None coord: Tells the cell where it is on the map. The default value is ``[0,0]``.
+        """
         self.coord   = coord if coord is not None else [0, 0]
         self.count   = dict()
         self.type    = cell_type
@@ -31,7 +35,7 @@ class Cells:
         another cell.
 
 
-        :param illigal_moves: a list of tuples with illigal cells
+        :param list[tuple[int,int]] illigal_moves: a list of tuples with illigal cells
         """
         # We tell the animal to move to a resenable spot#
         for specis in self.default:
@@ -53,7 +57,7 @@ class Cells:
 
     def count(self):
         """
-        We count the number of animals in cell.
+        Counts the number of animals in the cell.
         """
         self.count = 0
         for spesis in self.default:
