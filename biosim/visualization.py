@@ -32,6 +32,8 @@ class Visualization:
     def __init__(self):
         self.island_map_ax = None
         self.island_map = None
+        self.rgb_map = None
+        self.leg_ax = None
         self.histogram_age = None
         self.histogram_weight = None
         self.histogram_fitness = None
@@ -52,17 +54,33 @@ class Visualization:
         self.weight = 0
         self.fitness = 0
 
-    def setup_graphics(self, island_map, n_steps=300):
+    def setup_graphics(self, n_steps=300):
         """
         setups a graphics interface with heat maps, line graphs and histograms
         """
+        rgb_value = {'W': (0, 0.5, 1),
+                     'D': (1, 1, 0.3),
+                     'H': (0, 0.6, 0),
+                     'L': (0, 0.3, 0)}
+
         if self.fig is None:
             self.fig = plt.figure(figsize=(12, 12))
             self.axt = self.fig.add_axes([0.4, 0.8, 0.2, 0.2])
 
         if self.island_map_ax is None:
-            self.island_map_ax = self.fig.add_subplot(2, 2, 1)
-            self.island_map = self.island_map_ax.imshow(island_map)
+            self.island_map_ax = self.fig.add_subplot(3, 3, 1)
+            self.island_map = self.island_map_ax.imshow(self.rgb_map)
+            self.island_map_ax.set_xticks(range(len(self.rgb_map[0])))
+            self.island_map_ax.set_xticklabels([_ + 1 if not (_ + 1) % 5 else '' for _ in range(len(self.rgb_map[0]))])
+            self.island_map_ax.set_yticks(range(len(self.rgb_map)))
+            self.island_map_ax.set_yticklabels([_ + 1 if not (_ + 1) % 5 else '' for _ in range(len(self.rgb_map))])
+
+        if self.leg_ax is None:
+            self.leg_ax = self.fig.add_axes([0.36, 0.7, 0.1, 0.2])
+            self.leg_ax.axis('off')
+            for ix, name in enumerate(('Water', 'Lowland', 'Highland', 'Desert')):
+                self.leg_ax.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1, facecolor=rgb_value[name[0]]))
+                self.leg_ax.text(0.35, ix * 0.2, name, transform=self.leg_ax.transAxes)
 
         if self.heatmap_ax is None:
             self.heatmap_ax = self.fig.add_subplot(4, 2, 6)
@@ -73,7 +91,7 @@ class Visualization:
             self.img2_ax = None
 
         if self.pop is None:
-            self.pop = self.fig.add_subplot(2, 2, 2)
+            self.pop = self.fig.add_subplot(3, 3, 3)
             self.pop.set_ylim(0, 8000)
 
         self.pop.set_xlim(0, n_steps + 1)
@@ -84,17 +102,17 @@ class Visualization:
                                     np.full(n_steps, np.nan), 'r-')[0]
 
         if self.histogram_age is None:
-            self.histogram_age = self.fig.add_subplot(5, 3, 13)
+            self.histogram_age = self.fig.add_subplot(7, 3, 19)
             self.histogram_age.set_xlim(0, 60)
             self.histogram_age.set_ylim(0, 2000)
 
         if self.histogram_weight is None:
-            self.histogram_weight = self.fig.add_subplot(5, 3, 14)
+            self.histogram_weight = self.fig.add_subplot(7, 3, 20)
             self.histogram_weight.set_xlim(0, 60)
             self.histogram_weight.set_ylim(0, 1000)
 
         if self.histogram_fitness is None:
-            self.histogram_fitness = self.fig.add_subplot(5, 3, 15)
+            self.histogram_fitness = self.fig.add_subplot(7, 3, 21)
             self.histogram_fitness.set_xlim(0, 1.0)
             self.histogram_fitness.set_ylim(0, 2000)
 
@@ -172,14 +190,38 @@ class Visualization:
         self.weight = np.random.randint(120, size=8000)
         self.fitness = np.random.random(8000)
 
+    def convert_map(self, map_str: str):
+        rgb_value = {'W': (0, 171, 245),
+                     'D': (249, 209, 101),
+                     'H': (0, 200, 0),
+                     'L': (0, 100, 0)}
+
+        self.rgb_map = [[rgb_value[column] for column in row]
+                        for row in map_str.split()]
+
 
 if __name__ == "__main__":
+    geogr = """\
+                   WWWWWWWWWWWWWWWWWWWWW
+                   WWWWWWWWHWWWWLLLLLLLW
+                   WHHHHHLLLLWWLLLLLLLWW
+                   WHHHHHHHHHWWLLLLLLWWW
+                   WHHHHHLLLLLLLLLLLLWWW
+                   WHHHHHLLLDDLLLHLLLWWW
+                   WHHLLLLLDDDLLLHHHHWWW
+                   WWHHHHLLLDDLLLHWWWWWW
+                   WHHHLLLLLDDLLLLLLLWWW
+                   WHHHHLLLLDDLLLLWWWWWW
+                   WWHHHHLLLLLLLLWWWWWWW
+                   WWWHHHHLLLLLLLWWWWWWW
+                   WWWWWWWWWWWWWWWWWWWWW"""
     v = Visualization()
+    v.convert_map(geogr)
     v.setup_graphics()
     for k in range(300):
         sim = {'herbivore': random.randint(2000, 8000), 'carnivore': random.randint(1, 6000)}
-        z = np.random.randint(200, size=(21, 21))
-        z2 = np.random.randint(200, size=(21, 21))
+        z = np.random.randint(200, size=(13, 21))
+        z2 = np.random.randint(200, size=(13, 21))
         v.get_data(sim)
         v.update_graphics(k, z, z2)
     plt.ioff()
