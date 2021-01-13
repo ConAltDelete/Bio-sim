@@ -104,7 +104,7 @@ img_base=None, img_fmt='png'):
 		"""
 		if self.viz.fig is None:
 			self.viz.convert_map(self.str_map)
-			self.viz.setup_graphics()
+		self.viz.setup_graphics(num_years)
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
 			data = {'herbivore': ran.randint(2000, 8000), 'carnivore': ran.randint(1, 6000)}	# Debug code
