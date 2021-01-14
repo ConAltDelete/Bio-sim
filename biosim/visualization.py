@@ -30,6 +30,7 @@ class Visualization:
     Visualization
     """
     def __init__(self):
+        self.n_steps = 0
         self.island_map_ax = None
         self.island_map = None
         self.rgb_map = None
@@ -42,8 +43,8 @@ class Visualization:
         self.heatmap2_ax = None
         self.img2_ax = None
         self.pop = None
-        self.n_carn = list()
-        self.n_herb = list()
+        self.n_carn = None
+        self.n_herb = None
         self.count_carn = int()
         self.count_herb = int()
         self.fig = None
@@ -54,10 +55,11 @@ class Visualization:
         self.weight = 0
         self.fitness = 0
 
-    def setup_graphics(self, n_steps=300):
+    def setup_graphics(self, nx_step):
         """
         setups a graphics interface with heat maps, line graphs and histograms
         """
+        self.n_steps += nx_step
         rgb_value = {'W': (0, 0.5, 1),
                      'D': (1, 1, 0.3),
                      'H': (0, 0.6, 0),
@@ -94,12 +96,30 @@ class Visualization:
             self.pop = self.fig.add_subplot(3, 3, 3)
             self.pop.set_ylim(0, 8000)
 
-        self.pop.set_xlim(0, n_steps + 1)
+        self.pop.set_xlim(0, self.n_steps + 1)
 
-        self.n_herb = self.pop.plot(np.arange(n_steps),
-                                    np.full(n_steps, np.nan), 'b-')[0]
-        self.n_carn = self.pop.plot(np.arange(n_steps),
-                                    np.full(n_steps, np.nan), 'r-')[0]
+        if self.n_herb is None:
+            herb_plot = self.pop.plot(np.arange(self.n_steps),
+                                      np.full(self.n_steps, np.nan), 'b-')
+            self.n_herb = herb_plot[0]
+        else:
+            hx_data, hy_data = self.n_herb.get_data()
+            hx_new = np.arange(hx_data[-1] + 1, self.n_steps)
+            if len(hx_new) > 0:
+                hy_new = np.full(hx_new.shape, np.nan)
+                self.n_herb.set_data(np.hstack((hx_data, hx_new)),
+                                     np.hstack((hy_data, hy_new)))
+        if self.n_carn is None:
+            carn_plot = self.pop.plot(np.arange(self.n_steps),
+                                      np.full(self.n_steps, np.nan), 'r-')
+            self.n_carn = carn_plot[0]
+        else:
+            cx_data, cy_data = self.n_carn.get_data()
+            cx_new = np.arange(cx_data[-1] + 1, self.n_steps)
+            if len(cx_new) > 0:
+                hy_new = np.full(cx_new.shape, np.nan)
+                self.n_carn.set_data(np.hstack((cx_data, cx_new)),
+                                     np.hstack((cy_data, hy_new)))
 
         if self.histogram_age is None:
             self.histogram_age = self.fig.add_subplot(7, 3, 19)
@@ -118,10 +138,9 @@ class Visualization:
 
         self.histogram_age.hist(self.age, bins=30, histtype='step')
 
+        self.axt.cla()
         self.axt.axis('off')  # turn off coordinate system
-
-        template = 'Year: {:5}'
-        self.year = self.axt.text(0.5, 0.5, template.format(0),
+        self.year = self.axt.text(0.5, 0.5, 'Year: {:5}'.format(0),
                             horizontalalignment='center',
                             verticalalignment='center',
                             transform=self.axt.transAxes)  # relative coordinates

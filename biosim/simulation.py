@@ -7,6 +7,7 @@ from .animal import *
 import random as ran
 from .visuals import string2map, set_param
 from .logic import year_cycle
+from visualization import Visualization
 import sys
 import re
 
@@ -56,7 +57,7 @@ img_base=None, img_fmt='png'):
 		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
 		self.population = self.add_population(ini_pop)
 		self._year = 0
-
+		self.viz = Visualization()
 	
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -101,8 +102,16 @@ img_base=None, img_fmt='png'):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
+		if self.viz.fig is None:
+			self.viz.convert_map(self.str_map)
+		self.viz.setup_graphics(num_years)
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
+			data = {'herbivore': ran.randint(2000, 8000), 'carnivore': ran.randint(1, 6000)}	# Debug code
+			z = np.random.randint(200, size=(13, 21))											# Debug code
+			z2 = np.random.randint(200, size=(13, 21))											# Debug code
+			self.viz.get_data(data)
+			self.viz.update_graphics(self._year, z, z2)
 			self._year += 1
 	
 	def add_population(self, population:list):
