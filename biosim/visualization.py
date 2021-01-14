@@ -201,11 +201,11 @@ class Visualization:
         self.fig.canvas.flush_events()
         plt.pause(1e-6)
 
-    def get_data(self, n_species: dict, cells=None):
+    def update_data(self, n_species: dict, list_of_ages):
         self.count_herb = n_species["Herbivore"]
         self.count_carn = n_species["Carnivore"]
 
-        self.age = np.random.randint(120, size=8000)
+        self.age = list_of_ages
         self.weight = np.random.randint(120, size=8000)
         self.fitness = np.random.random(8000)
 

@@ -23,6 +23,9 @@ class Cells:
         """
         self.coord           = coord if coord is not None else [0, 0]
         self.count_species   = dict() if not(names) else {species:0 for species in names}
+        self.count_age = dict()
+        self.count_weight = dict()
+        self.count_fitness = dict()
         self.type            = cell_type
         self.f_max           = float(Cells.default_food[self.type])
         self.food            = self.f_max
@@ -59,8 +62,17 @@ class Cells:
         """
         Counts the number of animals in the cell.
         """
+        self.count_age = {'Herbivore': [], 'Carnivore': []}
+        self.count_weight = {'Herbivore': [], 'Carnivore': []}
+        self.count_fitness = {'Herbivore': [], 'Carnivore': []}
         for spesis in self.default:
             self.count_species[spesis] = len(self.default[spesis])
+            if len(self.default[spesis]) != 0:
+                for animals in self.default[spesis]:
+                    self.count_age[spesis].append(animals.var["a"])
+                    self.count_weight[spesis].append(animals.var["w"])
+                    self.count_fitness[spesis].append(animals.var["sigma"])
+
 
 if __name__ == '__main__':
     pass
