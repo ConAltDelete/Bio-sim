@@ -7,6 +7,9 @@ Welcome to Simulation of island's documentation!
 ================================================
 In this document I'm going to teach you what tok us 3 weeks.
 
+Table of Content
+=================
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -17,16 +20,12 @@ In this document I'm going to teach you what tok us 3 weeks.
    visuals
    animal
 
+Theory
+======
+To simulate an animal population we need to recreate its behavore.
+
 Indices and tables
 ==================
-
-+-------------+------------+------------+
-| authors     | age        |will to live|
-+=============+============+============+
-|Mats H.Olsen |the brain   | somewhere  |
-+-------------+------------+------------+
-|Roy G.Erling |the designer| somewhere  |
-+-------------+------------+------------+
 
 * :ref:`genindex`
 * :ref:`modindex`

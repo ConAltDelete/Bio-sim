@@ -7,7 +7,7 @@ from .animal import *
 import random as ran
 from .visuals import string2map, set_param
 from .logic import year_cycle
-from visualization import Visualization
+from .visualization import Visualization
 import sys
 import re
 
