@@ -11,17 +11,17 @@ if __name__ == "__main__":
                                 WLLLW
                                 WLLLW
                                 WWWWW""",ini_pop=[{
-        "loc":(2,2),
+        "loc":(3,3),
         "pop":[
             {
         "species": "Herbivore",
         "age": 5,
         "weight": 20} for _ in range(10)]
     }])
-    sim.simulate(num_years=50,vis_years=500)
+    sim.simulate(num_years=50,vis_years=1)
     sim.add_population(population=[
         {
-            "loc":(2,2),
+            "loc":(3,3),
             "pop":[
                 {
                     "species": "Carnivore",
@@ -31,4 +31,4 @@ if __name__ == "__main__":
             ]
         }
     ])
-    sim.simulate(num_years=250,vis_years=500)
+    sim.simulate(num_years=250,vis_years=1)
