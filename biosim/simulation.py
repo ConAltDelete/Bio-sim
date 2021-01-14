@@ -60,6 +60,9 @@ img_base=None, img_fmt='png'):
 		self.viz = Visualization()
 		self.data = list()
 		self.data2 = list() # temporary
+		self.total_age = dict()
+		self.total_weight = dict()
+		self.total_fitness = dict()
 
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -112,7 +115,7 @@ img_base=None, img_fmt='png'):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
 			if self._year % vis_years == 0:
 				self.get_data()
-				self.viz.get_data(self.num_animals_per_species)
+				self.viz.update_data(self.num_animals_per_species, self.total_age['Herbivore'])
 				self.viz.update_graphics(self._year, self.data, self.data2)
 			self._year += 1
 	
@@ -170,6 +173,12 @@ img_base=None, img_fmt='png'):
 				temp.append(v)
 			u.append(temp)
 		self.data2 = u
+
+		self.total_age = {'Herbivore': [], 'Carnivore': []}
+		for names in self.names:
+			for coord in self.island:
+				for units in self.island[coord].count_age[names]:
+					self.total_age[names].append(units)
 	
 	@property
 	def year(self):
