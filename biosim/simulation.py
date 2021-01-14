@@ -54,11 +54,13 @@ img_base=None, img_fmt='png'):
 		# new animals. This is assuming no global function except in animal superclass. #
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(\w*__\w*)|(np)|(ran)|(animal)",n)]
 		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
-		self.island, self.illigal_coord = string2map(island_map,self.names)
+		self.island, self.illigal_coord = string2map(island_map, self.names)
 		self.population = self.add_population(ini_pop)
 		self._year = 0
 		self.viz = Visualization()
-	
+		self.data = list()
+		self.data2 = list() # temporary
+
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
 		Set parameters for animal species.
@@ -109,10 +111,11 @@ img_base=None, img_fmt='png'):
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
 			if self._year % vis_years == 0:
-				z = np.random.randint(200, size=(13, 21))											# Debug code
+				z1 = np.random.randint(200, size=(13, 21))											# Debug code
 				z2 = np.random.randint(200, size=(13, 21))											# Debug code
+				self.get_data()
 				self.viz.get_data(self.num_animals_per_species)
-				self.viz.update_graphics(self._year, z, z2)
+				self.viz.update_graphics(self._year, self.data, z2)
 			self._year += 1
 	
 	def add_population(self, population:list):
@@ -149,7 +152,15 @@ img_base=None, img_fmt='png'):
 					raise ValueError("Got '{}'; needs {}".format(animal["species"],self.names))
 
 	def get_data(self):
-		pass
+		"""Get data from the cells in self.island"""
+		z = list()
+		for y in range(5):
+			temp = list()
+			for x in range(5):
+				v = self.island[(y + 1, x + 1)].count_species['Herbivore']
+				temp.append(v)
+			z.append(temp)
+		self.data = z
 	
 	@property
 	def year(self):
