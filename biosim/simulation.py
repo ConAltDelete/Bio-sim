@@ -115,7 +115,7 @@ img_base=None, img_fmt='png'):
 				z2 = np.random.randint(200, size=(13, 21))											# Debug code
 				self.get_data()
 				self.viz.get_data(self.num_animals_per_species)
-				self.viz.update_graphics(self._year, self.data, z2)
+				self.viz.update_graphics(self._year, self.data, self.data2)
 			self._year += 1
 	
 	def add_population(self, population:list):
@@ -161,6 +161,15 @@ img_base=None, img_fmt='png'):
 				temp.append(v)
 			z.append(temp)
 		self.data = z
+
+		u = list()
+		for y in range(5):
+			temp = list()
+			for x in range(5):
+				v = self.island[(y + 1, x + 1)].count_species['Carnivore']
+				temp.append(v)
+			u.append(temp)
+		self.data2 = u
 	
 	@property
 	def year(self):
