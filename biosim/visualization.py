@@ -202,8 +202,8 @@ class Visualization:
         plt.pause(1e-6)
 
     def get_data(self, n_species: dict, cells=None):
-        self.count_herb = n_species["herbivore"]
-        self.count_carn = n_species["carnivore"]
+        self.count_herb = n_species["Herbivore"]
+        self.count_carn = n_species["Carnivore"]
 
         self.age = np.random.randint(120, size=8000)
         self.weight = np.random.randint(120, size=8000)
