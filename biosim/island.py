@@ -72,7 +72,7 @@ class Cells:
                 for animals in self.default[spesis]:
                     self.count_age[spesis].append(animals.var["a"])
                     self.count_weight[spesis].append(animals.var["w"])
-                    self.count_fitness[spesis].append(animals.var["sigma"])
+                    self.count_fitness[spesis].append(animals.var["phi"])
 
 
 if __name__ == '__main__':

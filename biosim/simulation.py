@@ -135,6 +135,8 @@ img_base=None, img_fmt='png'):
 		"""
 		population = {popul["loc"]:popul["pop"] for popul in population}
 		for coord in population:
+			if coord in self.illigal_coord:
+				raise ValueError("An animal was placed at {} witch is an illegal placement.".format(coord))
 			cell = self.island[coord]
 			for animal in population[coord]:
 				animal_name = animal["species"]

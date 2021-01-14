@@ -35,3 +35,16 @@ def test_consistensy_simulation_one_cell_two_species():
 		n_carn += len(sim.island[(2,2)].default["Carnivore"])
 	assert n_herb/50 == pt.approx(85,abs=17)
 	assert n_carn/50 == pt.approx(41, abs=10)
+
+def test_wrong_placement():
+	with pt.raises(ValueError):
+		BioSim(island_map="WWW\nWWW\nWWW",ini_pop=[{
+		"loc": (2,2),
+		"pop":[
+			{
+				"species":"Herbivore",
+				"age": 4,
+				"weight": 100
+			}
+		]
+	}])

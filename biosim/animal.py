@@ -54,7 +54,7 @@ class animal:
 		self.var["w"] = w
 		self.var["a"] = a
 		self.var["life"] = True
-		self.var["sigma"] = self.Big_phi()
+		self.var["phi"] = self.Big_phi()
 
 	def Big_phi(self):
 		"""
@@ -84,7 +84,7 @@ class animal:
 				:parma phi: number
 				:return: float
 				"""
-				return 1 / (1 + np.e ** (k * phi * (x - xh)))
+				return 1 / (1 + pow(np.e, k * phi * (x - xh)) )
 
 			return new_q
 
@@ -107,7 +107,7 @@ class animal:
 		# By using the random.random function we utilise the seed declared in
 		# the BioSim class, assuming uniform distribution since the length from
 		# 0 to p is p, then the probability to hit <= p is p/1 = p
-		return ran.random() < p
+		return ran.random() <= p
 
 	@staticmethod
 	def N(w: float, p: float):
@@ -123,7 +123,7 @@ class animal:
 	
 	def age(self):
 		self.var["a"] += 1
-		self.var["sigma"] = self.Big_phi()
+		self.var["phi"] = self.Big_phi()
 
 	def death(self):
 		"""
@@ -131,7 +131,7 @@ class animal:
 				- Its weight is equal to 0 or less.
 				- By random chance based on its fitness.
 		"""
-		if self.var["w"] <= 0 or self.bin_choise(self.var["omega"] * (1 - self.var["sigma"])):
+		if self.var["w"] <= 0 or self.bin_choise(self.var["omega"] * (1 - self.var["phi"])):
 			self.var["life"] = False
 
 	def birth(self, N: int, necro_birth: bool = False):
@@ -145,7 +145,7 @@ class animal:
 		:param necro_birth: Give birth even when dead.
 		:return: either None or a new instace of itself.
 		"""
-		p_pop = min(1, self.var["sigma"] * self.var["gamma"] * (N - 1))
+		p_pop = min(1, self.var["phi"] * self.var["gamma"] * (N - 1))
 		test_w = self.var["w"] >= (self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]))
 		test_chanse = self.bin_choise(p_pop)
 		if not (test_w and test_chanse) :
@@ -158,7 +158,7 @@ class animal:
 			return None
 		else:
 			self.var["w"] -= self.var["xi"] * k.var["w"]
-			self.var["sigma"] = self.Big_phi()
+			self.var["phi"] = self.Big_phi()
 			return k
 
 	def moveto(self, ret: str):
@@ -183,7 +183,8 @@ class animal:
 		# Let the animal choose it's diraction based on what it
 		# knows, by that we need not worry about what it must 
 		# rather we let it do what it was born to do #
-		do_move = self.bin_choise(self.var["mu"] * self.var["sigma"])
+		
+		do_move = self.bin_choise(((self.var["mu"]) * self.var["phi"]))
 		direct = ran.choice([k for k in animal.ret_moves.keys()])
 		direct_list = animal.ret_moves[direct]
 		if self.check(direct_list, ild) and do_move:
@@ -210,7 +211,7 @@ class animal:
 		reevaluets its fitness.
 		"""
 		self.var["w"] -= self.var["eta"] * self.var["w"]
-		self.var["sigma"] = self.Big_phi()
+		self.var["phi"] = self.Big_phi()
 
 
 class Herbivore(animal):
@@ -249,7 +250,7 @@ class Herbivore(animal):
 			raise ValueError("animal::Herbivore::eat expected number, got {}".format(type(F_there)))
 		# We gain what is possible, whitch is what the animal want or get.#
 		self.var["w"] += self.var["beta"] * min(max(F_there,0), self.var["F"])
-		self.var["sigma"] = self.Big_phi()
+		self.var["phi"] = self.Big_phi()
 		if return_food:
 			# This is handy when needed.#
 			return min(max(F_there,0), self.var["F"])
@@ -294,7 +295,7 @@ class Carnivore(animal):
 			# we can see that on negative values we get 0, note 0 > than a negativ number (excluding -0 for computers sake) and
 			# 1 when the function is greater than the max value (e.i. greater than 1) for that reson we can with comfor use
 			# max(1,min(0,f(x))) to determen the probability.
-			probebility = max(0, min(1, (self.var["sigma"] - l.var["sigma"]) / self.var["DeltaPhiMax"]))
+			probebility = max(0, min(1, (self.var["phi"] - l.var["phi"]) / self.var["DeltaPhiMax"]))
 			# we agree that for a preditor to eat a pray it must be alive and the preditor must choose to accept the pray.
 			# we use the function `bin_choise` to determen if it will.#
 			if l.var["life"] and self.bin_choise(probebility):
@@ -310,14 +311,14 @@ class Carnivore(animal):
 		"""
 		# Every preditor must try itself on all the pray available given it want to. 
 		# We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#
-		F_there.sort(key= lambda O: O.var["sigma"])
+		F_there.sort(key= lambda O: O.var["phi"])
 		default_F = float(self.var["F"])
 		for pray in self._yield_life(F_there):
 			F_got = min(self.var["F"], pray.var["w"])
 			self.var["w"] += self.var["beta"] * F_got
 			pray.var["life"] = False
 			self.var["F"] -= F_got
-			self.var["sigma"] = self.Big_phi()
+			self.var["phi"] = self.Big_phi()
 			if self.var["F"] == 0:
 				self.var["F"] = default_F
 				break

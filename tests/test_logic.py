@@ -237,7 +237,7 @@ def test_two_Herbivore_eating_in_cell():
 def test_eating_carnevore():
     herd = [Herbivore(a=1,w=1)]
     pred = Carnivore(a=5,w=100)
-    pred.var["sigma"] = 20
+    pred.var["phi"] = 20
     herd = pred.eat(herd)
     assert herd == []
 

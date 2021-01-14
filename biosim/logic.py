@@ -30,7 +30,7 @@ def season_feeding(cell: Cells):
                 break
     if carn_test and herb_test:
         # We need to sort the list so the fittest goes first. #
-        cell.default["Carnivore"].sort(key=lambda O: O.var["sigma"],reverse = True)
+        cell.default["Carnivore"].sort(key=lambda O: O.var["phi"],reverse = True)
         for animal in cell.default["Carnivore"]:
             if all( not H.var["life"] for H in cell.default["Herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.

@@ -7,7 +7,6 @@ functioning visualization of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
-#from biosim.simulation import *
 import matplotlib.pyplot as plt
 import random
 import numpy as np
@@ -94,7 +93,7 @@ class Visualization:
 
         if self.pop is None:
             self.pop = self.fig.add_subplot(3, 3, 3)
-            self.pop.set_ylim(0, 1000)
+            self.pop.set_ylim(0, 16000)
 
         self.pop.set_xlim(0, self.n_steps + 1)
 
@@ -220,6 +219,7 @@ class Visualization:
 
 
 if __name__ == "__main__":
+    from biosim.simulation import *
     geogr = """\
                    WWWWWWWWWWWWWWWWWWWWW
                    WWWWWWWWHWWWWLLLLLLLW
