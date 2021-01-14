@@ -107,8 +107,6 @@ img_base=None, img_fmt='png'):
 		self.viz.setup_graphics(num_years)
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
-			# data = {'herbivore': ran.randint(2000, 8000), 'carnivore': ran.randint(1, 6000)}	# Debug code
-			# data = self.default_values_species
 			z = np.random.randint(200, size=(13, 21))											# Debug code
 			z2 = np.random.randint(200, size=(13, 21))											# Debug code
 			self.viz.get_data(self.num_animals_per_species)
