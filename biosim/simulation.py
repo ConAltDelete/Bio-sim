@@ -54,7 +54,7 @@ img_base=None, img_fmt='png'):
 		# new animals. This is assuming no global function except in animal superclass. #
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(\w*__\w*)|(np)|(ran)|(animal)",n)]
 		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
-		self.island, self.illigal_coord = string2map(island_map)
+		self.island, self.illigal_coord = string2map(island_map,self.names)
 		self.population = self.add_population(ini_pop)
 		self._year = 0
 		self.viz = Visualization()
