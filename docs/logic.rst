@@ -12,7 +12,9 @@ Every season requires a ``Cells`` object to manipulate. The only excpetions are
    - ``season_end``
    - ``season_migrasion``
 
-Those require the entire map.
+Those require the entire map. 
+
+
 
 .. automodule:: biosim.logic
    :members:

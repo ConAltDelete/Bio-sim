@@ -20,6 +20,7 @@ class Cells:
         """
         :param int cell_type: Describes the cell type as an integer.
         :param list/None coord: Tells the cell where it is on the map. The default value is ``[0,0]``.
+        :param list[str] names: ``names`` contain the names of all species on the island.
         """
         self.coord           = coord if coord is not None else [0, 0]
         self.count_species   = dict() if not(names) else {species:0 for species in names}
@@ -35,7 +36,7 @@ class Cells:
         another cell.
 
 
-        :param list[tuple[int,int]] illigal_moves: a list of tuples with illigal cells
+        :param list[tuple[int,int]] illigal_moves: a list of tuples with illegal cells
         """
         # We tell the animal to move to a resenable spot#
         for specis in self.default:
@@ -57,7 +58,7 @@ class Cells:
 
     def count(self):
         """
-        Counts the number of animals in the cell.
+        Counts the number of animals in the cell per species.
         """
         for spesis in self.default:
             self.count_species[spesis] = len(self.default[spesis])
