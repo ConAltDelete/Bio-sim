@@ -46,8 +46,6 @@ class animal:
 
 	def __init__(self, a: int, w: float, coord=[0, 0]):
 		"""
-		Inisializasion of the animal.
-
 		:param int a: age of animal.
 		:param float w: waight of animal.
 		:param list[int,int] coord: The coordinate of the animal.
@@ -60,7 +58,7 @@ class animal:
 
 	def Big_phi(self):
 		"""
-		'Big_phi' calculates the fitness of the animal based on its age and weight.
+		'Big_phi' calculates the fitness of the animal based on its age and weight. This value is crusial to this entire operation. 
 
 
 		:return: Fitness of animal.
@@ -138,7 +136,9 @@ class animal:
 
 	def birth(self, N: int, necro_birth: bool = False):
 		"""
-		Determens if child is born.
+		Birth it determened by the firness of the animal, its weight, and the number of the species around. If the weight of the mother is smaller than the weight of the child, it will not give birth.
+
+		Another factor to consider is chance, even if the condisions are met there is still no garanti to give birth. Unless you mess with its default values.
 
 
 		:param N: population number in cell.
@@ -173,7 +173,9 @@ class animal:
 
 	def move(self, ild: list):
 		"""
-		Given a map 'ild' it moves, or not.
+		For an animal to move it must first be fit enough to move. This is determend by its fitness and ``mu``.
+
+		If an animal is fit to move but tries to move to an cell that is not possible, it won't move at all. This illegal move is determend by the parameter ``ild`` which is an list generated from ``string2map``.
 
 
 		:param ild: list of illigal coorddiants.
@@ -189,7 +191,7 @@ class animal:
 
 	def check(self, r: list, ild: list):
 		"""
-		Checks if possible to move in diraction `r`
+		Checks if possible to move in diraction ``r``, in contecst of ``ild``.
 
 
 		:param r: The diraction this instance moves to.
@@ -236,7 +238,7 @@ class Herbivore(animal):
 
 	def eat(self, F_there, return_food = False):
 		"""
-		Instace consumes a portion of F.
+		``herbivore`` eats of the cell (which is representet by the number ``F_there``) and improves its own fitness. 
 
 
 		:param F_there: number of food.
@@ -281,7 +283,7 @@ class Carnivore(animal):
 
 	def _yield_life(self, L: list):
 		"""
-		Generator for life.
+		Generator for life that is about to be murdered.
 
 
 		:param L: The heard to eat.
@@ -300,7 +302,7 @@ class Carnivore(animal):
 
 	def eat(self, F_there: list):
 		"""
-		Animal eats, because it is good.
+		``Carnivore`` eats ``Herbivore`` given both's fitness. For the preditor to have an chance to eat the herbivore it must have better fitness than the herbivore. 
 
 
 		:param F_there: A list of herbavores.
@@ -326,10 +328,4 @@ class Carnivore(animal):
 
 
 if __name__ == "__main__":
-	H = Herbivore(1, 4)
-	H.gamma = 4
-	print(H.gamma)
-	Herbivore.gamma = 3
-	print(H.gamma)
-	K = Herbivore(2, 3)
-	print(K.gamma)
+	pass

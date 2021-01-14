@@ -22,7 +22,16 @@ Table of Content
 
 Theory
 ======
-To simulate an animal population we need to recreate its behavore.
+To simulate an animal population we need to recreate its behavore. This is done through ``seasons`` where each season interacts with the island. The primary ones are 
+
+* feeding
+* migration
+* birth
+* lose weight
+* death
+* The end
+
+``The end`` could not count as a season since its effect on the island is just refilling cells and counting population.
 
 Indices and tables
 ==================

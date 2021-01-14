@@ -28,12 +28,17 @@ def find_border(x_length,y_length):
 
     return all_coord
 
-def string2map(map_str: str):
+def string2map(map_str: str, names: list):
     """
-    This file converts map to a readable map.
+    This file converts map to a readable map. This function considers following f****
+     - 'W': Water tile, it has the curius proparty of being inaccesible to all being.
+     - 'D': Dessard: it contains no food for the ``Herbivore``.
+     - 'H': Highland: its maximum food supply is less than ``Lowland``.
+     - 'L': Lowland: its maximum food supply is greater than ``HighLand``.
 
 
     :param map_str: a string that represents the map.
+    :param list names: a list of species names.
     :return: a new map, and illigal coordinates
     """
     map_list = [list(map_r) for map_r in map_str.split()]
@@ -53,12 +58,12 @@ def string2map(map_str: str):
                 if colum[1] not in standard_values:
                     raise ValueError("'{}' is not a standard value, expected {}".format(colum[1],standard_values))
                 new_map.update({incomming_coord: Cells(
-                    standard_values[colum[1]], list(incomming_coord))})
+                    standard_values[colum[1]], list(incomming_coord),names)})
             else:
                 if colum[1] != "W" and incomming_coord in border_coord:
                     raise ValueError("excpected 'W', got {}".format(colum[1]))
                 new_map.update({incomming_coord: Cells(
-                    standard_values[colum[1]], list(incomming_coord))})
+                    standard_values[colum[1]], list(incomming_coord),names)})
                 illigal_coord.append(incomming_coord)
     return [new_map, illigal_coord]
 
