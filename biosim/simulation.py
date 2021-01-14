@@ -111,8 +111,6 @@ img_base=None, img_fmt='png'):
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
 			if self._year % vis_years == 0:
-				z1 = np.random.randint(200, size=(13, 21))											# Debug code
-				z2 = np.random.randint(200, size=(13, 21))											# Debug code
 				self.get_data()
 				self.viz.get_data(self.num_animals_per_species)
 				self.viz.update_graphics(self._year, self.data, self.data2)
@@ -153,19 +151,21 @@ img_base=None, img_fmt='png'):
 
 	def get_data(self):
 		"""Get data from the cells in self.island"""
+		columns = self.str_map.splitlines()
+		rows = list(columns[0])
 		z = list()
-		for y in range(5):
+		for y in range(len(columns)):
 			temp = list()
-			for x in range(5):
+			for x in range(len(rows)):
 				v = self.island[(y + 1, x + 1)].count_species['Herbivore']
 				temp.append(v)
 			z.append(temp)
 		self.data = z
 
 		u = list()
-		for y in range(5):
+		for y in range(len(columns)):
 			temp = list()
-			for x in range(5):
+			for x in range(len(rows)):
 				v = self.island[(y + 1, x + 1)].count_species['Carnivore']
 				temp.append(v)
 			u.append(temp)
