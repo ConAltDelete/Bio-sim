@@ -18,7 +18,7 @@ if __name__ == "__main__":
         "age": 5,
         "weight": 20} for _ in range(10)]
     }])
-    sim.simulate(num_years=50,vis_years=1)
+    sim.simulate(num_years=50,vis_years=500)
     sim.add_population(population=[
         {
             "loc":(2,2),
@@ -31,4 +31,4 @@ if __name__ == "__main__":
             ]
         }
     ])
-    sim.simulate(num_years=250,vis_years=1)
+    sim.simulate(num_years=250,vis_years=500)

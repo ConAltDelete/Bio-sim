@@ -85,16 +85,16 @@ class Visualization:
                 self.leg_ax.text(0.35, ix * 0.2, name, transform=self.leg_ax.transAxes)
 
         if self.heatmap_ax is None:
-            self.heatmap_ax = self.fig.add_subplot(4, 2, 6)
+            self.heatmap_ax = self.fig.add_subplot(4, 2, 5)
             self.img_ax = None
 
         if self.heatmap2_ax is None:
-            self.heatmap2_ax = self.fig.add_subplot(4, 2, 5)
+            self.heatmap2_ax = self.fig.add_subplot(4, 2, 6)
             self.img2_ax = None
 
         if self.pop is None:
             self.pop = self.fig.add_subplot(3, 3, 3)
-            self.pop.set_ylim(0, 8000)
+            self.pop.set_ylim(0, 1000)
 
         self.pop.set_xlim(0, self.n_steps + 1)
 
@@ -153,7 +153,7 @@ class Visualization:
             txt.set_text(template.format(k))
             plt.pause(0.1)"""
 
-        plt.ion()
+        # plt.ion()
 
     def update_graphics(self, current_year, cells_map, cells_map2):
         """
@@ -195,7 +195,7 @@ class Visualization:
         if self.img2_ax is not None:
             self.img2_ax.set_data(cells_map2)
         else:
-            self.img2_ax = self.heatmap2_ax.imshow(cells_map2, interpolation='nearest', vmin=0, vmax=200)
+            self.img2_ax = self.heatmap2_ax.imshow(cells_map2, interpolation='nearest', vmin=0, vmax=50)
             plt.colorbar(self.img2_ax, ax=self.heatmap2_ax, orientation='vertical')
 
         self.fig.canvas.flush_events()
