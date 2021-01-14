@@ -143,12 +143,12 @@ def test_no_diagonal_movements():
             ini_pop=fin_pop
                 )
     this_fucking_thing.set_animal_parameters("Herbivore",{
-        'mu': 1,
+        'mu': 100,
         'omega': 0,
         'gamma': 0,
         'a_half': 1000})
     this_fucking_thing.set_animal_parameters("Carnivore",{
-        'mu': 1,
+        'mu': 100,
         'omega': 0,
         'gamma': 0,
         'a_half': 1000})
@@ -168,6 +168,51 @@ def test_no_diagonal_movements():
             else:
                 count_cells[cell] += len(the_map[cell].default["Carnivore"])
     not_expected = [(3,3),(2,2),(2,4),(4,2),(4,4)]
+    for coord in not_expected:
+        if coord in count_cells:
+            count = count_cells[coord] == 0
+            assert count
+
+def test_no_diagonal_movements_two_iterations():
+    length = 20
+    ini_herb = [{'species': 'Herbivore',
+                 'age': 5,
+                 'weight': 100} for _ in range(length)]
+    ini_carn = [{'species': 'Carnivore',
+                 'age': 5,
+                 'weight': 100} for _ in range(length)]
+    ini_pop = ini_herb + ini_carn
+    fin_pop = [{"loc": (4, 4), "pop": ini_pop}]
+    this_fucking_thing = BioSim(island_map="WWWWWWW\nWLLLllW\nwLLlllw\nwlLLllw\nwlLLllw\nwlLLllw\nwwWWwWW".upper(),
+            ini_pop=fin_pop
+                )
+    this_fucking_thing.set_animal_parameters("Herbivore",{
+        'mu': 100,
+        'omega': 0,
+        'gamma': 0,
+        'a_half': 1000})
+    this_fucking_thing.set_animal_parameters("Carnivore",{
+        'mu': 100,
+        'omega': 0,
+        'gamma': 0,
+        'a_half': 1000})
+    the_map = this_fucking_thing.island
+    illigal_moves = this_fucking_thing.illigal_coord
+    for _ in range(2):
+        season_migration(the_map,illigal_moves)
+    count_cells = dict()
+    for cell in the_map:
+        if "Herbivore" in the_map[cell].default:
+            if cell not in count_cells:
+                count_cells[cell] = len(the_map[cell].default["Herbivore"])
+            else:
+                count_cells[cell] += len(the_map[cell].default["Herbivore"])
+        if "Carnivore" in the_map[cell].default:
+            if cell not in count_cells:
+                count_cells[cell] = len(the_map[cell].default["Carnivore"])
+            else:
+                count_cells[cell] += len(the_map[cell].default["Carnivore"])
+    not_expected = [(3,4),(4,3),(4,5),(5,4)]
     for coord in not_expected:
         if coord in count_cells:
             count = count_cells[coord] == 0

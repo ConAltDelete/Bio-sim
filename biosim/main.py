@@ -16,8 +16,18 @@ if __name__ == "__main__":
             {
         "species": "Herbivore",
         "age": 5,
-        "weight": 20} for _ in range(10)]
+        "weight": 20} for _ in range(200)]
     }])
+    sim.set_animal_parameters("Herbivore",{
+        'mu': 100,
+        'omega': 0,
+        'gamma': 0,
+        'a_half': 1000})
+    sim.set_animal_parameters("Carnivore",{
+        'mu': 100,
+        'omega': 0,
+        'gamma': 0,
+        'a_half': 1000})
     sim.simulate(num_years=50,vis_years=1)
     sim.add_population(population=[
         {
@@ -27,7 +37,7 @@ if __name__ == "__main__":
                     "species": "Carnivore",
                     "age": 5,
                     "weight": 20
-                } for _ in range(5)
+                } for _ in range(100)
             ]
         }
     ])
