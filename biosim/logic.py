@@ -175,10 +175,5 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
     season_end(island=island)
 
 
-
-    if year % visual_year == 0:
-        pass
-
-
 if __name__ == '__main__':
     pass

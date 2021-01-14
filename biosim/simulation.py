@@ -52,7 +52,7 @@ img_base=None, img_fmt='png'):
 
 		# We look for posible animals in animals.py, meaning we don't need to add maually
 		# new animals. This is assuming no global function except in animal superclass. #
-		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(\w*__\w*)|(np)|(ran)|(animal)",n)]
+		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match(r"(\w*__\w*)|(np)|(ran)|(animal)",n)]
 		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
 		self.island, self.illigal_coord = string2map(island_map, self.names)
 		self.population = self.add_population(ini_pop)
@@ -107,16 +107,18 @@ img_base=None, img_fmt='png'):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
-		if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
-			if self.viz.fig is None:
-				self.viz.convert_map(self.str_map)
-			self.viz.setup_graphics(num_years)
+		if vis_years != None:
+			if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
+				if self.viz.fig is None:
+					self.viz.convert_map(self.str_map)
+				self.viz.setup_graphics(num_years)
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
-			if self._year % vis_years == 0:
-				self.get_data()
-				self.viz.update_data(self.num_animals_per_species, self.total_age['Herbivore'])
-				self.viz.update_graphics(self._year, self.data, self.data2)
+			if vis_years != None:
+				if self._year % vis_years == 0:
+					self.get_data()
+					self.viz.update_data(self.num_animals_per_species, self.total_age['Herbivore'])
+					self.viz.update_graphics(self._year, self.data, self.data2)
 			self._year += 1
 	
 	def add_population(self, population:list):
