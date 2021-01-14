@@ -153,7 +153,7 @@ class Visualization:
             txt.set_text(template.format(k))
             plt.pause(0.1)"""
 
-        # plt.ion()
+        plt.ion()
 
     def update_graphics(self, current_year, cells_map, cells_map2):
         """
