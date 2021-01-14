@@ -172,17 +172,17 @@ class Visualization:
 
         self.histogram_age.cla()
         self.histogram_age.set_xlim(0, 60)
-        self.histogram_age.set_ylim(0, 2000)
+        self.histogram_age.set_ylim(0, 500)
         self.histogram_age.hist(self.age, bins=30, histtype='step')
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, 60)
-        self.histogram_weight.set_ylim(0, 1000)
+        self.histogram_weight.set_ylim(0, 250)
         self.histogram_weight.hist(self.weight, bins=30, histtype='step')
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, 1)
-        self.histogram_fitness.set_ylim(0, 2000)
+        self.histogram_fitness.set_ylim(0, 500)
         self.histogram_fitness.hist(self.fitness, bins=20, histtype='step')
 
         if self.img_ax is not None:
@@ -200,13 +200,13 @@ class Visualization:
         self.fig.canvas.flush_events()
         plt.pause(1e-6)
 
-    def update_data(self, n_species: dict, list_of_ages):
+    def update_data(self, n_species: dict, list_of_ages, l_weights, l_fitness):
         self.count_herb = n_species["Herbivore"]
         self.count_carn = n_species["Carnivore"]
 
         self.age = list_of_ages
-        self.weight = np.random.randint(120, size=8000)
-        self.fitness = np.random.random(8000)
+        self.weight = l_weights
+        self.fitness = l_fitness
 
     def convert_map(self, map_str: str):
         rgb_value = {'W': (0, 0.5, 1),

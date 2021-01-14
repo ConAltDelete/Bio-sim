@@ -52,7 +52,7 @@ img_base=None, img_fmt='png'):
 
 		# We look for posible animals in animals.py, meaning we don't need to add maually
 		# new animals. This is assuming no global function except in animal superclass. #
-		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match(r"(\w*__\w*)|(np)|(ran)|(animal)",n)]
+		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(\w*__\w*)|(np)|(ran)|(animal)",n)]
 		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
 		self.island, self.illigal_coord = string2map(island_map, self.names)
 		self.population = self.add_population(ini_pop)
@@ -114,11 +114,13 @@ img_base=None, img_fmt='png'):
 				self.viz.setup_graphics(num_years)
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
-			if vis_years != None:
-				if self._year % vis_years == 0:
-					self.get_data()
-					self.viz.update_data(self.num_animals_per_species, self.total_age['Herbivore'])
-					self.viz.update_graphics(self._year, self.data, self.data2)
+			if self._year % vis_years == 0:
+				self.get_data()
+				self.viz.update_data(self.num_animals_per_species,
+									 self.total_age['Herbivore'],
+									 self.total_weight['Herbivore'],
+									 self.total_fitness['Herbivore'])
+				self.viz.update_graphics(self._year, self.data, self.data2)
 			self._year += 1
 	
 	def add_population(self, population:list):
@@ -183,7 +185,19 @@ img_base=None, img_fmt='png'):
 			for coord in self.island:
 				for units in self.island[coord].count_age[names]:
 					self.total_age[names].append(units)
-	
+
+		self.total_weight = {'Herbivore': [], 'Carnivore': []}
+		for names in self.names:
+			for coord in self.island:
+				for units in self.island[coord].count_weight[names]:
+					self.total_weight[names].append(units)
+
+		self.total_fitness = {'Herbivore': [], 'Carnivore': []}
+		for names in self.names:
+			for coord in self.island:
+				for units in self.island[coord].count_fitness[names]:
+					self.total_fitness[names].append(units)
+
 	@property
 	def year(self):
 		"""Last year simulated."""
