@@ -114,14 +114,12 @@ def test_migrasion_two_species():
     season_migration(the_map, illigal_moves)
     count_cells = dict()
     for cell in the_map:
-        if cell == (3,3):
-            continue
-        if "Herbivore" in the_map[cell].default:
+        if "Herbivore" in the_map[cell].default and len(the_map[cell].default["Herbivore"]) != 0:
             if cell not in count_cells:
                 count_cells[cell] = len(the_map[cell].default["Herbivore"])
             else:
                 count_cells[cell] += len(the_map[cell].default["Herbivore"])
-        if "Carnivore" in the_map[cell].default:
+        if "Carnivore" in the_map[cell].default and len(the_map[cell].default["Carnivore"]) != 0:
             if cell not in count_cells:
                 count_cells[cell] = len(the_map[cell].default["Carnivore"])
             else:
