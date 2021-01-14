@@ -22,7 +22,7 @@ class Cells:
         :param list/None coord: Tells the cell where it is on the map. The default value is ``[0,0]``.
         """
         self.coord   = coord if coord is not None else [0, 0]
-        self.count   = dict()
+        self.count_species   = dict()
         self.type    = cell_type
         self.f_max   = float(Cells.default_food[self.type])
         self.food    = self.f_max
@@ -59,11 +59,9 @@ class Cells:
         """
         Counts the number of animals in the cell.
         """
-        self.count = 0
         for spesis in self.default:
-            self.count += len(self.default[spesis])
-        for spesis in self.migrate:
-            self.count += len(self.migrate[spesis])
+            self.count_species[spesis] = len(self.default[spesis])
+
 
 if __name__ == '__main__':
     pass

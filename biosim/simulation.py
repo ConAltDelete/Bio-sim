@@ -102,13 +102,13 @@ img_base=None, img_fmt='png'):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
-		if num_years % vis_years == 0:
+		if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
 			if self.viz.fig is None:
 				self.viz.convert_map(self.str_map)
 			self.viz.setup_graphics(num_years)
 		for year in range(num_years):
 			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
-			if num_years % vis_years == 0:
+			if self._year % vis_years == 0:
 				z = np.random.randint(200, size=(13, 21))											# Debug code
 				z2 = np.random.randint(200, size=(13, 21))											# Debug code
 				self.viz.get_data(self.num_animals_per_species)
@@ -147,6 +147,9 @@ img_base=None, img_fmt='png'):
 						cell.default[animal_name] = [create_animal]
 				else:
 					raise ValueError("Got '{}'; needs {}".format(animal["species"],self.names))
+
+	def get_data(self):
+		pass
 	
 	@property
 	def year(self):

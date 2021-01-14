@@ -143,6 +143,7 @@ def season_end(island: dict):
     """
     for coord in island:
         island[coord].food = float(island[coord].f_max)
+        island[coord].count()
 
 def year_cycle(island,illigal_coords,year, visual_year=1):
     """
@@ -172,6 +173,8 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
         season_death(island[c])
 
     season_end(island=island)
+
+
 
     if year % visual_year == 0:
         pass
