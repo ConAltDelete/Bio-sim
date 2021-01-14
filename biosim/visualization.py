@@ -7,7 +7,7 @@ functioning visualization of the island simulation
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
-from biosim.simulation import *
+#from biosim.simulation import *
 import matplotlib.pyplot as plt
 import random
 import numpy as np

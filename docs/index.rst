@@ -19,6 +19,7 @@ Table of Content
    island
    visuals
    animal
+   visualization
 
 Theory
 ======
