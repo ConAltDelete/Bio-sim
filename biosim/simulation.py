@@ -10,6 +10,12 @@ from .logic import year_cycle
 from .visualization import Visualization
 import sys
 import re
+import subprocess
+import os
+
+
+_DEFAULT_GRAPHICS_DIR = os.path.join('...', 'data')
+
 
 class BioSim:
 	"""
@@ -63,7 +69,7 @@ img_base=None, img_fmt='png'):
 		self.total_age = dict()
 		self.total_weight = dict()
 		self.total_fitness = dict()
-		self._img_base = img_base
+		self._img_base = '../data/{}'.format(img_base)
 		self._img_fmt = img_fmt
 
 	def set_animal_parameters(self, species: str, params: dict):
@@ -202,8 +208,37 @@ img_base=None, img_fmt='png'):
 				for units in self.island[coord].count_fitness[names]:
 					self.total_fitness[names].append(units)
 
-	def create_movie(self):
-		pass
+	def create_movie(self, movie_fmt='gif'):
+		"""Creates a movie of the simulation"""
+		if self._img_base is None:
+			raise RuntimeError("No filename defined")
+
+		if movie_fmt == 'mp4':
+			try:
+				subprocess.check_call([
+					'ffmpeg',
+					'-i', '{}_%05d.png'.format(self._img_base),
+					'-y',
+					'-profile:v', 'baseline',
+					'-level', '3.0',
+					'-pix_fmt', 'yuv420p',
+					'{}.{}'.format(self._img_base, movie_fmt)])
+			except subprocess.CalledProcessError as err:
+				raise RuntimeError('ERROR: ffmpeg failed with: {}'.format(err))
+
+		elif movie_fmt == 'gif':
+			try:
+				subprocess.check_call([
+					'magick',
+					'-delay', '1',
+					'-loop', '0',
+					'{}_*.png'.format(self._img_base),
+					'{}.{}'.format(self._img_base, movie_fmt)])
+			except subprocess.CalledProcessError as err:
+				raise RuntimeError('ERROR: convert failed with: {}'.format(err))
+
+		else:
+			raise ValueError('Unknown movie format: ' + movie_fmt)
 
 	@property
 	def year(self):
@@ -226,7 +261,3 @@ img_base=None, img_fmt='png'):
 				else:
 					dict_count[spesis] = len(self.island[coord].default[spesis])
 		return dict_count
-	
-	def make_movie(self):
-		"""Create MPEG4 movie from visualization images saved."""
-		pass
