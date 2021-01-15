@@ -571,7 +571,7 @@ venv.bak/
 .vscode
 .pytest_cache
 .ignore
-tests/test_simulation.py
+
 # Spyder project settings
 .spyderproject
 .spyproject
