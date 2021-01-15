@@ -183,8 +183,8 @@ class animal:
 		# Let the animal choose it's diraction based on what it
 		# knows, by that we need not worry about what it must 
 		# rather we let it do what it was born to do #
-		
-		do_move = self.bin_choise(((self.var["mu"]) * self.var["phi"]))
+
+		do_move = ran.random() > (self.var["mu"])*self.var["phi"]
 		direct = ran.choice([k for k in animal.ret_moves.keys()])
 		direct_list = animal.ret_moves[direct]
 		if self.check(direct_list, ild) and do_move:

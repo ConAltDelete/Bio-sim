@@ -57,7 +57,7 @@ class Cells:
                     else:
                         self.migrate[specis] = [animal]
                 else:
-                    self.default[specis].insert(0,animal)
+                    self.default[specis].insert(-1,animal)
 
     def count(self):
         """
