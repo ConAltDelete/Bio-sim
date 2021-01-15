@@ -43,7 +43,7 @@ class BioSim:
 		img_base should contain a path and beginning of a file name.
 	"""
 	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
-img_base=None, img_fmt='png'):
+img_base=None, img_fmt='png', tmean = False):
 		# we set the random seed for future random number generation. In other words,
 		# we make a random simulation consistent.#
 		if seed: ran.seed(seed)
@@ -63,6 +63,9 @@ img_base=None, img_fmt='png'):
 		self.total_age = dict()
 		self.total_weight = dict()
 		self.total_fitness = dict()
+		if tmean:
+			self.tmean = tmean
+			self.mean = {species:0 for species in self.names}
 
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -123,6 +126,9 @@ img_base=None, img_fmt='png'):
 									 self.total_fitness)
 					self.viz.update_graphics(self._year, self.data, self.data2)
 			self._year += 1
+			if self.tmean:
+				for species in self.num_animals_per_species:
+					self.mean[species] = self.mean[species] + ((self.num_animals_per_species[species] - self.mean[species])/self._year)
 	
 	def add_population(self, population:list):
 		"""

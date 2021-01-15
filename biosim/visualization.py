@@ -96,7 +96,7 @@ class Visualization:
 
         if self.pop is None:
             self.pop = self.fig.add_subplot(3, 3, 3)
-            self.pop.set_ylim(0, 16000)
+            self.pop.set_ylim(0, 300)
 
         self.pop.set_xlim(0, self.n_steps + 1)
 

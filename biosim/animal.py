@@ -97,20 +97,6 @@ class animal:
             return q_p * q_n
 
     @staticmethod
-    def bin_choise(p):
-        """
-        Gives True by random choise.
-
-
-        :param p: probability 0<=p<=1
-        :return: bool
-        """
-        # By using the random.random function we utilise the seed declared in
-        # the BioSim class, assuming uniform distribution since the length from
-        # 0 to p is p, then the probability to hit <= p is p/1 = p
-        return ran.random() < p
-
-    @staticmethod
     def N(w: float, p: float):
         """
         Gauss distrebution.
@@ -124,6 +110,7 @@ class animal:
 
     def age(self):
         self.var["a"] += 1
+        self.var["phi"] = self.Big_phi()
 
     def death(self):
         """
@@ -131,7 +118,7 @@ class animal:
                 - Its weight is equal to 0 or less.
                 - By random chance based on its fitness.
         """
-        if self.var["w"] <= 0 or (ran.random() < (self.var["omega"] * (1 - self.var["phi"]))):
+        if self.var["w"] <= 0 or ( ran.random() < (self.var["omega"] * (1 - self.var["phi"])) ):
             self.var["life"] = False
 
     def birth(self, N: int, necro_birth: bool = False):
