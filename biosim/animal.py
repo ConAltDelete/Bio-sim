@@ -110,7 +110,6 @@ class animal:
 
     def age(self):
         self.var["a"] += 1
-        self.var["phi"] = self.Big_phi()
 
     def death(self):
         """
