@@ -117,9 +117,9 @@ img_base=None, img_fmt='png'):
 			if self._year % vis_years == 0:
 				self.get_data()
 				self.viz.update_data(self.num_animals_per_species,
-									 self.total_age['Herbivore'],
-									 self.total_weight['Herbivore'],
-									 self.total_fitness['Herbivore'])
+									 self.total_age,
+									 self.total_weight,
+									 self.total_fitness)
 				self.viz.update_graphics(self._year, self.data, self.data2)
 			self._year += 1
 	
