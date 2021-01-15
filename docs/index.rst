@@ -34,6 +34,12 @@ To simulate an animal population we need to recreate its behavore. This is done 
 
 ``The end`` could not count as a season since its effect on the island is just refilling cells and counting population.
 
+The heriacy is as follows
+
+.. image:: biosim.png
+
+Every singel class in the heriacy gets used in the simulation along with its components. 
+
 Indices and tables
 ==================
 

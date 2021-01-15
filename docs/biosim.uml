@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#C:/Users/matsh/OneDrive - Norwegian University of Life Sciences/uni/INF200/eksamen/biosim-g24-olsen-granheim/biosim</OriginalElement>
+  <nodes>
+    <node x="0.0" y="305.0">biosim.island.Cells</node>
+    <node x="130.0" y="0.0">biosim.animal.animal</node>
+    <node x="236.0" y="80.0">biosim.animal.Herbivore</node>
+    <node x="0.0" y="230.0">biosim.simulation.BioSim</node>
+    <node x="0.0" y="80.0">biosim.animal.Carnivore</node>
+    <node x="0.0" y="155.0">biosim.visualization.Visualization</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="biosim.animal.Herbivore" target="biosim.animal.animal">
+      <point x="0.0" y="-15.0" />
+      <point x="344.0" y="55.0" />
+      <point x="274.0" y="55.0" />
+      <point x="48.0" y="15.0" />
+    </edge>
+    <edge source="biosim.animal.Carnivore" target="biosim.animal.animal">
+      <point x="0.0" y="-15.0" />
+      <point x="108.0" y="55.0" />
+      <point x="178.0" y="55.0" />
+      <point x="-48.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.6000000000000005" x="267.43749999999983" y="171.99999999999994" />
+  <SelectedNodes />
+  <Categories />
+</Diagram>
+
