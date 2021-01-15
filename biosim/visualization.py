@@ -150,7 +150,7 @@ class Visualization:
             txt.set_text(template.format(k))
             plt.pause(0.1)"""
 
-        plt.ion()
+        # plt.ion()
 
     def update_graphics(self, current_year, cells_map, cells_map2):
         """
@@ -226,7 +226,7 @@ class Visualization:
         if self._img_base is None:
             return
 
-        plt.savefig('{base}_{num:05d}.{type}'.format(base='../data/{name}'.format(name=self._img_base),
+        plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))
         self._img_ctr += 1
