@@ -50,9 +50,12 @@ class Visualization:
         self.year = None
         self.year_current = 0
         self.axt = None
-        self.age = 0
-        self.weight = 0
-        self.fitness = 0
+        self.h_age = list()
+        self.h_weight = list()
+        self.h_fitness = list()
+        self.c_age = list()
+        self.c_weight = list()
+        self.c_fitness = list()
 
     def setup_graphics(self, nx_step):
         """
@@ -122,20 +125,12 @@ class Visualization:
 
         if self.histogram_age is None:
             self.histogram_age = self.fig.add_subplot(7, 3, 19)
-            self.histogram_age.set_xlim(0, 60)
-            self.histogram_age.set_ylim(0, 2000)
 
         if self.histogram_weight is None:
             self.histogram_weight = self.fig.add_subplot(7, 3, 20)
-            self.histogram_weight.set_xlim(0, 60)
-            self.histogram_weight.set_ylim(0, 1000)
 
         if self.histogram_fitness is None:
             self.histogram_fitness = self.fig.add_subplot(7, 3, 21)
-            self.histogram_fitness.set_xlim(0, 1.0)
-            self.histogram_fitness.set_ylim(0, 2000)
-
-        self.histogram_age.hist(self.age, bins=30, histtype='step')
 
         self.axt.cla()
         self.axt.axis('off')  # turn off coordinate system
@@ -173,17 +168,20 @@ class Visualization:
         self.histogram_age.cla()
         self.histogram_age.set_xlim(0, 60)
         self.histogram_age.set_ylim(0, 500)
-        self.histogram_age.hist(self.age, bins=30, histtype='step')
+        self.histogram_age.hist(self.h_age, bins=30, histtype='step', color=(0, 0, 1))
+        self.histogram_age.hist(self.c_age, bins=30, histtype='step', color=(1, 0, 0))
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, 60)
         self.histogram_weight.set_ylim(0, 250)
-        self.histogram_weight.hist(self.weight, bins=30, histtype='step')
+        self.histogram_weight.hist(self.h_weight, bins=30, histtype='step', color=(0, 0, 1))
+        self.histogram_weight.hist(self.c_weight, bins=30, histtype='step', color=(1, 0, 0))
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, 1)
         self.histogram_fitness.set_ylim(0, 500)
-        self.histogram_fitness.hist(self.fitness, bins=20, histtype='step')
+        self.histogram_fitness.hist(self.h_fitness, bins=20, histtype='step', color=(0, 0, 1))
+        self.histogram_fitness.hist(self.c_fitness, bins=20, histtype='step', color=(1, 0, 0))
 
         if self.img_ax is not None:
             self.img_ax.set_data(cells_map)
@@ -200,13 +198,17 @@ class Visualization:
         self.fig.canvas.flush_events()
         plt.pause(1e-6)
 
-    def update_data(self, n_species: dict, list_of_ages, l_weights, l_fitness):
+    def update_data(self, n_species: dict, l_ages, l_weights, l_fitness):
         self.count_herb = n_species["Herbivore"]
         self.count_carn = n_species["Carnivore"]
 
-        self.age = list_of_ages
-        self.weight = l_weights
-        self.fitness = l_fitness
+        self.h_age = l_ages['Herbivore']
+        self.h_weight = l_weights['Herbivore']
+        self.h_fitness = l_fitness['Herbivore']
+
+        self.c_age = l_ages['Carnivore']
+        self.c_weight = l_weights['Carnivore']
+        self.c_fitness = l_fitness['Carnivore']
 
     def convert_map(self, map_str: str):
         rgb_value = {'W': (0, 0.5, 1),
