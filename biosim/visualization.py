@@ -28,7 +28,7 @@ class Visualization:
     """
     Visualization
     """
-    def __init__(self):
+    def __init__(self, img_base, img_fmt):
         self.n_steps = 0
         self.island_map_ax = None
         self.island_map = None
@@ -56,6 +56,9 @@ class Visualization:
         self.c_age = list()
         self.c_weight = list()
         self.c_fitness = list()
+        self._img_base = img_base
+        self._img_ctr = 0
+        self._img_fmt = img_fmt
 
     def setup_graphics(self, nx_step):
         """
@@ -154,9 +157,8 @@ class Visualization:
         updates the graphics interface with new data and shows it live
         TODO: cells_map and cells_map2 make into 1 as a dict
         """
-
-        self.year.set_text('Year:{:5}'.format(self.year_current))
         self.year_current = current_year
+        self.year.set_text('Year:{:5}'.format(self.year_current))
 
         herbdata = self.n_herb.get_ydata()
         carndata = self.n_carn.get_ydata()
@@ -167,19 +169,19 @@ class Visualization:
 
         self.histogram_age.cla()
         self.histogram_age.set_xlim(0, 60)
-        self.histogram_age.set_ylim(0, 500)
+        self.histogram_age.set_ylim(0, 2000)
         self.histogram_age.hist(self.h_age, bins=30, histtype='step', color=(0, 0, 1))
         self.histogram_age.hist(self.c_age, bins=30, histtype='step', color=(1, 0, 0))
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, 60)
-        self.histogram_weight.set_ylim(0, 250)
+        self.histogram_weight.set_ylim(0, 1000)
         self.histogram_weight.hist(self.h_weight, bins=30, histtype='step', color=(0, 0, 1))
         self.histogram_weight.hist(self.c_weight, bins=30, histtype='step', color=(1, 0, 0))
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, 1)
-        self.histogram_fitness.set_ylim(0, 500)
+        self.histogram_fitness.set_ylim(0, 2000)
         self.histogram_fitness.hist(self.h_fitness, bins=20, histtype='step', color=(0, 0, 1))
         self.histogram_fitness.hist(self.c_fitness, bins=20, histtype='step', color=(1, 0, 0))
 
@@ -218,6 +220,16 @@ class Visualization:
 
         self.rgb_map = [[rgb_value[column] for column in row]
                         for row in map_str.split()]
+
+    def create_images(self):
+        """saves images to file"""
+        if self._img_base is None:
+            return
+
+        plt.savefig('{base}_{num:05d}.{type}'.format(base='../data/{name}'.format(name=self._img_base),
+                                                     num=self._img_ctr,
+                                                     type=self._img_fmt))
+        self._img_ctr += 1
 
 
 if __name__ == "__main__":

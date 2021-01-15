@@ -57,12 +57,14 @@ img_base=None, img_fmt='png'):
 		self.island, self.illigal_coord = string2map(island_map, self.names)
 		self.population = self.add_population(ini_pop)
 		self._year = 0
-		self.viz = Visualization()
+		self.viz = None
 		self.data = list()
 		self.data2 = list() # temporary
 		self.total_age = dict()
 		self.total_weight = dict()
 		self.total_fitness = dict()
+		self._img_base = img_base
+		self._img_fmt = img_fmt
 
 	def set_animal_parameters(self, species: str, params: dict):
 		"""
@@ -107,9 +109,10 @@ img_base=None, img_fmt='png'):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
-		if vis_years != None:
+		if vis_years is not None:
 			if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
-				if self.viz.fig is None:
+				if self.viz is None:
+					self.viz = Visualization(self._img_base, self._img_fmt)
 					self.viz.convert_map(self.str_map)
 				self.viz.setup_graphics(num_years)
 		for year in range(num_years):
@@ -121,6 +124,7 @@ img_base=None, img_fmt='png'):
 									 self.total_weight,
 									 self.total_fitness)
 				self.viz.update_graphics(self._year, self.data, self.data2)
+				self.viz.create_images()
 			self._year += 1
 	
 	def add_population(self, population:list):
@@ -197,6 +201,9 @@ img_base=None, img_fmt='png'):
 			for coord in self.island:
 				for units in self.island[coord].count_fitness[names]:
 					self.total_fitness[names].append(units)
+
+	def create_movie(self):
+		pass
 
 	@property
 	def year(self):
