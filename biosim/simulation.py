@@ -69,8 +69,8 @@ img_base=None, img_fmt='png', tmean = False):
 		self.total_age = dict()
 		self.total_weight = dict()
 		self.total_fitness = dict()
-		if tmean:
-			self.tmean = tmean
+		self.tmean = tmean
+		if self.tmean:
 			self.mean = {species:0 for species in self.names}
 		self._img_base = '../data/{}'.format(img_base)
 		self._img_fmt = img_fmt
@@ -134,7 +134,7 @@ img_base=None, img_fmt='png', tmean = False):
 									 self.total_weight,
 									 self.total_fitness)
 				self.viz.update_graphics(self._year, self.data, self.data2)
-				self.viz.create_images()
+				#self.viz.create_images()
 			self._year += 1
 			if self.tmean:
 				for species in self.num_animals_per_species:

@@ -29,6 +29,14 @@ class Visualization:
     Visualization
     """
     def __init__(self, img_base, img_fmt):
+        self.meta_data = {
+            "Herbivore": {
+                "colour": (1,0,0)
+            },
+            "Carnivore": {
+                "colour": (0,0,1)
+            }
+        }
         self.n_steps = 0
         self.island_map_ax = None
         self.island_map = None
@@ -42,20 +50,16 @@ class Visualization:
         self.heatmap2_ax = None
         self.img2_ax = None
         self.pop = None
-        self.n_carn = None
-        self.n_herb = None
-        self.count_carn = int()
-        self.count_herb = int()
+        self.n = dict()
+        self.count = dict()
         self.fig = None
         self.year = None
         self.year_current = 0
         self.axt = None
-        self.h_age = list()
-        self.h_weight = list()
-        self.h_fitness = list()
-        self.c_age = list()
-        self.c_weight = list()
-        self.c_fitness = list()
+        self.age = dict()
+        self.weight = dict()
+        self.fitness = dict()
+
         self._img_base = img_base
         self._img_ctr = 0
         self._img_fmt = img_fmt
@@ -103,28 +107,17 @@ class Visualization:
 
         self.pop.set_xlim(0, self.n_steps + 1)
 
-        if self.n_herb is None:
-            herb_plot = self.pop.plot(np.arange(self.n_steps),
-                                      np.full(self.n_steps, np.nan), 'b-')
-            self.n_herb = herb_plot[0]
-        else:
-            hx_data, hy_data = self.n_herb.get_data()
-            hx_new = np.arange(hx_data[-1] + 1, self.n_steps)
-            if len(hx_new) > 0:
-                hy_new = np.full(hx_new.shape, np.nan)
-                self.n_herb.set_data(np.hstack((hx_data, hx_new)),
-                                     np.hstack((hy_data, hy_new)))
-        if self.n_carn is None:
-            carn_plot = self.pop.plot(np.arange(self.n_steps),
-                                      np.full(self.n_steps, np.nan), 'r-')
-            self.n_carn = carn_plot[0]
-        else:
-            cx_data, cy_data = self.n_carn.get_data()
-            cx_new = np.arange(cx_data[-1] + 1, self.n_steps)
-            if len(cx_new) > 0:
-                hy_new = np.full(cx_new.shape, np.nan)
-                self.n_carn.set_data(np.hstack((cx_data, cx_new)),
-                                     np.hstack((cy_data, hy_new)))
+        for species in self.n:
+            if self.n[species] is None:
+                self.n[species] = (self.pop.plot(np.arange(self.n_steps),
+                                      np.full(self.n_steps, np.nan), 'b-'))[0]
+            else:
+                hx_data, hy_data = self.n[species].get_data()
+                hx_new = np.arange(hx_data[-1] + 1, self.n_steps)
+                if len(hx_new) > 0:
+                    hy_new = np.full(hx_new.shape, np.nan)
+                    self.n[species].set_data(np.hstack((hx_data, hx_new)),
+                                         np.hstack((hy_data, hy_new)))
 
         if self.histogram_age is None:
             self.histogram_age = self.fig.add_subplot(7, 3, 19)
@@ -160,30 +153,28 @@ class Visualization:
         self.year_current = current_year
         self.year.set_text('Year:{:5}'.format(self.year_current))
 
-        herbdata = self.n_herb.get_ydata()
-        carndata = self.n_carn.get_ydata()
-        herbdata[current_year] = self.count_herb
-        carndata[current_year] = self.count_carn
-        self.n_herb.set_ydata(herbdata)
-        self.n_carn.set_ydata(carndata)
+        for species in self.n:
+            data = self.n[species].get_ydata()
+            data[current_year] = self.count[species]
+            self.n[species].set_ydata(data)
 
         self.histogram_age.cla()
         self.histogram_age.set_xlim(0, 60)
         self.histogram_age.set_ylim(0, 2000)
-        self.histogram_age.hist(self.h_age, bins=30, histtype='step', color=(0, 0, 1))
-        self.histogram_age.hist(self.c_age, bins=30, histtype='step', color=(1, 0, 0))
+        for species in self.weight:
+            self.histogram_age.hist(self.age[species], bins=30, histtype='step', color=self.meta_data[species]["colour"])
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, 60)
         self.histogram_weight.set_ylim(0, 1000)
-        self.histogram_weight.hist(self.h_weight, bins=30, histtype='step', color=(0, 0, 1))
-        self.histogram_weight.hist(self.c_weight, bins=30, histtype='step', color=(1, 0, 0))
+        for species in self.weight:
+            self.histogram_weight.hist(self.weight[species], bins=30, histtype='step', color=self.meta_data[species]["colour"])
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, 1)
         self.histogram_fitness.set_ylim(0, 2000)
-        self.histogram_fitness.hist(self.h_fitness, bins=20, histtype='step', color=(0, 0, 1))
-        self.histogram_fitness.hist(self.c_fitness, bins=20, histtype='step', color=(1, 0, 0))
+        for species in self.weight:
+            self.histogram_fitness.hist(self.fitness[species], bins=20, histtype='step', color=self.meta_data[species]["colour"])
 
         if self.img_ax is not None:
             self.img_ax.set_data(cells_map)
@@ -201,16 +192,13 @@ class Visualization:
         plt.pause(1e-6)
 
     def update_data(self, n_species: dict, l_ages, l_weights, l_fitness):
-        self.count_herb = n_species["Herbivore"]
-        self.count_carn = n_species["Carnivore"]
-
-        self.h_age = l_ages['Herbivore']
-        self.h_weight = l_weights['Herbivore']
-        self.h_fitness = l_fitness['Herbivore']
-
-        self.c_age = l_ages['Carnivore']
-        self.c_weight = l_weights['Carnivore']
-        self.c_fitness = l_fitness['Carnivore']
+        for species in n_species:
+            self.count[species] = n_species[species]
+        
+        for species in n_species:
+            self.age[species] = l_ages[species]
+            self.weight[species] = l_weights[species]
+            self.fitness[species] = l_fitness[species]
 
     def convert_map(self, map_str: str):
         rgb_value = {'W': (0, 0.5, 1),
@@ -248,9 +236,9 @@ if __name__ == "__main__":
                    WWHHHHLLLLLLLLWWWWWWW
                    WWWHHHHLLLLLLLWWWWWWW
                    WWWWWWWWWWWWWWWWWWWWW"""
-    v = Visualization()
+    v = Visualization(".",".")
     v.convert_map(geogr)
-    v.setup_graphics()
+    v.setup_graphics(1)
     for k in range(300):
         sim = {'herbivore': random.randint(2000, 8000), 'carnivore': random.randint(1, 6000)}
         z = np.random.randint(200, size=(13, 21))
