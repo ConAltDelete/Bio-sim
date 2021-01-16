@@ -64,8 +64,7 @@ img_base=None, img_fmt='png', tmean = False):
 		self.population = self.add_population(ini_pop)
 		self._year = 0
 		self.viz = None
-		self.data = list()
-		self.data2 = list() # temporary
+		self.data = dict()
 		self.total_age = dict()
 		self.total_weight = dict()
 		self.total_fitness = dict()
@@ -121,7 +120,7 @@ img_base=None, img_fmt='png', tmean = False):
 		if vis_years is not None:
 			if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
 				if self.viz is None:
-					self.viz = Visualization(self._img_base, self._img_fmt)
+					self.viz = Visualization(self.names, self._img_base, self._img_fmt)
 					self.viz.convert_map(self.str_map)
 				self.viz.setup_graphics(num_years)
 		for year in range(num_years):
@@ -133,7 +132,7 @@ img_base=None, img_fmt='png', tmean = False):
 									 self.total_age,
 									 self.total_weight,
 									 self.total_fitness)
-				self.viz.update_graphics(self._year, self.data, self.data2)
+				self.viz.update_graphics(self._year, self.data)
 				#self.viz.create_images()
 			self._year += 1
 			if self.tmean:
@@ -179,23 +178,16 @@ img_base=None, img_fmt='png', tmean = False):
 		"""Get data from the cells in self.island"""
 		columns = self.str_map.splitlines()
 		rows = list(columns[0])
-		z = list()
-		for y in range(len(columns)):
-			temp = list()
-			for x in range(len(rows)):
-				v = self.island[(y + 1, x + 1)].count_species['Herbivore']
-				temp.append(v)
-			z.append(temp)
-		self.data = z
-
-		u = list()
-		for y in range(len(columns)):
-			temp = list()
-			for x in range(len(rows)):
-				v = self.island[(y + 1, x + 1)].count_species['Carnivore']
-				temp.append(v)
-			u.append(temp)
-		self.data2 = u
+		
+		for species in self.names:
+			z = list()
+			for y in range(len(columns)):
+				temp = list()
+				for x in range(len(rows)):
+					v = self.island[(y + 1, x + 1)].count_species[species]
+					temp.append(v)
+				z.append(temp)
+			self.data[species] = z
 
 		self.total_age = {'Herbivore': [], 'Carnivore': []}
 		for names in self.names:

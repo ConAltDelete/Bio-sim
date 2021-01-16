@@ -28,14 +28,15 @@ class Visualization:
     """
     Visualization
     """
-    def __init__(self, img_base, img_fmt):
+    def __init__(self, names, img_base, img_fmt):
+        colours = [ (1,0,0), (0,0,1), (0,1,0), (0,1,1), (1,1,0), (1,0,1) ]
+        while len(names) > len(colours):
+            colours = set(colours)
+            colours.update(inner_points(colours))
+            colours = list(colours)
+        
         self.meta_data = {
-            "Herbivore": {
-                "colour": (1,0,0)
-            },
-            "Carnivore": {
-                "colour": (0,0,1)
-            }
+            d[0]:{"colour":d[1]} for d in zip(names,colours)
         }
         self.n_steps = 0
         self.island_map_ax = None
@@ -50,7 +51,7 @@ class Visualization:
         self.heatmap2_ax = None
         self.img2_ax = None
         self.pop = None
-        self.n = {"Herbivore":None,"Carnivore":None}
+        self.n = {species:None for species in names}
         self.count = dict()
         self.fig = None
         self.year = None
@@ -95,22 +96,24 @@ class Visualization:
 
         if self.heatmap_ax is None:
             self.heatmap_ax = self.fig.add_subplot(4, 2, 5)
+            self.heatmap_ax.title.set_text("Herbivore heatmap")
             self.img_ax = None
 
         if self.heatmap2_ax is None:
             self.heatmap2_ax = self.fig.add_subplot(4, 2, 6)
+            self.heatmap2_ax.title.set_text("Carnivore heatmap")
             self.img2_ax = None
 
         if self.pop is None:
             self.pop = self.fig.add_subplot(3, 3, 3)
-            self.pop.set_ylim(0, 300)
+            self.pop.set_ylim(0, 15000)
 
         self.pop.set_xlim(0, self.n_steps + 1)
 
         for species in self.n:
             if self.n[species] is None:
                 self.n[species], = self.pop.plot(np.arange(self.n_steps),
-                                      np.full(self.n_steps, np.nan), color=self.meta_data[species]["colour"])
+                                      np.full(self.n_steps, np.nan), color=self.meta_data[species]["colour"], label = species)
             else:
                 hx_data, hy_data = self.n[species].get_data()
                 hx_new = np.arange(hx_data[-1] + 1, self.n_steps)
@@ -118,15 +121,19 @@ class Visualization:
                     hy_new = np.full(hx_new.shape, np.nan)
                     self.n[species].set_data(np.hstack((hx_data, hx_new)),
                                          np.hstack((hy_data, hy_new)))
+        self.pop.legend()
 
         if self.histogram_age is None:
             self.histogram_age = self.fig.add_subplot(7, 3, 19)
+            self.histogram_age.set_title("Age")
 
         if self.histogram_weight is None:
             self.histogram_weight = self.fig.add_subplot(7, 3, 20)
+            self.histogram_weight.set_title("weight")
 
         if self.histogram_fitness is None:
             self.histogram_fitness = self.fig.add_subplot(7, 3, 21)
+            self.histogram_fitness.set_title("fitness")
 
         self.axt.cla()
         self.axt.axis('off')  # turn off coordinate system
@@ -145,7 +152,7 @@ class Visualization:
 
         plt.ion()
 
-    def update_graphics(self, current_year, cells_map, cells_map2):
+    def update_graphics(self, current_year, cells_map):
         """
         updates the graphics interface with new data and shows it live
         TODO: cells_map and cells_map2 make into 1 as a dict
@@ -177,15 +184,15 @@ class Visualization:
             self.histogram_fitness.hist(self.fitness[species], bins=20, histtype='step', color=self.meta_data[species]["colour"])
 
         if self.img_ax is not None:
-            self.img_ax.set_data(cells_map)
+            self.img_ax.set_data(cells_map["Herbivore"])
         else:
-            self.img_ax = self.heatmap_ax.imshow(cells_map, interpolation='nearest', vmin=0, vmax=200)
+            self.img_ax = self.heatmap_ax.imshow(cells_map["Herbivore"], interpolation='nearest', vmin=0, vmax=200)
             plt.colorbar(self.img_ax, ax=self.heatmap_ax, orientation='vertical')
 
         if self.img2_ax is not None:
-            self.img2_ax.set_data(cells_map2)
+            self.img2_ax.set_data(cells_map["Carnivore"])
         else:
-            self.img2_ax = self.heatmap2_ax.imshow(cells_map2, interpolation='nearest', vmin=0, vmax=50)
+            self.img2_ax = self.heatmap2_ax.imshow(cells_map["Carnivore"], interpolation='nearest', vmin=0, vmax=50)
             plt.colorbar(self.img2_ax, ax=self.heatmap2_ax, orientation='vertical')
 
         self.fig.canvas.flush_events()
@@ -219,6 +226,19 @@ class Visualization:
                                                      type=self._img_fmt))
         self._img_ctr += 1
 
+
+def inner_points(p: iter):
+    """
+    finds a small sample of inner point limited by the volum made from points p.
+
+    :param iter[tuple[float,float,float]] p: point that containes a volume.
+    :return: a set of inner points.
+    """
+    r = []
+    for a in p:
+        for b in (q for q in p if q != a):
+            r.append( ( (a[0]+b[0])/2 , (a[1]+b[1])/2 , (a[2]+b[2])/2 ) )
+    return set(r)
 
 if __name__ == "__main__":
     from biosim.simulation import *
