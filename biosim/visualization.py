@@ -125,15 +125,12 @@ class Visualization:
 
         if self.histogram_age is None:
             self.histogram_age = self.fig.add_subplot(7, 3, 19)
-            self.histogram_age.title.set_text("Age")
 
         if self.histogram_weight is None:
             self.histogram_weight = self.fig.add_subplot(7, 3, 20)
-            self.histogram_weight.title.set_text("weight")
 
         if self.histogram_fitness is None:
             self.histogram_fitness = self.fig.add_subplot(7, 3, 21)
-            self.histogram_fitness.title.set_text("fitness")
 
         self.axt.cla()
         self.axt.axis('off')  # turn off coordinate system
@@ -170,18 +167,21 @@ class Visualization:
         self.histogram_age.set_ylim(0, 2000)
         for species in self.weight:
             self.histogram_age.hist(self.age[species], bins=30, histtype='step', color=self.meta_data[species]["colour"])
+        self.histogram_age.title.set_text("age")
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, 60)
         self.histogram_weight.set_ylim(0, 1000)
         for species in self.weight:
             self.histogram_weight.hist(self.weight[species], bins=30, histtype='step', color=self.meta_data[species]["colour"])
+        self.histogram_weight.title.set_text("weight")
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, 1)
         self.histogram_fitness.set_ylim(0, 2000)
         for species in self.weight:
             self.histogram_fitness.hist(self.fitness[species], bins=20, histtype='step', color=self.meta_data[species]["colour"])
+        self.histogram_fitness.title.set_text("fitness")
 
         if self.img_ax is not None:
             self.img_ax.set_data(cells_map["Herbivore"])
