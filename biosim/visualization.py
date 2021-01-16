@@ -50,7 +50,7 @@ class Visualization:
         self.heatmap2_ax = None
         self.img2_ax = None
         self.pop = None
-        self.n = dict()
+        self.n = {"Herbivore":None,"Carnivore":None}
         self.count = dict()
         self.fig = None
         self.year = None
@@ -109,8 +109,8 @@ class Visualization:
 
         for species in self.n:
             if self.n[species] is None:
-                self.n[species] = (self.pop.plot(np.arange(self.n_steps),
-                                      np.full(self.n_steps, np.nan), 'b-'))[0]
+                self.n[species], = self.pop.plot(np.arange(self.n_steps),
+                                      np.full(self.n_steps, np.nan), color=self.meta_data[species]["colour"])
             else:
                 hx_data, hy_data = self.n[species].get_data()
                 hx_new = np.arange(hx_data[-1] + 1, self.n_steps)
