@@ -125,15 +125,15 @@ class Visualization:
 
         if self.histogram_age is None:
             self.histogram_age = self.fig.add_subplot(7, 3, 19)
-            self.histogram_age.set_title("Age")
+            self.histogram_age.title.set_text("Age")
 
         if self.histogram_weight is None:
             self.histogram_weight = self.fig.add_subplot(7, 3, 20)
-            self.histogram_weight.set_title("weight")
+            self.histogram_weight.title.set_text("weight")
 
         if self.histogram_fitness is None:
             self.histogram_fitness = self.fig.add_subplot(7, 3, 21)
-            self.histogram_fitness.set_title("fitness")
+            self.histogram_fitness.title.set_text("fitness")
 
         self.axt.cla()
         self.axt.axis('off')  # turn off coordinate system
