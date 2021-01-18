@@ -10,7 +10,6 @@ __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 from .island import Cells
 from .animal import *
 
-
 def season_feeding(cell: Cells):
     """
     ´´season_feeding´´ goes over the animals ´´Herbivore´´, and ´´Carnivore´´ (in that order) and feeds them. The Herbavore eats off the cell while Carnivore eats Herbivore after they have eaten.
@@ -27,6 +26,7 @@ def season_feeding(cell: Cells):
             if cell.food > 0:
                 cell.food -= animal.eat(cell.food, return_food=True)
             else:
+                cell.food = 0
                 break
     if carn_test and herb_test:
         # We need to sort the list so the fittest goes first. #
@@ -109,29 +109,8 @@ def season_ageing(cell: Cells):
     for spesis in cell.default:
         for animal in cell.default[spesis]:
             animal.age()
-
-
-def season_loss(cell: Cells):
-    """
-    ``season_loss`` goes through all the species in a cell and tells them to lose weight. This is done by ´´w -= eta * w´´.
-
-    :param Cells cell: cells object
-    """
-    for species in cell.default:
-        for animal in cell.default[species]:
             animal.loss_weight()
-
-
-def season_death(cell: Cells):
-    """
-    ``season_death`` goes through every species and kills them by chance.
-
-    :param Cells cell: cells object
-    """
-    for spesis in cell.default:
-        for animal in cell.default[spesis]:
             animal.death()
-    for spesis in cell.default:
         cell.default[spesis] = [animal for animal in cell.default[spesis] if animal.var["life"]]
 
 def season_end(island: dict):
@@ -157,20 +136,12 @@ def year_cycle(island,illigal_coords,year, visual_year=1):
 
     for c in island:
         season_feeding(island[c])
-
-    for c in island:
         season_breeding(island[c])
 
     season_migration(island,illigal_coords)
 
     for c in island:
         season_ageing(island[c])
-
-    for c in island:
-        season_loss(island[c])
-
-    for c in island:
-        season_death(island[c])
 
     season_end(island=island)
 

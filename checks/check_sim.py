@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import time
+
 import textwrap
 import matplotlib.pyplot as plt
 
@@ -17,7 +19,7 @@ __email__ = "hans.ekkehard.plesser@nmbu.no"
 
 
 if __name__ == '__main__':
-
+    d1 = time.time()
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
                WWWWWWWWHWWWWLLLLLLLW
@@ -45,7 +47,7 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
+    sim = BioSim(island_map=geogr, ini_pop=ini_herbs, seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
@@ -57,6 +59,9 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=100, vis_years=1)
+    sim.simulate(num_years=100, vis_years=None)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100, vis_years=1)
+    sim.simulate(num_years=100, vis_years=None)
+    d2 = time.time()
+
+    print(d2-d1)

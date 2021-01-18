@@ -85,7 +85,7 @@ class animal:
                 :parma phi: number
                 :return: float
                 """
-                return 1 / (1 + pow(np.e, k * phi * (x - xh)))
+                return 1 / (1 + np.e**(k * phi * (x - xh)))
 
             return new_q
 
@@ -120,7 +120,7 @@ class animal:
         if self.var["w"] <= 0 or ( ran.random() < (self.var["omega"] * (1 - self.var["phi"])) ):
             self.var["life"] = False
 
-    def birth(self, N: int, necro_birth: bool = False):
+    def birth(self, N: int):
         """
         Birth it determened by the fitness of the animal, its weight, and the number of the species around.
         If the weight of the mother is smaller than the weight of the child, it will not give birth.
@@ -134,15 +134,12 @@ class animal:
         :return: either None or a new instace of itself.
         """
         self.var["phi"] = self.Big_phi()
-        p_pop = min(1, self.var["phi"] * self.var["gamma"] * (N - 1))
         test_w = self.var["w"] >= (self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]))
-        test_chanse = ran.random() < (p_pop)
-        if not (test_w and test_chanse):
+        test_chanse = ran.random() < min(1, self.var["phi"] * self.var["gamma"] * (N - 1))
+        if not(test_w and test_chanse):
             return None
-        class_name = type(self)
-        k = class_name(a=0, w=self.N(self.var['w_birth'], self.var['sigma_birth']))
-        if not necro_birth:
-            k.life = self.var["life"]
+        k = type(self)(a=0, w=self.N(self.var['w_birth'], self.var['sigma_birth']))
+
         if self.var["w"] <= self.var["xi"] * k.var["w"]:
             return None
         else:
@@ -157,8 +154,7 @@ class animal:
 
         :param ret: a key from 'ret_moves'.
         """
-        self.var["coord"][0] += animal.ret_moves[ret][0]
-        self.var["coord"][1] += animal.ret_moves[ret][1]
+
 
     def move(self, ild: list):
         """
@@ -177,23 +173,10 @@ class animal:
         do_move = ran.random() < (self.var["mu"] * self.var["phi"])
         direct = ran.choice([k for k in animal.ret_moves.keys()])
         direct_list = animal.ret_moves[direct]
-        if self.check(direct_list, ild) and do_move:
-            self.moveto(direct)
+        if ((self.var["coord"][0] + direct_list[0], self.var["coord"][1] + direct_list[1]) not in ild) and do_move:
+            self.var["coord"][0] += direct_list[0]
+            self.var["coord"][1] += direct_list[1]
 
-    def check(self, r: list, ild: list):
-        """
-        Checks if possible to move in diraction ``r``, in contecst of ``ild``.
-
-
-        :param r: The diraction this instance moves to.
-        :param ild: Contains illigal coorddinats.
-        :return: bool
-        """
-        c_coord = [self.var["coord"][0] + r[0], self.var["coord"][1] + r[1]]
-        if tuple(c_coord) in ild:
-            return False
-        else:
-            return True
 
     def loss_weight(self):
         """
@@ -239,7 +222,7 @@ class Herbivore(animal):
         if not (type(F_there) == int or type(F_there) == float):
             raise ValueError("animal::Herbivore::eat unexpected number, got {}".format(type(F_there)))
         # We gain what is possible, whitch is what the animal want or get.#
-        self.var["w"] += self.var["beta"] * min(max(F_there, 0), self.var["F"])
+        self.var["w"] += self.var["beta"] * min(F_there, self.var["F"])
         self.var["phi"] = self.Big_phi()
 
         if return_food:
@@ -311,13 +294,13 @@ class Carnivore(animal):
             pray.var["life"] = False
             self.var["F"] -= F_got
             self.var["phi"] = self.Big_phi()
-            if self.var["F"] == 0:
+            if self.var["F"]:
                 self.var["F"] = default_F
                 break
         # Since we don't care for dead animals we will discard all dead animals to the void
         # before returing them to the next preditor.#
         self.var["F"] = default_F
-        return [f for f in F_there if f.var["life"]]
+        return (f for f in F_there if f.var["life"])
 
 
 if __name__ == "__main__":
