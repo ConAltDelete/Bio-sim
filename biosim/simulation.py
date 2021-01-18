@@ -135,7 +135,8 @@ img_base=None, img_fmt='png', tmean = False):
 				if self._year % vis_years == 0:
 					self.get_data()
 					self.viz.update_data(
-						self.num_animals_per_species, self.total_age, self.total_weight, self.total_fitness
+						self.num_animals_per_species, self.total_age,
+						self.total_weight, self.total_fitness, self.hist_specs
 					)
 				self.viz.update_graphics(self._year, self.data, self.cmax_animals, self.hist_specs)
 				if self._year % img_years == 0:

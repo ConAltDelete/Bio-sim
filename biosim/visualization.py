@@ -231,14 +231,17 @@ class Visualization:
         self.fig.canvas.flush_events()
         plt.pause(1e-6)
 
-    def update_data(self, n_species: dict, l_ages, l_weights, l_fitness):
+    def update_data(self, n_species: dict, l_ages, l_weights, l_fitness, hist_specs):
         for species in n_species:
             self.count[species] = n_species[species]
         
         for species in n_species:
-            self.age[species] = l_ages[species]
-            self.weight[species] = l_weights[species]
-            self.fitness[species] = l_fitness[species]
+            self.age[species] = [a if a < hist_specs['age']['max'] else
+                                 hist_specs['age']['max'] for a in l_ages[species]]
+            self.weight[species] = [w if w < hist_specs['weight']['max'] else
+                                    hist_specs['weight']['max'] for w in l_weights[species]]
+            self.fitness[species] = [f if f < hist_specs['fitness']['max'] else
+                                     hist_specs['fitness']['max'] for f in l_fitness[species]]
 
     def convert_map(self, map_str: str):
         rgb_value = {'W': (0, 0.5, 1),
