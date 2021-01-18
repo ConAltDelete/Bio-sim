@@ -86,7 +86,7 @@ class Visualization:
             self.fig = plt.figure(figsize=(10, 10))
 
         if self.island_map_ax is None:
-            self.island_map_ax = self.fig.add_subplot(3, 3, 1)
+            self.island_map_ax = self.fig.add_axes([0.1, 0.55, 0.3, 0.45])
             self.island_map = self.island_map_ax.imshow(self.rgb_map)
             self.island_map_ax.set_xticks(range(len(self.rgb_map[0])))
             self.island_map_ax.set_xticklabels([_ + 1 if not (_ + 1) % 5 else '' for _ in range(len(self.rgb_map[0]))])
@@ -94,24 +94,24 @@ class Visualization:
             self.island_map_ax.set_yticklabels([_ + 1 if not (_ + 1) % 5 else '' for _ in range(len(self.rgb_map))])
 
         if self.leg_ax is None:
-            self.leg_ax = self.fig.add_axes([0.36, 0.7, 0.1, 0.2])
+            self.leg_ax = self.fig.add_axes([0.45, 0.7, 0.1, 0.2])
             self.leg_ax.axis('off')
             for ix, name in enumerate(('Water', 'Lowland', 'Highland', 'Desert')):
                 self.leg_ax.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1, facecolor=rgb_value[name[0]]))
                 self.leg_ax.text(0.35, ix * 0.2, name, transform=self.leg_ax.transAxes)
 
         if self.heatmap_ax is None:
-            self.heatmap_ax = self.fig.add_subplot(4, 2, 5)
+            self.heatmap_ax = self.fig.add_axes([0.6, 0.75, 0.3, 0.15])
             self.heatmap_ax.title.set_text("Herbivore heatmap")
             self.img_ax = None
 
         if self.heatmap2_ax is None:
-            self.heatmap2_ax = self.fig.add_subplot(4, 2, 6)
+            self.heatmap2_ax = self.fig.add_axes([0.6, 0.55, 0.3, 0.15])
             self.heatmap2_ax.title.set_text("Carnivore heatmap")
             self.img2_ax = None
 
         if self.pop is None:
-            self.pop = self.fig.add_subplot(3, 3, 3)
+            self.pop = self.fig.add_axes([0.1, 0.1, 0.4, 0.4])
 
         self.pop.set_xlim(0, self.n_steps + 1)
 
@@ -141,13 +141,13 @@ class Visualization:
                     self.def_specs[keys] = hist_specs[keys]
 
         if self.histogram_age is None:
-            self.histogram_age = self.fig.add_subplot(7, 3, 19)
+            self.histogram_age = self.fig.add_axes([0.55, 0.40, 0.35, 0.1])
 
         if self.histogram_weight is None:
-            self.histogram_weight = self.fig.add_subplot(7, 3, 20)
+            self.histogram_weight = self.fig.add_axes([0.55, 0.25, 0.35, 0.1])
 
         if self.histogram_fitness is None:
-            self.histogram_fitness = self.fig.add_subplot(7, 3, 21)
+            self.histogram_fitness = self.fig.add_axes([0.55, 0.1, 0.35, 0.1])
         if self.axt is None:
             self.axt = self.fig.add_axes([0.4, 0.8, 0.2, 0.2])
             self.axt.cla()
