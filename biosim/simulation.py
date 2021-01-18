@@ -213,7 +213,7 @@ img_base=None, img_fmt='png', tmean = False):
 				for units in self.island[coord].count_fitness[names]:
 					self.total_fitness[names].append(units)
 
-	def create_movie(self, movie_fmt='gif'):
+	def create_movie(self, movie_fmt):
 		"""Creates a movie of the simulation"""
 		if self._img_base is None:
 			raise ValueError("RuntimeError: No filename defined")
@@ -221,7 +221,7 @@ img_base=None, img_fmt='png', tmean = False):
 		if movie_fmt == 'mp4':
 			try:
 				subprocess.check_call([
-					'ffmpeg',
+					'ffmpeg', '-framerate', '12',
 					'-i', '{}_%05d.png'.format(self._img_base),
 					'-y',
 					'-profile:v', 'baseline',
@@ -235,7 +235,7 @@ img_base=None, img_fmt='png', tmean = False):
 			try:
 				subprocess.check_call([
 					'magick',
-					'-delay', '1',
+					'-delay', '8',
 					'-loop', '0',
 					'{}_*.png'.format(self._img_base),
 					'{}.{}'.format(self._img_base, movie_fmt)])
