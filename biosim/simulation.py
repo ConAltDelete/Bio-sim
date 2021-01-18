@@ -70,9 +70,9 @@ img_base=None, img_fmt='png', tmean = False):
 		self.tmean = tmean
 		if self.tmean:
 			self.mean = {species:0 for species in self.names}
-		self.ymax_animals = ymax_animals
-		self.cmax_animals = cmax_animals
-		self.hist_specs = hist_specs
+		self.ymax_animals = ymax_animals if ymax_animals else None
+		self.cmax_animals = cmax_animals if cmax_animals else None
+		self.hist_specs = hist_specs if hist_specs else None
 		self._img_base = '../data/{}'.format(img_base) if img_base else None
 		self._img_fmt = img_fmt
 
@@ -298,3 +298,5 @@ img_base=None, img_fmt='png', tmean = False):
 		save_file = open(direct + "save_{}.biosim".format(str(time.time())),"bw")
 		pickle.dump(self,save_file)
 
+def load(file):
+	return pickle.load(open(file,"br"))
