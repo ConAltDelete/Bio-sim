@@ -271,6 +271,11 @@ img_base=None, img_fmt='png', tmean = False):
 			ValueError("This file is not a BioSim file.")
 
 	def save(self, path: str = ""):
+		"""
+		saves the current state of the simulation in a .biosim file.
+		
+		:param str path: path to diractory in local diractory.
+		"""
 		if type(path) is not str:
 			raise ValueError("TypeError: path must be a str, not a {}".format(type(path)))
 		if path == "":
