@@ -267,16 +267,18 @@ img_base=None, img_fmt='png', tmean = False):
 					dict_count[spesis] = len(self.island[coord].default[spesis])
 		return dict_count
 
-	def load(self,file):
+	def load(self,file:str):
 		"""
 		loads a save_file of users choosing.
 
 		:param str file: file to be loaded.
 		"""
+		if file.endswith(".biosim"):
+			raise ValueError("Must be a '.biosim' file.")
 		try:
 			self.__dict__.update(pickle.load(open(file,"br")).__dict__)
 		except:
-			ValueError("This file is not a BioSim file.")
+			ValueError("This file is not a readeble BioSim file.")
 
 	def save(self, path: str = ""):
 		"""
