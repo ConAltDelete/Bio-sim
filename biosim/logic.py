@@ -16,6 +16,7 @@ def season_feeding(cell: Cells):
 
     :param Cells cell: The cell of the island.
     """
+    except_list = ["Herbivore","Carnivore"]
     herb_test = "Herbivore" in cell.default and len(cell.default["Herbivore"]) != 0
     carn_test = "Carnivore" in cell.default and len(cell.default["Carnivore"]) != 0
 
@@ -24,7 +25,7 @@ def season_feeding(cell: Cells):
         ran.shuffle(cell.default["Herbivore"])
         for animal in cell.default["Herbivore"]:
             if cell.food > 0:
-                cell.food -= animal.eat(cell.food, return_food=True)
+                animal.eat(cell)
             else:
                 cell.food = 0
                 break
@@ -35,12 +36,14 @@ def season_feeding(cell: Cells):
             if all( not H.var["life"] for H in cell.default["Herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
             # replace original list with new list with not dead animals#
-            cell.default["Herbivore"] = animal.eat(cell.default["Herbivore"])
+            animal.eat(cell)
     # Resets the food in the cell since we are done for the year. If 
     # feeding seson happens multiple times per year, or irregulary
     # , it must either be done at the last iteration of feeding, or
     # create a 'end of the year' seson that handels anything that must
     # be reset at the end of the year. #
+    for species in [A for A in cell.default if A not in except_list]:
+        species.eat(cell)
 
 def season_breeding(cell: Cells):
     """

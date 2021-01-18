@@ -210,7 +210,7 @@ class Herbivore(animal):
         self.var = dict(Herbivore.default_var)
         super().__init__(a, w, coord=coord)
 
-    def eat(self, F_there, return_food=False):
+    def eat(self, F_there):
         """
         ``herbivore`` eats of the cell (which is representet by the number ``F_there``) and improves its own fitness.
 
@@ -218,16 +218,10 @@ class Herbivore(animal):
         :param F_there: number of food.
         :return: returns eaten amount if `return_food` is true.
         """
-        # Animals eat what is available, or can eat...#
-        if not (type(F_there) == int or type(F_there) == float):
-            raise ValueError("animal::Herbivore::eat unexpected number, got {}".format(type(F_there)))
         # We gain what is possible, whitch is what the animal want or get.#
-        self.var["w"] += self.var["beta"] * min(F_there, self.var["F"])
+        self.var["w"] += self.var["beta"] * min(F_there.food, self.var["F"])
         self.var["phi"] = self.Big_phi()
-
-        if return_food:
-            # This is handy when needed.#
-            return min(max(F_there, 0), self.var["F"])
+        F_there.food -= float(min(F_there.food, self.var["F"]))
 
 
 class Carnivore(animal):
@@ -275,7 +269,7 @@ class Carnivore(animal):
             if l.var["life"] and (ran.random() < (probebility)):
                 yield l
 
-    def eat(self, F_there: list):
+    def eat(self, cell):
         """
         ``Carnivore`` eats ``Herbivore`` given both's fitness. For the preditor to have an chance to eat the herbivore
          it must have better fitness than the herbivore.
@@ -286,9 +280,10 @@ class Carnivore(animal):
         """
         # Every preditor must try itself on all the pray available given it want to.
         # We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#
-        F_there.sort(key=lambda O: O.var["phi"])
+        herb_herd = list(cell.default["Herbivore"])
+        herb_herd.sort(key= lambda O: O.var["phi"])
         default_F = float(self.var["F"])
-        for pray in self._yield_life(F_there):
+        for pray in self._yield_life(herb_herd):
             F_got = min(self.var["F"], pray.var["w"])
             self.var["w"] += self.var["beta"] * F_got
             pray.var["life"] = False
@@ -300,7 +295,7 @@ class Carnivore(animal):
         # Since we don't care for dead animals we will discard all dead animals to the void
         # before returing them to the next preditor.#
         self.var["F"] = default_F
-        return [f for f in F_there if f.var["life"]]
+        cell.default["Herbivore"] = [f for f in herb_herd if f.var["life"]]
 
 
 if __name__ == "__main__":
