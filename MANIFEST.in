@@ -1,3 +1,3 @@
 recursive-include examples *.py *.ipynb
 recursive-include tests *.py
-include docs/*.py docs/*.rst
+include docs/*.py docs/*.rst docs/*.png

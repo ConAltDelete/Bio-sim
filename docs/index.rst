@@ -20,6 +20,7 @@ Table of Content
    visuals
    animal
    visualization
+   User handel <README>
 
 Theory
 ======
