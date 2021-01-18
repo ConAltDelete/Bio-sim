@@ -125,7 +125,7 @@ img_base=None, img_fmt='png', tmean = False):
 				if self.viz is None:
 					self.viz = Visualization(self.names, self._img_base, self._img_fmt, self.ymax_animals)
 					self.viz.convert_map(self.str_map)
-				self.viz.setup_graphics(num_years)
+				self.viz.setup_graphics(num_years, self.cmax_animals, self.hist_specs)
 		n = 1
 		while n < num_years:
 			year_cycle(self.island,self.illigal_coord)
@@ -134,9 +134,9 @@ img_base=None, img_fmt='png', tmean = False):
 					self.get_data()
 					self.viz.update_data(
 						self.num_animals_per_species, self.total_age,
-						self.total_weight, self.total_fitness, self.hist_specs
+						self.total_weight, self.total_fitness
 					)
-				self.viz.update_graphics(self._year, self.data, self.cmax_animals, self.hist_specs)
+				self.viz.update_graphics(self._year, self.data)
 				if self._year % img_years == 0:
 					self.viz.create_images()
 			self._year += 1
