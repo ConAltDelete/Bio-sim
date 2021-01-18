@@ -24,9 +24,9 @@ class Cells:
         """
         self.coord           = coord if coord is not None else [0, 0]
         self.count_species   = dict() if not(names) else {species:0 for species in names}
-        self.count_age = dict()
-        self.count_weight = dict()
-        self.count_fitness = dict()
+        self.count_age       = dict()
+        self.count_weight    = dict()
+        self.count_fitness   = dict()
         self.type            = cell_type
         self.f_max           = float(Cells.default_food[self.type])
         self.food            = self.f_max

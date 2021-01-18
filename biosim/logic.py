@@ -75,8 +75,9 @@ def season_migration(cells: dict, illigal_moves: list):
     for cell in cells:
         cells[cell].migration(illigal_moves)
         mig_len = {spesis: len(cells[cell].migrate[spesis]) for spesis in cells[cell].migrate} # N1
+        mig_n = 0
         for spesis in cells[cell].migrate:
-            for _ in range(mig_len[spesis]):
+            while mig_n < mig_len[spesis]:
                 try:
                     moving_animal = cells[cell].migrate[spesis].pop(0)
                 except IndexError: # N2
@@ -89,6 +90,8 @@ def season_migration(cells: dict, illigal_moves: list):
                     moving_animals[spesis][tuple(moving_animal.var["coord"])] = [moving_animal]
                 else:
                     moving_animals[spesis][tuple(moving_animal.var["coord"])].append(moving_animal)
+                mig_n += 1
+            mig_n = 0
     for spesis in moving_animals:
         for coord in moving_animals[spesis]:
             if spesis not in cells[coord].default:

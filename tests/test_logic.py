@@ -239,7 +239,7 @@ def test_eating_carnevore():
     pred = Carnivore(a=5,w=100)
     pred.var["phi"] = 20
     herd = pred.eat(herd)
-    assert herd == []
+    assert list(herd) == []
 
 def test_weight_loss():
     sim = BioSim(island_map="""WWW\nWLW\nWWW""", ini_pop=[{
@@ -255,7 +255,7 @@ def test_weight_loss():
     }])
     island = sim.island
     for cell in island:
-        season_loss(island[cell])
+        season_ageing(island[cell])
     for coord in island:
         for spesis in island[coord].default:
             check = [animal.var["w"] == 19 for animal in island[coord].default[spesis]]
@@ -304,7 +304,7 @@ def test_death_one_animal():
 def test_death_multi_animal(n_animals):
     cell = Cells(cell_type=3,coord=[2,2])
     cell.default["Herbivore"] = [Herbivore(a=5,w=0) for _ in range(n_animals)]
-    season_death(cell)
+    season_ageing(cell)
     assert len(cell.default["Herbivore"]) == 0
 
 @pytest.mark.parametrize("n_carn",[n for n in range(2,6)])
@@ -313,5 +313,5 @@ def test_death_multi_specis(n_herb,n_carn):
     cell = Cells(cell_type=3,coord=[2,2])
     cell.default["Herbivore"] = [Herbivore(a=5,w=0) for _ in range(n_herb)]
     cell.default["Carnivore"] = [Carnivore(a=5,w=0) for _ in range(n_carn)]
-    season_death(cell)
+    season_ageing(cell)
     assert len(cell.default["Herbivore"]) == 0 and len(cell.default["Carnivore"]) == 0

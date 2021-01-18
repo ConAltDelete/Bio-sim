@@ -136,16 +136,16 @@ def test_simulate(plain_sim):
 def test_multi_simulate(plain_sim):
     """Test that simulation can be called repeatedly"""
 
-    plain_sim.simulate(num_years=10, vis_years=500, img_years=100)
-    plain_sim.simulate(num_years=10, vis_years=500, img_years=100)
+    plain_sim.simulate(num_years=10, vis_years=None, img_years=None)
+    plain_sim.simulate(num_years=10, vis_years=None, img_years=None)
 
 
 def test_get_years(plain_sim):
     """Test that number of years simulated is available"""
 
-    plain_sim.simulate(num_years=2, vis_years=500, img_years=100)
+    plain_sim.simulate(num_years=2, vis_years=None, img_years=None)
     assert plain_sim.year == 2
-    plain_sim.simulate(num_years=3, vis_years=500, img_years=100)
+    plain_sim.simulate(num_years=3, vis_years=None, img_years=None)
     assert plain_sim.year == 5
 
 

@@ -121,7 +121,8 @@ img_base=None, img_fmt='png', tmean = False):
 					self.viz = Visualization(self.names, self._img_base, self._img_fmt, self.ymax_animals)
 					self.viz.convert_map(self.str_map)
 				self.viz.setup_graphics(num_years)
-		for year in range(num_years):
+		n = 0
+		while n < num_years:
 			year_cycle(self.island,self.illigal_coord)
 			if vis_years != None:
 				if self._year % vis_years == 0:
@@ -133,6 +134,7 @@ img_base=None, img_fmt='png', tmean = False):
 				self.viz.update_graphics(self._year, self.data)
 				self.viz.create_images()
 			self._year += 1
+			n += 1
 			if self.tmean:
 				for species in self.num_animals_per_species:
 					self.mean[species] = self.mean[species] + ((self.num_animals_per_species[species] - self.mean[species])/self._year)
