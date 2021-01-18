@@ -126,7 +126,7 @@ img_base=None, img_fmt='png', tmean = False):
 					self.viz = Visualization(self.names, self._img_base, self._img_fmt, self.ymax_animals)
 					self.viz.convert_map(self.str_map)
 				self.viz.setup_graphics(num_years)
-		n = 0
+		n = 1
 		while n < num_years:
 			year_cycle(self.island,self.illigal_coord)
 			if vis_years != None:

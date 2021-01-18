@@ -10,8 +10,8 @@ then run
 """
 from distutils.core import setup
 setup(name='BioSim',
- version='1.0',
- description='BioSim',
+ version='1.94738573872888',
+ description='BioSim, but cooler',
  author='Mats Hoem Olsen, Roy Erling Granheim',
  author_email='mats.hoem.olsen@nmbu.no,roy.erling.granheim@nmbu.no',
  url='',

@@ -130,7 +130,7 @@ def test_add_population(plain_sim):
 def test_simulate(plain_sim):
     """Test that simulation can be called with visualization step values"""
 
-    plain_sim.simulate(num_years=10, vis_years=500, img_years=100)
+    plain_sim.simulate(num_years=10, vis_years=None, img_years=None)
 
 
 def test_multi_simulate(plain_sim):

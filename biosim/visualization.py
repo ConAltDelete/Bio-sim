@@ -171,14 +171,14 @@ class Visualization:
         def_specs = {'weight': {'max': 60, 'delta': 2},
                      'fitness': {'max': 1.0, 'delta': 0.05},
                      'age': {'max': 60, 'delta': 2}}
-
-        for keys in ['age', 'weight', 'fitness']:
-            if hist_specs.get(keys):
-                def_specs[keys] = hist_specs[keys]
+        if hist_specs:
+            for keys in ['age', 'weight', 'fitness']:
+                if hist_specs.get(keys):
+                    def_specs[keys] = hist_specs[keys]
 
         self.histogram_age.cla()
         self.histogram_age.set_xlim(0, def_specs['age']['max'])
-        self.histogram_age.set_ylim(0, 2000)
+        #self.histogram_age.set_ylim(0, 2000)
         for species in self.weight:
             self.histogram_age.hist(self.age[species],
                                     bins=int((def_specs['age']['max']) / (def_specs['age']['delta'])),
@@ -189,7 +189,7 @@ class Visualization:
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, def_specs['weight']['max'])
-        self.histogram_weight.set_ylim(0, 1000)
+        #self.histogram_weight.set_ylim(0, 3000 )
         for species in self.weight:
             self.histogram_weight.hist(self.weight[species],
                                        bins=int((def_specs['weight']['max']) / (def_specs['weight']['delta'])),
@@ -200,7 +200,7 @@ class Visualization:
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, def_specs['fitness']['max'])
-        self.histogram_fitness.set_ylim(0, 2000)
+        #self.histogram_fitness.set_ylim(0, 2000 )
         for species in self.weight:
             self.histogram_fitness.hist(self.fitness[species],
                                         bins=int((def_specs['fitness']['max']) / (def_specs['fitness']['delta'])),

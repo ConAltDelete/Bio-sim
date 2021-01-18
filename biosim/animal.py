@@ -300,7 +300,7 @@ class Carnivore(animal):
         # Since we don't care for dead animals we will discard all dead animals to the void
         # before returing them to the next preditor.#
         self.var["F"] = default_F
-        return (f for f in F_there if f.var["life"])
+        return [f for f in F_there if f.var["life"]]
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ def season_feeding(cell: Cells):
             if all( not H.var["life"] for H in cell.default["Herbivore"]):
                break # Timesaver, but `preditor` object can distigvish between dead animal and an alive one.
             # replace original list with new list with not dead animals#
-            cell.default["Herbivore"] = [ h for h in animal.eat(cell.default["Herbivore"]) if h.var["life"]] 
+            cell.default["Herbivore"] = animal.eat(cell.default["Herbivore"])
     # Resets the food in the cell since we are done for the year. If 
     # feeding seson happens multiple times per year, or irregulary
     # , it must either be done at the last iteration of feeding, or
