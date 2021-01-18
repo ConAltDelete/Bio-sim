@@ -120,6 +120,9 @@ img_base=None, img_fmt='png', tmean = False):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
+		if img_years is None:
+			img_years = vis_years
+
 		if vis_years is not None:
 			if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
 				if self.viz is None:
@@ -135,7 +138,8 @@ img_base=None, img_fmt='png', tmean = False):
 						self.num_animals_per_species, self.total_age, self.total_weight, self.total_fitness
 					)
 				self.viz.update_graphics(self._year, self.data, self.cmax_animals, self.hist_specs)
-				self.viz.create_images()
+				if self._year % img_years == 0:
+					self.viz.create_images()
 			self._year += 1
 			if self.tmean:
 				for species in self.num_animals_per_species:
