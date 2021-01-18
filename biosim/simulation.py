@@ -48,7 +48,7 @@ class BioSim:
 		where img_no are consecutive image numbers starting from 0.
 		img_base should contain a path and beginning of a file name.
 	"""
-	def __init__(self, island_map : str, ini_pop : list, seed : int = None,ymax_animals=None, cmax_animals=None, hist_specs=None,
+	def __init__(self, island_map : str, ini_pop : list, seed : int = None, ymax_animals=None, cmax_animals=None, hist_specs=None,
 img_base=None, img_fmt='png', tmean = False):
 		# we set the random seed for future random number generation. In other words,
 		# we make a random simulation consistent.#
@@ -71,7 +71,8 @@ img_base=None, img_fmt='png', tmean = False):
 		self.tmean = tmean
 		if self.tmean:
 			self.mean = {species:0 for species in self.names}
-		self._img_base = '../data/{}'.format(img_base)
+		self.ymax_animals = ymax_animals
+		self._img_base = '../data/{}'.format(img_base) if img_base else None
 		self._img_fmt = img_fmt
 
 	def set_animal_parameters(self, species: str, params: dict):
@@ -120,7 +121,7 @@ img_base=None, img_fmt='png', tmean = False):
 		if vis_years is not None:
 			if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
 				if self.viz is None:
-					self.viz = Visualization(self.names, self._img_base, self._img_fmt)
+					self.viz = Visualization(self.names, self._img_base, self._img_fmt, self.ymax_animals)
 					self.viz.convert_map(self.str_map)
 				self.viz.setup_graphics(num_years)
 		for year in range(num_years):
@@ -133,7 +134,7 @@ img_base=None, img_fmt='png', tmean = False):
 									 self.total_weight,
 									 self.total_fitness)
 				self.viz.update_graphics(self._year, self.data)
-				#self.viz.create_images()
+				self.viz.create_images()
 			self._year += 1
 			if self.tmean:
 				for species in self.num_animals_per_species:

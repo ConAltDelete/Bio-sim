@@ -10,6 +10,7 @@ __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+import os
 
 """
 1. grab information from the island simulation every cycle
@@ -28,7 +29,7 @@ class Visualization:
     """
     Visualization
     """
-    def __init__(self, names, img_base, img_fmt):
+    def __init__(self, names, img_base, img_fmt, ymax_animals):
         colours = [ (1,0,0), (0,0,1), (0,1,0), (0,1,1), (1,1,0), (1,0,1) ]
         while len(names) > len(colours):
             colours = set(colours)
@@ -51,6 +52,8 @@ class Visualization:
         self.heatmap2_ax = None
         self.img2_ax = None
         self.pop = None
+        self.y_set_lim = ymax_animals
+        self.y_def_lim = 0
         self.n = {species:None for species in names}
         self.count = dict()
         self.fig = None
@@ -76,8 +79,7 @@ class Visualization:
                      'L': (0, 0.3, 0)}
 
         if self.fig is None:
-            self.fig = plt.figure(figsize=(12, 12))
-            self.axt = self.fig.add_axes([0.4, 0.8, 0.2, 0.2])
+            self.fig = plt.figure(figsize=(10, 10))
 
         if self.island_map_ax is None:
             self.island_map_ax = self.fig.add_subplot(3, 3, 1)
@@ -106,21 +108,22 @@ class Visualization:
 
         if self.pop is None:
             self.pop = self.fig.add_subplot(3, 3, 3)
-            self.pop.set_ylim(0, 15000)
 
         self.pop.set_xlim(0, self.n_steps + 1)
 
         for species in self.n:
             if self.n[species] is None:
                 self.n[species], = self.pop.plot(np.arange(self.n_steps),
-                                      np.full(self.n_steps, np.nan), color=self.meta_data[species]["colour"], label = species)
+                                                 np.full(self.n_steps, np.nan),
+                                                 color=self.meta_data[species]["colour"],
+                                                 label=species)
             else:
                 hx_data, hy_data = self.n[species].get_data()
                 hx_new = np.arange(hx_data[-1] + 1, self.n_steps)
                 if len(hx_new) > 0:
                     hy_new = np.full(hx_new.shape, np.nan)
                     self.n[species].set_data(np.hstack((hx_data, hx_new)),
-                                         np.hstack((hy_data, hy_new)))
+                                             np.hstack((hy_data, hy_new)))
         self.pop.legend()
 
         if self.histogram_age is None:
@@ -131,21 +134,16 @@ class Visualization:
 
         if self.histogram_fitness is None:
             self.histogram_fitness = self.fig.add_subplot(7, 3, 21)
-
-        self.axt.cla()
-        self.axt.axis('off')  # turn off coordinate system
-        self.year = self.axt.text(0.5, 0.5, 'Year: {:5}'.format(0),
-                            horizontalalignment='center',
-                            verticalalignment='center',
-                            transform=self.axt.transAxes)  # relative coordinates
+        if self.axt is None:
+            self.axt = self.fig.add_axes([0.4, 0.8, 0.2, 0.2])
+            self.axt.cla()
+            self.axt.axis('off')  # turn off coordinate system
+            self.year = self.axt.text(0.5, 0.5, 'Year: {:5}'.format(0),
+                                horizontalalignment='center',
+                                verticalalignment='center',
+                                transform=self.axt.transAxes)  # relative coordinates
 
         plt.pause(1e-6)  # pause required to make figure visible
-
-        """input('Press ENTER to begin counting')
-
-        for k in range(40):
-            txt.set_text(template.format(k))
-            plt.pause(0.1)"""
 
         plt.ion()
 
@@ -156,6 +154,14 @@ class Visualization:
         """
         self.year_current = current_year
         self.year.set_text('Year:{:5}'.format(self.year_current))
+
+        if not self.y_set_lim:
+            if self.y_def_lim <= max(self.count['Herbivore'], self.count['Carnivore']):
+                self.y_def_lim = max(self.count['Herbivore'], self.count['Carnivore'])
+        else:
+            self.y_def_lim = self.y_set_lim - 1000
+
+        self.pop.set_ylim(0, self.y_def_lim + 1000)
 
         for species in self.n:
             data = self.n[species].get_ydata()
@@ -221,6 +227,9 @@ class Visualization:
         if self._img_base is None:
             return
 
+        if not os.path.exists('../data'):
+            os.makedirs('../data')
+
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
                                                      num=self._img_ctr,
                                                      type=self._img_fmt))
@@ -239,6 +248,7 @@ def inner_points(p: iter):
         for b in (q for q in p if q != a):
             r.append( ( (a[0]+b[0])/2 , (a[1]+b[1])/2 , (a[2]+b[2])/2 ) )
     return set(r)
+
 
 if __name__ == "__main__":
     from biosim.simulation import *
