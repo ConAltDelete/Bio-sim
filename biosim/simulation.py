@@ -71,6 +71,8 @@ img_base=None, img_fmt='png', tmean = False):
 		if self.tmean:
 			self.mean = {species:0 for species in self.names}
 		self.ymax_animals = ymax_animals
+		self.cmax_animals = cmax_animals
+		self.hist_specs = hist_specs
 		self._img_base = '../data/{}'.format(img_base) if img_base else None
 		self._img_fmt = img_fmt
 
@@ -115,6 +117,9 @@ img_base=None, img_fmt='png', tmean = False):
 		:param img_years: years between visualizations saved to files (default: vis_years)
 		Image files will be numbered consecutively.
 		"""
+		if img_years is None:
+			img_years = vis_years
+
 		if vis_years is not None:
 			if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
 				if self.viz is None:
@@ -127,12 +132,13 @@ img_base=None, img_fmt='png', tmean = False):
 			if vis_years != None:
 				if self._year % vis_years == 0:
 					self.get_data()
-					self.viz.update_data(self.num_animals_per_species,
-									 self.total_age,
-									 self.total_weight,
-									 self.total_fitness)
-				self.viz.update_graphics(self._year, self.data)
-				self.viz.create_images()
+					self.viz.update_data(
+						self.num_animals_per_species, self.total_age,
+						self.total_weight, self.total_fitness, self.hist_specs
+					)
+				self.viz.update_graphics(self._year, self.data, self.cmax_animals, self.hist_specs)
+				if self._year % img_years == 0:
+					self.viz.create_images()
 			self._year += 1
 			n += 1
 			if self.tmean:
