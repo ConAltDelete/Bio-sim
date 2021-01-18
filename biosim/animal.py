@@ -275,8 +275,7 @@ class Carnivore(animal):
          it must have better fitness than the herbivore.
 
 
-        :param F_there: A list of herbavores.
-        :return: updated list of herbavores.
+        :param Cells cell: The entire cell
         """
         # Every preditor must try itself on all the pray available given it want to.
         # We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#

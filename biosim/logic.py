@@ -43,7 +43,8 @@ def season_feeding(cell: Cells):
     # create a 'end of the year' seson that handels anything that must
     # be reset at the end of the year. #
     for species in [A for A in cell.default if A not in except_list]:
-        species.eat(cell)
+        for animal in cell.default[species]:
+            animal.eat(cell)
 
 def season_breeding(cell: Cells):
     """
@@ -67,6 +68,8 @@ def season_breeding(cell: Cells):
 def season_migration(cells: dict, illigal_moves: list):
     """
     Animals moves to desired location if possible, else they don't move from cell and remain in ´´Cells.default´´.
+
+
     :param dict[tuple[int,int] : Cells] cells: dictonary with coordinats as key, and Cells objects as value
 
     .. note::
@@ -135,9 +138,7 @@ def year_cycle(island,illigal_coords):
     
 
     :param dict[tuple[int,int]:Cells] island: The map of the island.
-    :param list[tuple[int,int]]: Every coordinates that an animal can't walk on.
-    :param int year: The current year.
-    :param int visual_year: send data after n years.
+    :param list[tuple[int,int]] illigal_coords: Every coordinates that an animal can't walk on.
     """
 
     for c in island:
