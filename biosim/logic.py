@@ -80,7 +80,7 @@ def season_migration(cells: dict, illigal_moves: list):
                 try:
                     moving_animal = cells[cell].migrate[spesis].pop(0)
                 except IndexError: # N2
-                    raise IndexError("IndexError in logic::season_migration::cells[cell].migrate")
+                    raise ValueError("IndexError in logic::season_migration::cells[cell].migrate, lenght of array changed.")
                 # if this is a new spesis, we will remember it in the future.#
                 if spesis not in moving_animals:
                     moving_animals[spesis] = dict()
@@ -124,7 +124,7 @@ def season_end(island: dict):
         island[coord].food = float(island[coord].f_max)
         island[coord].count()
 
-def year_cycle(island,illigal_coords,year, visual_year=1):
+def year_cycle(island,illigal_coords):
     """
     
 

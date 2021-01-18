@@ -61,7 +61,7 @@ def string2map(map_str: str, names: list):
                     standard_values[colum[1]], list(incomming_coord),names)})
             else:
                 if colum[1] != "W" and incomming_coord in border_coord:
-                    raise ValueError("excpected 'W', got {}".format(colum[1]))
+                    raise ValueError("excpected 'W' on border, got {}".format(colum[1]))
                 new_map.update({incomming_coord: Cells(
                     standard_values[colum[1]], list(incomming_coord),names)})
                 illigal_coord.append(incomming_coord)

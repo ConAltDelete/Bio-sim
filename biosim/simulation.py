@@ -12,9 +12,8 @@ import sys
 import re
 import subprocess
 import os
-
-
-_DEFAULT_GRAPHICS_DIR = os.path.join('...', 'data')
+import time
+import pickle
 
 
 class BioSim:
@@ -61,7 +60,7 @@ img_base=None, img_fmt='png', tmean = False):
 		self.names=[n for n in dir(sys.modules["biosim.animal"]) if not re.match("(\w*__\w*)|(np)|(ran)|(animal)",n)]
 		self.default_values_species = {species : dict(eval("{}.default_var".format(species) ) ) for species in self.names }
 		self.island, self.illigal_coord = string2map(island_map, self.names)
-		self.population = self.add_population(ini_pop)
+		self.add_population(ini_pop)
 		self._year = 0
 		self.viz = None
 		self.data = dict()
@@ -96,8 +95,6 @@ img_base=None, img_fmt='png', tmean = False):
 					animal.var.update(self.default_values_species[species])
 
 
-
-	
 	def set_landscape_parameters(self, landscape : str, params: dict):
 		"""
 		Set parameters for landscape type.
@@ -125,7 +122,7 @@ img_base=None, img_fmt='png', tmean = False):
 					self.viz.convert_map(self.str_map)
 				self.viz.setup_graphics(num_years)
 		for year in range(num_years):
-			year_cycle(self.island,self.illigal_coord,year=year,visual_year=vis_years)
+			year_cycle(self.island,self.illigal_coord)
 			if vis_years != None:
 				if self._year % vis_years == 0:
 					self.get_data()
@@ -211,7 +208,7 @@ img_base=None, img_fmt='png', tmean = False):
 	def create_movie(self, movie_fmt='gif'):
 		"""Creates a movie of the simulation"""
 		if self._img_base is None:
-			raise RuntimeError("No filename defined")
+			raise ValueError("RuntimeError: No filename defined")
 
 		if movie_fmt == 'mp4':
 			try:
@@ -224,7 +221,7 @@ img_base=None, img_fmt='png', tmean = False):
 					'-pix_fmt', 'yuv420p',
 					'{}.{}'.format(self._img_base, movie_fmt)])
 			except subprocess.CalledProcessError as err:
-				raise RuntimeError('ERROR: ffmpeg failed with: {}'.format(err))
+				raise ValueError('RuntimeError: ERROR: ffmpeg failed with: {}'.format(err))
 
 		elif movie_fmt == 'gif':
 			try:
@@ -235,7 +232,7 @@ img_base=None, img_fmt='png', tmean = False):
 					'{}_*.png'.format(self._img_base),
 					'{}.{}'.format(self._img_base, movie_fmt)])
 			except subprocess.CalledProcessError as err:
-				raise RuntimeError('ERROR: convert failed with: {}'.format(err))
+				raise ValueError('RuntimeError: ERROR: convert failed with: {}'.format(err))
 
 		else:
 			raise ValueError('Unknown movie format: ' + movie_fmt)
@@ -261,3 +258,30 @@ img_base=None, img_fmt='png', tmean = False):
 				else:
 					dict_count[spesis] = len(self.island[coord].default[spesis])
 		return dict_count
+
+	def load(self,file):
+		"""
+		loads a save_file of users choosing.
+
+		:param str file: file to be loaded.
+		"""
+		try:
+			self.__dict__.update(pickle.load(open(file,"br")).__dict__)
+		except:
+			ValueError("This file is not a BioSim file.")
+
+	def save(self, path: str = ""):
+		if type(path) is not str:
+			raise ValueError("TypeError: path must be a str, not a {}".format(type(path)))
+		if path == "":
+			direct = ""
+		elif path.endswith("/"):
+			direct = path
+		else:
+			direct = path + "/"
+
+		if not(os.path.isdir(direct)):
+			os.mkdir("./"+direct)
+		save_file = open(direct + "save_{}.biosim".format(str(time.time())),"bw")
+		pickle.dump(self,save_file)
+
