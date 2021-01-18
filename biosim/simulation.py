@@ -72,6 +72,8 @@ img_base=None, img_fmt='png', tmean = False):
 		if self.tmean:
 			self.mean = {species:0 for species in self.names}
 		self.ymax_animals = ymax_animals
+		self.cmax_animals = cmax_animals
+		self.hist_specs = hist_specs
 		self._img_base = '../data/{}'.format(img_base) if img_base else None
 		self._img_fmt = img_fmt
 
@@ -129,11 +131,10 @@ img_base=None, img_fmt='png', tmean = False):
 			if vis_years != None:
 				if self._year % vis_years == 0:
 					self.get_data()
-					self.viz.update_data(self.num_animals_per_species,
-									 self.total_age,
-									 self.total_weight,
-									 self.total_fitness)
-				self.viz.update_graphics(self._year, self.data)
+					self.viz.update_data(
+						self.num_animals_per_species, self.total_age, self.total_weight, self.total_fitness
+					)
+				self.viz.update_graphics(self._year, self.data, self.cmax_animals, self.hist_specs)
 				self.viz.create_images()
 			self._year += 1
 			if self.tmean:

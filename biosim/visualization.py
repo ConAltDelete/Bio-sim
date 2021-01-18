@@ -147,7 +147,7 @@ class Visualization:
 
         plt.ion()
 
-    def update_graphics(self, current_year, cells_map):
+    def update_graphics(self, current_year, cells_map, cmax_animals, hist_specs):
         """
         updates the graphics interface with new data and shows it live
         TODO: cells_map and cells_map2 make into 1 as a dict
@@ -168,37 +168,64 @@ class Visualization:
             data[current_year] = self.count[species]
             self.n[species].set_ydata(data)
 
+        def_specs = {'weight': {'max': 60, 'delta': 2},
+                     'fitness': {'max': 1.0, 'delta': 0.05},
+                     'age': {'max': 60, 'delta': 2}}
+
+        for keys in ['age', 'weight', 'fitness']:
+            if hist_specs.get(keys):
+                def_specs[keys] = hist_specs[keys]
+
         self.histogram_age.cla()
-        self.histogram_age.set_xlim(0, 60)
+        self.histogram_age.set_xlim(0, def_specs['age']['max'])
         self.histogram_age.set_ylim(0, 2000)
         for species in self.weight:
-            self.histogram_age.hist(self.age[species], bins=30, histtype='step', color=self.meta_data[species]["colour"])
+            self.histogram_age.hist(self.age[species],
+                                    bins=int((def_specs['age']['max']) / (def_specs['age']['delta'])),
+                                    histtype='step',
+                                    range=(0, def_specs['age']['max']),
+                                    color=self.meta_data[species]["colour"])
         self.histogram_age.title.set_text("age")
 
         self.histogram_weight.cla()
-        self.histogram_weight.set_xlim(0, 60)
+        self.histogram_weight.set_xlim(0, def_specs['weight']['max'])
         self.histogram_weight.set_ylim(0, 1000)
         for species in self.weight:
-            self.histogram_weight.hist(self.weight[species], bins=30, histtype='step', color=self.meta_data[species]["colour"])
+            self.histogram_weight.hist(self.weight[species],
+                                       bins=int((def_specs['weight']['max']) / (def_specs['weight']['delta'])),
+                                       range=(0, def_specs['weight']['max']),
+                                       histtype='step',
+                                       color=self.meta_data[species]["colour"])
         self.histogram_weight.title.set_text("weight")
 
         self.histogram_fitness.cla()
-        self.histogram_fitness.set_xlim(0, 1)
+        self.histogram_fitness.set_xlim(0, def_specs['fitness']['max'])
         self.histogram_fitness.set_ylim(0, 2000)
         for species in self.weight:
-            self.histogram_fitness.hist(self.fitness[species], bins=20, histtype='step', color=self.meta_data[species]["colour"])
+            self.histogram_fitness.hist(self.fitness[species],
+                                        bins=int((def_specs['fitness']['max']) / (def_specs['fitness']['delta'])),
+                                        histtype='step',
+                                        range=(0, def_specs['fitness']['max']),
+                                        color=self.meta_data[species]["colour"])
         self.histogram_fitness.title.set_text("fitness")
+
+        if cmax_animals is None:
+            heat_values = {'Herbivore': 200, 'Carnivore': 50}
+        else:
+            heat_values = cmax_animals
 
         if self.img_ax is not None:
             self.img_ax.set_data(cells_map["Herbivore"])
         else:
-            self.img_ax = self.heatmap_ax.imshow(cells_map["Herbivore"], interpolation='nearest', vmin=0, vmax=200)
+            self.img_ax = self.heatmap_ax.imshow(cells_map["Herbivore"], interpolation='nearest',
+                                                 vmin=0, vmax=heat_values['Herbivore'])
             plt.colorbar(self.img_ax, ax=self.heatmap_ax, orientation='vertical')
 
         if self.img2_ax is not None:
             self.img2_ax.set_data(cells_map["Carnivore"])
         else:
-            self.img2_ax = self.heatmap2_ax.imshow(cells_map["Carnivore"], interpolation='nearest', vmin=0, vmax=50)
+            self.img2_ax = self.heatmap2_ax.imshow(cells_map["Carnivore"], interpolation='nearest',
+                                                   vmin=0, vmax=heat_values['Carnivore'])
             plt.colorbar(self.img2_ax, ax=self.heatmap2_ax, orientation='vertical')
 
         self.fig.canvas.flush_events()
