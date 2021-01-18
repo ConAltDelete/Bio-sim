@@ -70,9 +70,9 @@ img_base=None, img_fmt='png', tmean = False):
 		self.tmean = tmean
 		if self.tmean:
 			self.mean = {species:0 for species in self.names}
-		self.ymax_animals = ymax_animals
-		self.cmax_animals = cmax_animals
-		self.hist_specs = hist_specs
+		self.ymax_animals = ymax_animals if ymax_animals else None
+		self.cmax_animals = cmax_animals if cmax_animals else None
+		self.hist_specs = hist_specs if hist_specs else None
 		self._img_base = '../data/{}'.format(img_base) if img_base else None
 		self._img_fmt = img_fmt
 
@@ -125,8 +125,8 @@ img_base=None, img_fmt='png', tmean = False):
 				if self.viz is None:
 					self.viz = Visualization(self.names, self._img_base, self._img_fmt, self.ymax_animals)
 					self.viz.convert_map(self.str_map)
-				self.viz.setup_graphics(num_years, self.cmax_animals, self.hist_specs)
-		n = 1
+				self.viz.setup_graphics(num_years)
+		n = 0
 		while n < num_years:
 			year_cycle(self.island,self.illigal_coord)
 			if vis_years != None:
@@ -267,16 +267,18 @@ img_base=None, img_fmt='png', tmean = False):
 					dict_count[spesis] = len(self.island[coord].default[spesis])
 		return dict_count
 
-	def load(self,file):
+	def load(self,file:str):
 		"""
 		loads a save_file of users choosing.
 
 		:param str file: file to be loaded.
 		"""
+		if file.endswith(".biosim"):
+			raise ValueError("Must be a '.biosim' file.")
 		try:
 			self.__dict__.update(pickle.load(open(file,"br")).__dict__)
 		except:
-			ValueError("This file is not a BioSim file.")
+			ValueError("This file is not a readeble BioSim file.")
 
 	def save(self, path: str = ""):
 		"""
@@ -298,3 +300,5 @@ img_base=None, img_fmt='png', tmean = False):
 		save_file = open(direct + "save_{}.biosim".format(str(time.time())),"bw")
 		pickle.dump(self,save_file)
 
+def load(file):
+	return pickle.load(open(file,"br"))

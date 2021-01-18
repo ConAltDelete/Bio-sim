@@ -219,9 +219,14 @@ def test_no_diagonal_movements_two_iterations():
             assert count
 
 def test_eating_Herbivore():
+    class cell:
+        def __init__(self):
+            self.food = 20
+
+    a_cell = cell()
     herb = Herbivore(a= 5, w = 100)
-    eaten = herb.eat(100,return_food=True)
-    assert eaten == 10
+    herb.eat(a_cell)
+    assert a_cell.food == 10
 
 def test_two_Herbivore_eating_in_cell():
     ini_herb = [ {'species': 'Herbivore',
@@ -235,11 +240,14 @@ def test_two_Herbivore_eating_in_cell():
     assert cell.food == 780
 
 def test_eating_carnevore():
-    herd = [Herbivore(a=1,w=1)]
+    class herb_test:
+        def __init__(self):
+            self.default = {"Herbivore":[Herbivore(a=1,w=1)]}
+    herd = herb_test()
     pred = Carnivore(a=5,w=100)
     pred.var["phi"] = 20
-    herd = pred.eat(herd)
-    assert list(herd) == []
+    pred.eat(herd)
+    assert list(herd.default["Herbivore"]) == []
 
 def test_weight_loss():
     sim = BioSim(island_map="""WWW\nWLW\nWWW""", ini_pop=[{
