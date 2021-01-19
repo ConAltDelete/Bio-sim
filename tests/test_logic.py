@@ -310,16 +310,48 @@ def test_death_one_animal():
 
 @pytest.mark.parametrize("n_animals",[n for n in range(2,6)])
 def test_death_multi_animal(n_animals):
-    cell = Cells(cell_type=3,coord=[2,2])
-    cell.default["Herbivore"] = [Herbivore(a=5,w=0) for _ in range(n_animals)]
-    season_ageing(cell)
-    assert len(cell.default["Herbivore"]) == 0
+    ini_pop = [{
+        "loc": (2,2),
+        "pop": [
+            {
+                "species": "Herbivore",
+                "age": 5,
+                "weight": 0
+            } for _ in range(n_animals)
+        ]
+        }
+    ]
+    sim = BioSim("WWW\nWLW\nWWW",ini_pop=ini_pop)
+    the_map = sim.island
+    season_ageing(the_map[(2,2)])
+    assert len(the_map[(2,2)].default["Herbivore"]) == 0
 
 @pytest.mark.parametrize("n_carn",[n for n in range(2,6)])
 @pytest.mark.parametrize("n_herb",[n for n in range(2,6)])
 def test_death_multi_specis(n_herb,n_carn):
-    cell = Cells(cell_type=3,coord=[2,2])
-    cell.default["Herbivore"] = [Herbivore(a=5,w=0) for _ in range(n_herb)]
-    cell.default["Carnivore"] = [Carnivore(a=5,w=0) for _ in range(n_carn)]
-    season_ageing(cell)
-    assert len(cell.default["Herbivore"]) == 0 and len(cell.default["Carnivore"]) == 0
+    ini_herb = [
+            {
+                "species": "Herbivore",
+                "age": 5,
+                "weight": 0
+            } for _ in range(n_herb)
+        ]
+
+    ini_carn = [
+        {
+                "species": "Carnivore",
+                "age": 5,
+                "weight": 0
+            } for _ in range(n_carn)
+    ]
+
+    ini_pop = [
+        {
+            "loc": (2,2),
+            "pop": ini_herb + ini_carn
+        }
+    ]
+    sim = BioSim("WWW\nWLW\nWWW",ini_pop=ini_pop)
+    the_map = sim.island
+    season_ageing(the_map[(2,2)])
+    assert len(the_map[(2,2)].default["Herbivore"]) == 0 and len(the_map[(2,2)].default["Carnivore"]) == 0
