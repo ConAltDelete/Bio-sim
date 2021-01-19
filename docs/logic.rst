@@ -8,9 +8,9 @@ This module handles all of the logic in the simulation. The logic is used to mak
 
 Usage
 --------
-Every season requires a ``Cells`` object to manipulate. The only excpetions are 
+Every season requires a ``Cells`` object to manipulate. The only exceptions are
    - ``season_end``
-   - ``season_migrasion``
+   - ``season_migration``
 
 Those require the entire map. 
 
