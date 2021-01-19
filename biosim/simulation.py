@@ -73,7 +73,7 @@ img_base=None, img_fmt='png', tmean = False):
 		self.ymax_animals = ymax_animals if ymax_animals else None
 		self.cmax_animals = cmax_animals if cmax_animals else None
 		self.hist_specs = hist_specs if hist_specs else None
-		self._img_base = '../data/{}'.format(img_base) if img_base else None
+		self._img_base = img_base
 		self._img_fmt = img_fmt
 
 	def set_animal_parameters(self, species: str, params: dict):
