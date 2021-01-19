@@ -163,6 +163,17 @@ class Visualization:
 
         plt.ion()
 
+    def pop_handler(self, current_year, n_species):
+        """Updates the year"""
+        for species in n_species:
+            self.count[species] = n_species[species]
+
+        self.year_current = current_year
+        for species in self.n:
+            data = self.n[species].get_ydata()
+            data[self.year_current] = self.count[species]
+            self.n[species].set_ydata(data)
+
     def update_histograms(self):
         """
         yo
@@ -220,12 +231,10 @@ class Visualization:
                                                    vmin=0, vmax=self.def_cmax['Carnivore'])
             plt.colorbar(self.img2_ax, ax=self.heatmap2_ax, orientation='vertical')
 
-    def update_graphics(self, current_year, cells_map):
+    def update_graphics(self, cells_map):
         """
         updates the graphics interface with new data and shows it live
-        TODO: cells_map and cells_map2 make into 1 as a dict
         """
-        self.year_current = current_year
         self.year.set_text('Year:{:5}'.format(self.year_current))
 
         if not self.y_set_lim:
@@ -236,11 +245,6 @@ class Visualization:
 
         self.pop.set_ylim(0, self.y_def_lim + 1000)
 
-        for species in self.n:
-            data = self.n[species].get_ydata()
-            data[current_year] = self.count[species]
-            self.n[species].set_ydata(data)
-
         self.update_histograms()
 
         self.update_heatmaps(cells_map)
@@ -249,9 +253,7 @@ class Visualization:
         plt.pause(1e-6)
 
     def update_data(self, n_species: dict, l_ages, l_weights, l_fitness):
-        for species in n_species:
-            self.count[species] = n_species[species]
-        
+        """updates the data"""
         for species in n_species:
             self.age[species] = [a if a < self.def_specs['age']['max'] else
                                  self.def_specs['age']['max'] for a in l_ages[species]]
