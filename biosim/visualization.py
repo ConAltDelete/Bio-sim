@@ -87,6 +87,7 @@ class Visualization:
 
         if self.island_map_ax is None:
             self.island_map_ax = self.fig.add_axes([0.1, 0.55, 0.3, 0.45])
+            self.island_map_ax.title.set_text("Island Map")
             self.island_map = self.island_map_ax.imshow(self.rgb_map)
             self.island_map_ax.set_xticks(range(len(self.rgb_map[0])))
             self.island_map_ax.set_xticklabels([_ + 1 if not (_ + 1) % 5 else '' for _ in range(len(self.rgb_map[0]))])
@@ -102,16 +103,17 @@ class Visualization:
 
         if self.heatmap_ax is None:
             self.heatmap_ax = self.fig.add_axes([0.6, 0.75, 0.3, 0.15])
-            self.heatmap_ax.title.set_text("Herbivore heatmap")
+            self.heatmap_ax.title.set_text("Herbivore Heatmap")
             self.img_ax = None
 
         if self.heatmap2_ax is None:
             self.heatmap2_ax = self.fig.add_axes([0.6, 0.55, 0.3, 0.15])
-            self.heatmap2_ax.title.set_text("Carnivore heatmap")
+            self.heatmap2_ax.title.set_text("Carnivore Heatmap")
             self.img2_ax = None
 
         if self.pop is None:
             self.pop = self.fig.add_axes([0.1, 0.1, 0.4, 0.4])
+            self.pop.title.set_text("Population Graph")
 
         self.pop.set_xlim(0, self.n_steps + 1)
 
@@ -174,7 +176,7 @@ class Visualization:
                                     histtype='step',
                                     range=(0, self.def_specs['age']['max']),
                                     color=self.meta_data[species]["colour"])
-        self.histogram_age.title.set_text("age")
+        self.histogram_age.title.set_text("Age Distribution")
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, self.def_specs['weight']['max'])
@@ -186,7 +188,7 @@ class Visualization:
                                        range=(0, self.def_specs['weight']['max']),
                                        histtype='step',
                                        color=self.meta_data[species]["colour"])
-        self.histogram_weight.title.set_text("weight")
+        self.histogram_weight.title.set_text("Weight Distribution")
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, self.def_specs['fitness']['max'])
@@ -198,7 +200,7 @@ class Visualization:
                                         histtype='step',
                                         range=(0, self.def_specs['fitness']['max']),
                                         color=self.meta_data[species]["colour"])
-        self.histogram_fitness.title.set_text("fitness")
+        self.histogram_fitness.title.set_text("Fitness Distribution")
 
     def update_heatmaps(self, cells_map):
         """
