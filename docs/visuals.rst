@@ -4,7 +4,7 @@ visuals module
 
 Introduction
 ------------
-This module handels map related functions.
+This module handles map related functions.
 
 Usage
 ----------
@@ -12,7 +12,7 @@ Usage
 
 ``string2map`` takes a rectangle based string and returns a map and a list of illegal moves. 
 
-``set_param`` sets the paramaters of the cells.
+``set_param`` sets the parameters of the cells.
 
 .. automodule:: biosim.visuals
    :members:
