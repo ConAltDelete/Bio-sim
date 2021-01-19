@@ -161,7 +161,7 @@ class BioSim:
         population = {pop["loc"]: pop["pop"] for pop in population}
         for coord in population:
             if coord in self.illegal_coord:
-                raise ValueError("An animal was placed at {} witch is an illegal placement.".format(coord))
+                raise ValueError("An animal was placed at {} which is an illegal placement.".format(coord))
             cell = self.island[coord]
             for animal_ in population[coord]:
                 animal_name = animal_["species"]
