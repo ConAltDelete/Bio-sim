@@ -1,33 +1,38 @@
 # -*- coding: utf-8 -*-
 
 """
-functioning visualization of the island simulation
+Visualization of the BioSim project
 """
 
 __author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
 __email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
 
 import matplotlib.pyplot as plt
-import random
 import numpy as np
 import os
-
-"""
-1. grab information from the island simulation every cycle
-2. set up a plot graphics window
-3. update the graphics window every cycle
-4. the graphics windows contains:
-    Geography; the map is visualized with colors
-    Total number of animals by species; shown as a line graph
-    Population map; each species is shown with a heat map
-    Histograms; shall show histograms of each species ages, weights and fitness
-    Year; the current year shall be shown
-"""
 
 
 class Visualization:
     """
-    Visualization
+        Visualization is the graphics interface of the BioSim project that displays a island map, population graph,
+        population heatmap and histogram distributions based on age, weight and fitness.
+
+
+        :param names: names of species
+        :param img_base: String with beginning of file name for figures, including path
+        :param img_fmt: String with file type for figures, e.g. 'png'`
+        :param ymax_animals: Number specifying y-axis limit for graph showing animal numbers
+
+        Visualization does as follows:
+        - grab information from the island simulation every cycle (mostly handled by simulation.py)
+        - set up a plot graphics window
+        - update the graphics window every cycle
+        - the graphics windows contains:
+            Geography; the map is visualized with colors
+            Total number of animals by species; shown as a line graph
+            Population map; each species is shown with a heat map
+            Histograms; shall show histograms of each species ages, weights and fitness
+            Year; the current year shall be shown
     """
     def __init__(self, names, img_base, img_fmt, ymax_animals):
         colours = [ (1,0,0), (0,0,1), (0,1,0), (0,1,1), (1,1,0), (1,0,1) ]
@@ -74,7 +79,12 @@ class Visualization:
 
     def setup_graphics(self, nx_step, cmax_animals, hist_specs):
         """
-        setups a graphics interface with heat maps, line graphs and histograms
+        sets up a graphics interface with island map, heat maps, population graph and histograms
+
+
+        :param nx_step: integer that adds to the current year to give the total amount of years to simulate
+        :param cmax_animals: dictionary parameter that specifies the limits of heatmap values
+        :param hist_specs: dictionary parameter that specifies the limits of histogram values
         """
         self.n_steps += nx_step
         rgb_value = {'W': (0, 0.5, 1),
@@ -164,7 +174,13 @@ class Visualization:
         plt.ion()
 
     def pop_handler(self, current_year, n_species):
-        """Updates the year"""
+        """
+        Method for specifically handling the population graph and updating the year counter
+
+
+        :param current_year: integer that updates the current year
+        :param n_species: dictionary containing population count for each species
+        """
         for species in n_species:
             self.count[species] = n_species[species]
 
@@ -176,7 +192,7 @@ class Visualization:
 
     def update_histograms(self):
         """
-        yo
+        Updates the histograms on the graphics interface
         """
         self.histogram_age.cla()
         self.histogram_age.set_xlim(0, self.def_specs['age']['max'])
@@ -215,7 +231,11 @@ class Visualization:
 
     def update_heatmaps(self, cells_map):
         """
-        hello
+        Updates the heatmaps on the graphics interface
+
+
+        :param cells_map: dictionary containing for each species
+                          containing 2d arrays for the population count in each cell
         """
         if self.img_ax is not None:
             self.img_ax.set_data(cells_map["Herbivore"])
@@ -233,7 +253,11 @@ class Visualization:
 
     def update_graphics(self, cells_map):
         """
-        updates the graphics interface with new data and shows it live
+        Updates the graphics interface with new data and shows it live
+
+
+        :param cells_map: dictionary containing for each species
+                          containing 2d arrays for the population count in each cell
         """
         self.year.set_text('Year:{:5}'.format(self.year_current))
 
@@ -253,7 +277,15 @@ class Visualization:
         plt.pause(1e-6)
 
     def update_data(self, n_species: dict, l_ages, l_weights, l_fitness):
-        """updates the data"""
+        """
+        Updates the histogram data and limits the data outside the ranges to display as maximum
+
+
+        :param n_species: dictionary containing the types of species
+        :param l_ages: dictionary containing data for ages for each species
+        :param l_weights: dictionary containing data for weights for each species
+        :param l_fitness: dictionary containing data for fitness for each species
+        """
         for species in n_species:
             self.age[species] = [a if a < self.def_specs['age']['max'] else
                                  self.def_specs['age']['max'] for a in l_ages[species]]
@@ -263,6 +295,12 @@ class Visualization:
                                      self.def_specs['fitness']['max'] for f in l_fitness[species]]
 
     def convert_map(self, map_str: str):
+        """
+        Converts a given map string into a usable display
+
+
+        :param map_str: String with W, D, H, L letters to specify cell type display
+        """
         rgb_value = {'W': (0, 0.5, 1),
                      'D': (1, 1, 0.3),
                      'H': (0, 0.6, 0),
@@ -272,7 +310,9 @@ class Visualization:
                         for row in map_str.split()]
 
     def create_images(self):
-        """saves images to file"""
+        """
+        saves images to file and creates directory if one doesn't exist
+        """
         if self._img_base is None:
             return
 
@@ -297,32 +337,3 @@ def inner_points(p: iter):
         for b in (q for q in p if q != a):
             r.append( ( (a[0]+b[0])/2 , (a[1]+b[1])/2 , (a[2]+b[2])/2 ) )
     return set(r)
-
-
-if __name__ == "__main__":
-    from biosim.simulation import *
-    geogr = """\
-                   WWWWWWWWWWWWWWWWWWWWW
-                   WWWWWWWWHWWWWLLLLLLLW
-                   WHHHHHLLLLWWLLLLLLLWW
-                   WHHHHHHHHHWWLLLLLLWWW
-                   WHHHHHLLLLLLLLLLLLWWW
-                   WHHHHHLLLDDLLLHLLLWWW
-                   WHHLLLLLDDDLLLHHHHWWW
-                   WWHHHHLLLDDLLLHWWWWWW
-                   WHHHLLLLLDDLLLLLLLWWW
-                   WHHHHLLLLDDLLLLWWWWWW
-                   WWHHHHLLLLLLLLWWWWWWW
-                   WWWHHHHLLLLLLLWWWWWWW
-                   WWWWWWWWWWWWWWWWWWWWW"""
-    v = Visualization(".",".")
-    v.convert_map(geogr)
-    v.setup_graphics(1)
-    for k in range(300):
-        sim = {'herbivore': random.randint(2000, 8000), 'carnivore': random.randint(1, 6000)}
-        z = np.random.randint(200, size=(13, 21))
-        z2 = np.random.randint(200, size=(13, 21))
-        v.get_data(sim)
-        v.update_graphics(k, z, z2)
-    plt.ioff()
-    plt.show()
