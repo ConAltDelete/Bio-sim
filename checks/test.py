@@ -23,7 +23,5 @@ for coord in sim.island:
 sim.simulate(50)
 sim.re_map(new_map="WWWW\nWHLW\nWWWW\nWWWW")
 sim.simulate(50)
-print(sim.str_map,end="\n\n")
-
-for coord in sim.island:
-	print(coord,sim.island[coord].type)
+sim.re_map(new_map="WWWW\nWLHW\nWLHW\nWWWW")
+sim.simulate(50)

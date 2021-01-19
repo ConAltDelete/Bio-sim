@@ -125,9 +125,9 @@ class BioSim:
         self.island = new_map_list
         self.illegal_coord = new_illegal_coord
 
-        self.viz.island_map_ax = None
+        #self.viz.island_map_ax = None
         self.viz.convert_map(self.str_map)
-        self.viz.setup_graphics(0,self.cmax_animals,self.hist_specs)
+        self.viz.island_map = self.viz.island_map_ax.imshow(self.viz.rgb_map)
 
 
     def simulate(self, num_years, vis_years=1, img_years=None):
