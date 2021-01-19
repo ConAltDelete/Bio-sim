@@ -44,12 +44,13 @@ class animal:
         'E': [0, 1]
     }
 
-    def __init__(self, a: int, w: float, coord=None):
+    def __init__(self, a: int, w: float, coord=None, random_name=False):
         """
         :param int a: age of animal.
         :param float w: weight of animal.
         :param list[int,int] coord: The coordinate of the animal.
         """
+        self.name = self.random_name() if random_name else None
         self.var["coord"] = coord
         self.var["w"] = w
         self.var["a"] = a
@@ -173,6 +174,22 @@ class animal:
         reevaluates its fitness.
         """
         self.var["w"] -= self.var["eta"] * self.var["w"]
+
+    @staticmethod
+    def random_name():
+        """
+        Method to give each newly initialized animal a mostly unique name
+        """
+        name_given = str()
+        name_length = 5
+        name_list = ['Roy', 'Mats', 'Hans', 'Sabina', 'Amir', 'Ngoc', 'Mike', 'the', 'Mario', 'Sephiroth', 'McMuffin',
+                     'Herby', 'McHerbface', 'Carny', 'McCarnface', 'Cthulhu', 'Harambe', 'Cheems', 'Sonic', 'Hawk',
+                     'Vinny', 'Pog', 'Jotaro', 'Giovanni', 'Super', 'Penny', 'Jack', 'Jill', 'Golden', 'Jugemu',
+                     'Unlucky', 'Lucky']
+        for name in range(name_length):
+            name_given += ran.choice(name_list) + ' '
+        name_given = name_given[:-1]
+        return name_given
 
 
 class Herbivore(animal):

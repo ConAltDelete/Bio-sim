@@ -49,8 +49,7 @@ class BioSim:
     """
 
     def __init__(self, island_map: str, ini_pop: list, seed: int = None, ymax_animals=None, cmax_animals=None,
-                 hist_specs=None,
-                 img_base=None, img_fmt='png', tmean=False):
+                 hist_specs=None, img_base=None, img_fmt='png', tmean=False):
         # we set the random seed for future random number generation. In other words,
         # we make a random simulation consistent.#
         if seed:
@@ -306,6 +305,18 @@ class BioSim:
         else:
             save_file = open(direct + "save_{}.biosim".format(str(time.time())), "bw")
         pickle.dump(self, save_file)
+
+    def print_random_name(self):
+        n = 0
+        while n == 0:
+            coord, cell = ran.choice(list(self.island.items()))
+            n = len(cell.default)
+        species, animal_list = ran.choice(list(cell.default.items()))
+        name = ran.choice(animal_list).name
+        if name is None:
+            print("You haven't enabled animals to have names!")
+        else:
+            print('Say hello to {}, {} from cell {}!'.format(species, name, str(coord)))
 
 
 def load(file):
