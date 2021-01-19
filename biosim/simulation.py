@@ -162,23 +162,23 @@ img_base=None, img_fmt='png', tmean = False):
 			if coord in self.illigal_coord:
 				raise ValueError("An animal was placed at {} witch is an illegal placement.".format(coord))
 			cell = self.island[coord]
-			for animal in population[coord]:
-				animal_name = animal["species"]
-				if animal["age"] < 0:
+			for animal_ in population[coord]:
+				animal_name = animal_["species"]
+				if animal_["age"] < 0:
 							raise ValueError("age is less than zero")
-				elif animal["weight"] < 0:
+				elif animal_["weight"] < 0:
 					raise ValueError("weight is less than zero")
 				if animal_name in self.names:
 					if animal_name in cell.default:
-						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						create_animal = eval("{}(a = animal_['age'], w = animal_['weight'])".format(animal_name))
 						create_animal.var.update(self.default_values_species[animal_name])
 						cell.default[animal_name].append(create_animal)
 					else:
-						create_animal = eval("{}(a = animal['age'], w = animal['weight'])".format(animal_name))
+						create_animal = eval("{}(a = animal_['age'], w = animal_['weight'])".format(animal_name))
 						create_animal.var.update(self.default_values_species[animal_name])
 						cell.default[animal_name] = [create_animal]
 				else:
-					raise ValueError("Got '{}'; needs {}".format(animal["species"],self.names))
+					raise ValueError("Got '{}'; needs {}".format(animal_["species"],self.names))
 
 	def get_data(self):
 		"""Get data from the cells in self.island"""
@@ -195,19 +195,19 @@ img_base=None, img_fmt='png', tmean = False):
 				z.append(temp)
 			self.data[species] = z
 
-		self.total_age = {'Herbivore': [], 'Carnivore': []}
+		self.total_age = {spes : [] for spes in self.names}
 		for names in self.names:
 			for coord in self.island:
 				for units in self.island[coord].count_age[names]:
 					self.total_age[names].append(units)
 
-		self.total_weight = {'Herbivore': [], 'Carnivore': []}
+		self.total_weight = {spes : [] for spes in self.names}
 		for names in self.names:
 			for coord in self.island:
 				for units in self.island[coord].count_weight[names]:
 					self.total_weight[names].append(units)
 
-		self.total_fitness = {'Herbivore': [], 'Carnivore': []}
+		self.total_fitness = {spes : [] for spes in self.names}
 		for names in self.names:
 			for coord in self.island:
 				for units in self.island[coord].count_fitness[names]:
