@@ -120,25 +120,23 @@ img_base=None, img_fmt='png', tmean = False):
 		if img_years is None:
 			img_years = vis_years
 
-		if vis_years is not None:
-			if self._year % vis_years == 0: # visualization not working correctly with vis_years > 1
-				if self.viz is None:
-					self.viz = Visualization(self.names, self._img_base, self._img_fmt, self.ymax_animals)
-					self.viz.convert_map(self.str_map)
-				self.viz.setup_graphics(num_years, self.cmax_animals, self.hist_specs)
+			if self.viz is None:
+				self.viz = Visualization(self.names, self._img_base, self._img_fmt, self.ymax_animals)
+				self.viz.convert_map(self.str_map)
+			self.viz.setup_graphics(num_years, self.cmax_animals, self.hist_specs)
 		n = 0
 		while n < num_years:
 			year_cycle(self.island,self.illigal_coord)
-			if vis_years != None:
-				if self._year % vis_years == 0:
-					self.get_data()
-					self.viz.update_data(
-						self.num_animals_per_species, self.total_age,
-						self.total_weight, self.total_fitness
-					)
-				self.viz.update_graphics(self._year, self.data)
-				if self._year % img_years == 0:
-					self.viz.create_images()
+			self.viz.pop_handler(self._year, self.num_animals_per_species)
+			if self._year % vis_years == 0:
+				self.get_data()
+				self.viz.update_data(
+					self.num_animals_per_species, self.total_age,
+					self.total_weight, self.total_fitness
+				)
+				self.viz.update_graphics(self.data)
+			if self._year % img_years == 0:
+				self.viz.create_images()
 			self._year += 1
 			n += 1
 			if self.tmean:
