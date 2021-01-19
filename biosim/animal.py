@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-__author__ = "Mats Hoem olsen"
-__email__ = "mats.hoem.olsen@nmbu.no"
-
-import numpy as np
-import random as ran
-
 """
-Module for animal logic. This file contains
-	- class: animal
-	- class (animal) : herbivore
-	- class (animal) : carnivore
+Module for animal logic. This file contains:
+    - class: animal
+    - class (animal) : herbivore
+    - class (animal) : carnivore
 Any global function must start and/or end with '__' to not be included
 in valid names.
 """
+
+__author__ = "Mats Hoem olsen, Roy Erling Granheim"
+__email__ = "mats.hoem.olsen@nmbu.no, roy.erling.granheim@nmbu.no"
+
+import numpy as np
+import random as ran
 
 
 class animal:
@@ -44,48 +44,48 @@ class animal:
         'E': [0, 1]
     }
 
-    def __init__(self, a: int, w: float, coord=[0, 0]):
+    def __init__(self, a: int, w: float, coord=None):
         """
         :param int a: age of animal.
-        :param float w: waight of animal.
+        :param float w: weight of animal.
         :param list[int,int] coord: The coordinate of the animal.
         """
         self.var["coord"] = coord
         self.var["w"] = w
         self.var["a"] = a
         self.var["life"] = True
-        self.var["phi"] = self.Big_phi()
+        self.var["phi"] = self.big_phi()
 
-    def Big_phi(self):
+    def big_phi(self):
         """
-        'Big_phi' calculates the fitness of the animal based on its age and weight. This value is
-        crusial to this entire operation.
+        'big_phi' calculates the fitness of the animal based on its age and weight. This value is
+        crucial to this entire operation.
 
 
         :return: Fitness of animal.
         """
 
-        def q(S: str):
+        def q(s: str):
             """
             Generates a function based on 'S'.
 
 
-            :param S: 'P' for a smaller value, other for bigger.
+            :param s: 'P' for a smaller value, other for bigger.
             :return: function
             """
-            k = 1 if S == "P" else -1
+            k = 1 if s == "P" else -1
 
             def new_q(x: float, xh: float, phi: float):
-                r"""
-                calculates the function $\frac{1}{1+e^{\pm\phi(x-x_h)}}$
+                """
+                calculates the function
 
 
                 :param x: number
-                :parma xh: number
-                :parma phi: number
+                :param xh: number
+                :param phi: number
                 :return: float
                 """
-                return 1 / (1 + np.e**(k * phi * (x - xh)))
+                return 1 / (1 + np.e ** (k * phi * (x - xh)))
 
             return new_q
 
@@ -97,9 +97,9 @@ class animal:
             return q_p * q_n
 
     @staticmethod
-    def N(w: float, p: float):
+    def n(w: float, p: float):
         """
-        Gauss distrebution.
+        Gaussian distribution.
 
 
         :param w: mean
@@ -113,60 +113,50 @@ class animal:
 
     def death(self):
         """
-        Desides if this animal dies. It got two ways to determen it:
+        Decides if this animal dies. It got two ways to determine it:
                 - Its weight is equal to 0 or less.
                 - By random chance based on its fitness.
         """
-        if self.var["w"] <= 0 or ( ran.random() < (self.var["omega"] * (1 - self.var["phi"])) ):
+        if self.var["w"] <= 0 or (ran.random() < (self.var["omega"] * (1 - self.var["phi"]))):
             self.var["life"] = False
 
-    def birth(self, N: int):
+    def birth(self, n: int):
         """
-        Birth it determened by the fitness of the animal, its weight, and the number of the species around.
+        Birth it determined by the fitness of the animal, its weight, and the number of the species around.
         If the weight of the mother is smaller than the weight of the child, it will not give birth.
 
-        Another factor to consider is chance, even if the condisions are met there is still no garanti to
+        Another factor to consider is chance, even if the conditions are met there is still no guarantee to
         give birth. Unless you mess with its default values.
 
 
-        :param N: population number in cell.
-        :param necro_birth: Give birth even when dead.
-        :return: either None or a new instace of itself.
+        :param n: population number in cell.
+        :return: either None or a new instance of itself.
         """
-        self.var["phi"] = self.Big_phi()
+        self.var["phi"] = self.big_phi()
         test_w = self.var["w"] >= (self.var["zeta"] * (self.var["w_birth"] + self.var["sigma_birth"]))
-        test_chanse = ran.random() < min(1, self.var["phi"] * self.var["gamma"] * (N - 1))
-        if not(test_w and test_chanse):
+        test_chance = ran.random() < min(1, self.var["phi"] * self.var["gamma"] * (n - 1))
+        if not (test_w and test_chance):
             return None
-        k = type(self)(a=0, w=self.N(self.var['w_birth'], self.var['sigma_birth']))
+        k = type(self)(a=0, w=self.n(self.var['w_birth'], self.var['sigma_birth']))
 
         if self.var["w"] <= self.var["xi"] * k.var["w"]:
             return None
         else:
             self.var["w"] -= self.var["xi"] * k.var["w"]
-            self.var["phi"] = self.Big_phi()
+            self.var["phi"] = self.big_phi()
             return k
-
-    def moveto(self, ret: str):
-        """
-        Animal moves in a given diraction 'ret'
-
-
-        :param ret: a key from 'ret_moves'.
-        """
-
 
     def move(self, ild: list):
         """
-        For an animal to move it must first be fit enough to move. This is determend by its fitness and ``mu``.
+        For an animal to move it must first be fit enough to move. This is determined by its fitness and ``mu``.
 
         If an animal is fit to move but tries to move to an cell that is not possible, it won't move at all.
-        This illegal move is determend by the parameter ``ild`` which is an list generated from ``string2map``.
+        This illegal move is determined by the parameter ``ild`` which is an list generated from ``string2map``.
 
 
-        :param ild: list of illigal coorddiants.
+        :param ild: list of illegal coordinates.
         """
-        # Let the animal choose it's diraction based on what it
+        # Let the animal choose it's direction based on what it
         # knows, by that we need not worry about what it must
         # rather we let it do what it was born to do #
 
@@ -177,18 +167,17 @@ class animal:
             self.var["coord"][0] += direct_list[0]
             self.var["coord"][1] += direct_list[1]
 
-
     def loss_weight(self):
         """
         calculates the new weight of the animal and
-        reevaluets its fitness.
+        reevaluates its fitness.
         """
         self.var["w"] -= self.var["eta"] * self.var["w"]
 
 
 class Herbivore(animal):
     """
-    This is the herbavore class that eats non-meat like vegans.
+    This is the herbivore class that eats non-meat like vegans.
     """
     default_var = {
         "w_birth": 8,
@@ -206,22 +195,22 @@ class Herbivore(animal):
         "omega": 0.4,
         "F": 10}
 
-    def __init__(self, a: int, w: float, coord=[0, 0]):
+    def __init__(self, a: int, w: float, coord=None):
         self.var = dict(Herbivore.default_var)
         super().__init__(a, w, coord=coord)
 
-    def eat(self, F_there):
+    def eat(self, f_there):
         """
-        ``herbivore`` eats of the cell (which is representet by the number ``F_there``) and improves its own fitness.
+        ``herbivore`` eats of the cell (which is represented by the number ``f_there``) and improves its own fitness.
 
 
-        :param F_there: number of food.
+        :param f_there: number of food.
         :return: returns eaten amount if `return_food` is true.
         """
-        # We gain what is possible, whitch is what the animal want or get.#
-        self.var["w"] += self.var["beta"] * min(F_there.food, self.var["F"])
-        self.var["phi"] = self.Big_phi()
-        F_there.food -= float(min(F_there.food, self.var["F"]))
+        # We gain what is possible, which is what the animal want or get.#
+        self.var["w"] += self.var["beta"] * min(f_there.food, self.var["F"])
+        self.var["phi"] = self.big_phi()
+        f_there.food -= float(min(f_there.food, self.var["F"]))
 
 
 class Carnivore(animal):
@@ -245,55 +234,55 @@ class Carnivore(animal):
         "F": 50,
         "DeltaPhiMax": 10}
 
-    def __init__(self, a: int, w: float, coord=[0, 0]):
+    def __init__(self, a: int, w: float, coord=None):
         self.var = dict(Carnivore.default_var)
         super().__init__(a, w, coord=coord)
 
-    def _yield_life(self, L: list):
+    def _yield_life(self, fresh_meat: list):
         """
         Generator for life that is about to be murdered.
 
 
-        :param L: The heard to eat.
+        :param fresh_meat: The heard to eat.
         :yield: A soon to be dead animal.
         """
-        for l in L:
+        for meat in fresh_meat:
             # we know that the limits of the function is 0 and 1, and by analyzing the curve of the function
-            # with the limits we can see that on negative values we get 0, note 0 > than a negativ number
+            # with the limits we can see that on negative values we get 0, note 0 > than a negative number
             # (excluding -0 for computers sake) and 1 when the function is greater than the max value
-            # (e.i. greater than 1) for that reson we can with comfor use max(1,min(0,f(x))) to determen
+            # (e.i. greater than 1) for that reason we can with comfort use max(1,min(0,f(x))) to determine
             # the probability.
-            probebility = max(0, min(1, (self.var["phi"] - l.var["phi"]) / self.var["DeltaPhiMax"]))
-            # we agree that for a preditor to eat a pray it must be alive and the preditor must choose to accept
-            # the pray. we use the function `bin_choise` to determen if it will.#
-            if l.var["life"] and (ran.random() < (probebility)):
-                yield l
+            probability = max(0, min(1, (self.var["phi"] - meat.var["phi"]) / self.var["DeltaPhiMax"]))
+            # we agree that for a predator to eat a pray it must be alive and the predator must choose to accept
+            # the pray.#
+            if meat.var["life"] and (ran.random() < probability):
+                yield meat
 
     def eat(self, cell):
         """
-        ``Carnivore`` eats ``Herbivore`` given both's fitness. For the preditor to have an chance to eat the herbivore
+        ``Carnivore`` eats ``Herbivore`` given both fitness. For the predator to have an chance to eat the herbivore
          it must have better fitness than the herbivore.
 
 
         :param Cells cell: The entire cell
         """
-        # Every preditor must try itself on all the pray available given it want to.
-        # We will therefor iterate over all the animals until it is feed up or have tryed on all of them.#
+        # Every predator must try itself on all the pray available given it want to.
+        # We will therefore iterate over all the animals until it is feed up or have tried on all of them.#
         herb_herd = list(cell.default["Herbivore"])
-        herb_herd.sort(key= lambda O: O.var["phi"])
-        default_F = float(self.var["F"])
+        herb_herd.sort(key=lambda o: o.var["phi"])
+        default_f = float(self.var["F"])
         for pray in self._yield_life(herb_herd):
-            F_got = min(self.var["F"], pray.var["w"])
-            self.var["w"] += self.var["beta"] * F_got
+            f_got = min(self.var["F"], pray.var["w"])
+            self.var["w"] += self.var["beta"] * f_got
             pray.var["life"] = False
-            self.var["F"] -= F_got
-            self.var["phi"] = self.Big_phi()
+            self.var["F"] -= f_got
+            self.var["phi"] = self.big_phi()
             if self.var["F"]:
-                self.var["F"] = default_F
+                self.var["F"] = default_f
                 break
         # Since we don't care for dead animals we will discard all dead animals to the void
-        # before returing them to the next preditor.#
-        self.var["F"] = default_F
+        # before returning them to the next predator.#
+        self.var["F"] = default_f
         cell.default["Herbivore"] = [f for f in herb_herd if f.var["life"]]
 
 
