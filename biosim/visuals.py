@@ -77,7 +77,7 @@ def set_param(island, _type: str, parm: dict):
 
 
     :param island: a list of cells
-    :param str _type: a string witch is either 'L', 'H', 'D', 'W'
+    :param str _type: a string which is either 'L', 'H', 'D', 'W'
     :param parm: a Dict with param (f_max)
     """
     cell_types = {"W": 0, "L": 3, "H": 2, "D": 1}
