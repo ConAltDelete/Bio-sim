@@ -268,18 +268,18 @@ img_base=None, img_fmt='png', tmean = False):
 
 	def load(self,file:str):
 		"""
-		loads a save_file of users choosing.
+		loads a save_file of users choosing replacing the current one.
 
 		:param str file: file to be loaded.
 		"""
-		if file.endswith(".biosim"):
+		if not file.endswith(".biosim"):
 			raise ValueError("Must be a '.biosim' file.")
 		try:
 			self.__dict__.update(pickle.load(open(file,"br")).__dict__)
 		except:
 			ValueError("This file is not a readeble BioSim file.")
 
-	def save(self, path: str = ""):
+	def save(self, path: str = "", name = None):
 		"""
 		saves the current state of the simulation in a .biosim file.
 		
@@ -296,8 +296,22 @@ img_base=None, img_fmt='png', tmean = False):
 
 		if not(os.path.isdir(direct)):
 			os.mkdir("./"+direct)
-		save_file = open(direct + "save_{}.biosim".format(str(time.time())),"bw")
+		if name:
+			save_file = open(direct + "{}.biosim".format(name),"bw")
+		else:
+			save_file = open(direct + "save_{}.biosim".format(str(time.time())),"bw")
 		pickle.dump(self,save_file)
 
 def load(file):
-	return pickle.load(open(file,"br"))
+	"""
+	loads a biosim file.
+
+	:param str file: a path to file.
+	:return: returns a new ``BioSim`` object.
+		"""
+	if not file.endswith(".biosim"):
+		raise ValueError("Must be a '.biosim' file.")
+	try:
+		return pickle.load(open(file,"br"))
+	except:
+		ValueError("This file is not a readeble BioSim file.")

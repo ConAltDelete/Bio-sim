@@ -27,10 +27,9 @@ Theory
 To simulate an animal population we need to recreate its behavore. This is done through ``seasons`` where each season interacts with the island. The primary ones are 
 
 * feeding
-* migration
 * birth
-* lose weight
-* death
+* migration
+* age
 * The end
 
 ``The end`` could not count as a season since its effect on the island is just refilling cells and counting population.
@@ -39,7 +38,7 @@ The heriacy is as follows
 
 .. image:: biosim.png
 
-Every singel class in the heriacy gets used in the simulation along with its components. 
+Every singel class in the heriacy gets used in the simulation along with its components. To add more we need to append to ``animal.py``
 
 Indices and tables
 ==================

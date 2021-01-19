@@ -9,17 +9,17 @@ You set up the simulation by
 
 .. code-block:: python
 
-	import biosim
+	from biosim.simulation import BioSim
 	map = "WWW\nWHW\nWWW\n"
-	ini_pop = {
+	ini_pop = [{
 		"loc": (2,2),
-		"pop": {
+		"pop": [{
 			"species": "Herbivore",
 			"age": 5,
 			"weight": 100 # kg
-		}
-	}
-	sim = biosim.simulation.BioSim(map,ini_pop)
+		}]
+	}]
+	sim = BioSim(map,ini_pop)
 
 This is the most basic form of a simulation, where nothing gets simulated.
 
@@ -36,11 +36,20 @@ To simulate you use the ``biosim.simulate()``. An example of this is
 
 Save and load state
 -------------------
-If you want to save the state of your simulation you can use ``.save()`` and ``.load()``. An example of this is
+If you want to save the state of your simulation you can use ``.save()``, ``.load()``, and ``load()``. An example of this is
 
 .. code-block:: python
 
 	sim.save(path="data/")
 	sim.load(file)
 
-The ``path`` argument is the directory you want to save your ``*.biosim``. The directory will be created in the root directory.
+The ``path`` argument is the directory you want to save your ``*.biosim``. The directory will be created in the root directory. If you want a particular name you can always use the ``name=`` argument to specify a name instead of an generated one. 
+
+.. code-block:: python
+
+	sim.save(path="data/", name = "lollypop")
+	sim.load(file)
+
+The file **will** be saved as an ``.biosim`` file regardless of what name you use, and don't dear to put in an file that does not have a ``.biosim`` file type.
+
+The code shown will replace the simulation you have going, however you can avoid this by using ``load()`` instead. This function returns a new instance instead of replacing the old one.

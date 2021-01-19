@@ -1,3 +1,11 @@
-L = {"fuc":[1,2,3],"tit":[4,5,6]}
-
-print(max(L[ max(L,key= L.get ) ]) )
+from biosim.simulation import BioSim
+map = "WWW\nWHW\nWWW\n"
+ini_pop = [{
+	"loc": (2,2),
+	"pop": [{
+		"species": "Herbivore",
+		"age": 5,
+		"weight": 100 # kg
+	}]
+}]
+sim = BioSim(map,ini_pop)
