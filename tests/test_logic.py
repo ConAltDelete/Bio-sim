@@ -33,7 +33,7 @@ def test_migrasion_consistensy_one_animal():
     this_fucking_thing = BioSim(island_map="WWWW\nWllW\nwllw\nWWWW".upper(), seed=1234,
                                 ini_pop=[{"loc": (2, 2), "pop": [{'species': 'Herbivore', 'age': 5, 'weight': 100} for _ in range(length)]}])
     the_map = this_fucking_thing.island
-    illigal_moves = this_fucking_thing.illigal_coord
+    illigal_moves = this_fucking_thing.illegal_coord
     for _ in range(30):
         season_migration(the_map, illigal_moves)
     total_in_map = 0
@@ -56,7 +56,7 @@ def test_migrasion_consistensy_two_animals():
     this_fucking_thing = BioSim(
         island_map="WWWW\nWLLW\nWWWW", seed=1234, ini_pop=fin_pop)
     the_map = this_fucking_thing.island
-    illigal_moves = this_fucking_thing.illigal_coord
+    illigal_moves = this_fucking_thing.illegal_coord
     for _ in range(30):
         season_migration(the_map, illigal_moves)
     total_in_map = 0
@@ -75,7 +75,7 @@ def test_migrasion_one_species():
         'gamma': 0,
         'a_half': 1000})
     the_map = this_fucking_thing.island
-    illigal_moves = this_fucking_thing.illigal_coord
+    illigal_moves = this_fucking_thing.illegal_coord
     season_migration(the_map, illigal_moves)
     count_cells = dict()
     for cell in the_map:
@@ -110,7 +110,7 @@ def test_migrasion_two_species():
         'gamma': 0,
         'a_half': 1000})
     the_map = this_fucking_thing.island
-    illigal_moves = this_fucking_thing.illigal_coord
+    illigal_moves = this_fucking_thing.illegal_coord
     season_migration(the_map, illigal_moves)
     count_cells = dict()
     for cell in the_map:
@@ -153,7 +153,7 @@ def test_no_diagonal_movements():
         'gamma': 0,
         'a_half': 1000})
     the_map = this_fucking_thing.island
-    illigal_moves = this_fucking_thing.illigal_coord
+    illigal_moves = this_fucking_thing.illegal_coord
     season_migration(the_map,illigal_moves)
     count_cells = dict()
     for cell in the_map:
@@ -197,7 +197,7 @@ def test_no_diagonal_movements_two_iterations():
         'gamma': 0,
         'a_half': 1000})
     the_map = this_fucking_thing.island
-    illigal_moves = this_fucking_thing.illigal_coord
+    illigal_moves = this_fucking_thing.illegal_coord
     for _ in range(2):
         season_migration(the_map,illigal_moves)
     count_cells = dict()
