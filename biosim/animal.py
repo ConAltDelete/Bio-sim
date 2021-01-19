@@ -81,8 +81,8 @@ class animal:
 
 
                 :param x: number
-                :parma xh: number
-                :parma phi: number
+                :param xh: number
+                :param phi: number
                 :return: float
                 """
                 return 1 / (1 + np.e**(k * phi * (x - xh)))
@@ -146,15 +146,6 @@ class animal:
             self.var["w"] -= self.var["xi"] * k.var["w"]
             self.var["phi"] = self.Big_phi()
             return k
-
-    def moveto(self, ret: str):
-        """
-        Animal moves in a given diraction 'ret'
-
-
-        :param ret: a key from 'ret_moves'.
-        """
-
 
     def move(self, ild: list):
         """
