@@ -110,6 +110,11 @@ class BioSim:
         set_param(self.island, landscape, params)
     
     def re_map(self, new_map: str):
+        """
+        Changes the map to the new map.
+
+        :param str new_map: The map to replace the old one.
+        """
         new_map_list, new_illegal_coord = string2map(new_map, self.names)
         
         x_length_old_map = len(self.str_map.split()[0])
@@ -125,7 +130,6 @@ class BioSim:
         self.island = new_map_list
         self.illegal_coord = new_illegal_coord
 
-        #self.viz.island_map_ax = None
         self.viz.convert_map(self.str_map)
         self.viz.island_map = self.viz.island_map_ax.imshow(self.viz.rgb_map)
 

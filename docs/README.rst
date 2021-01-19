@@ -34,6 +34,19 @@ To simulate you use the ``biosim.simulate()``. An example of this is
 
 ``num_years`` is the number of years you want to simulate, ``vis_years`` plots every given years, and ``img_years`` is similar to ``vis_years`` however instead of ploting it saves a image, by default the pictures are saved as a ``.png`` file.
 
+
+Change map
+----------
+If you want to change the map you can use the function ``BioSim.re_map()``. To use the function the new map must be the same size as the old map and furfill the same criterias as when inizilizing the first instance of the map. An exsample is 
+
+.. code-block:: python
+
+	new_map = "WWWW\nWHHW\nWWWW"
+	old_sim.re_map(new_map)
+
+This can happen after an simulation or before.
+
+
 Save and load state
 -------------------
 If you want to save the state of your simulation you can use ``.save()``, ``.load()``, and ``load()``. An example of this is
