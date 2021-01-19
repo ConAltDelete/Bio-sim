@@ -34,15 +34,16 @@ class Visualization:
             Histograms; shall show histograms of each species ages, weights and fitness
             Year; the current year shall be shown
     """
+
     def __init__(self, names, img_base, img_fmt, ymax_animals):
-        colours = [ (1,0,0), (0,0,1), (0,1,0), (0,1,1), (1,1,0), (1,0,1) ]
+        colours = [(1, 0, 0), (0, 0, 1), (0, 1, 0), (0, 1, 1), (1, 1, 0), (1, 0, 1)]
         while len(names) > len(colours):
             colours = set(colours)
             colours.update(inner_points(colours))
             colours = list(colours)
-        
+
         self.meta_data = {
-            d[0]:{"colour":d[1]} for d in zip(names,colours)
+            d[0]: {"colour": d[1]} for d in zip(names, colours)
         }
         self.n_steps = 0
         self.island_map_ax = None
@@ -59,7 +60,7 @@ class Visualization:
         self.pop = None
         self.y_set_lim = ymax_animals
         self.y_def_lim = 0
-        self.n = {species:None for species in names}
+        self.n = {species: None for species in names}
         self.count = dict()
         self.fig = None
         self.year = None
@@ -163,13 +164,13 @@ class Visualization:
         if self.axt is None:
             self.axt = self.fig.add_axes([0.4, 0.8, 0.2, 0.2])
             self.axt.cla()
-            self.axt.axis('off')  # turn off coordinate system
+            self.axt.axis('off')
             self.year = self.axt.text(0.5, 0.5, 'Year: {:5}'.format(0),
-                                horizontalalignment='center',
-                                verticalalignment='center',
-                                transform=self.axt.transAxes)  # relative coordinates
+                                      horizontalalignment='center',
+                                      verticalalignment='center',
+                                      transform=self.axt.transAxes)
 
-        plt.pause(1e-6)  # pause required to make figure visible
+        plt.pause(1e-6)
 
         plt.ion()
 
@@ -196,7 +197,6 @@ class Visualization:
         """
         self.histogram_age.cla()
         self.histogram_age.set_xlim(0, self.def_specs['age']['max'])
-        # self.histogram_age.set_ylim(0, 2000)
         for species in self.weight:
             self.histogram_age.hist(self.age[species],
                                     bins=int((self.def_specs['age']['max']) / (self.def_specs['age']['delta'])),
@@ -207,7 +207,6 @@ class Visualization:
 
         self.histogram_weight.cla()
         self.histogram_weight.set_xlim(0, self.def_specs['weight']['max'])
-        # self.histogram_weight.set_ylim(0, 3000 )
         for species in self.weight:
             self.histogram_weight.hist(self.weight[species],
                                        bins=int(
@@ -219,7 +218,6 @@ class Visualization:
 
         self.histogram_fitness.cla()
         self.histogram_fitness.set_xlim(0, self.def_specs['fitness']['max'])
-        # self.histogram_fitness.set_ylim(0, 2000 )
         for species in self.weight:
             self.histogram_fitness.hist(self.fitness[species],
                                         bins=int(
@@ -327,13 +325,13 @@ class Visualization:
 
 def inner_points(p: iter):
     """
-    finds a small sample of inner point limited by the volum made from points p.
+    finds a small sample of inner point limited by the volume made from points p.
 
-    :param iter[tuple[float,float,float]] p: point that containes a volume.
+    :param iter[tuple[float,float,float]] p: point that contains a volume.
     :return: a set of inner points.
     """
     r = []
     for a in p:
         for b in (q for q in p if q != a):
-            r.append( ( (a[0]+b[0])/2 , (a[1]+b[1])/2 , (a[2]+b[2])/2 ) )
+            r.append(((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2))
     return set(r)
