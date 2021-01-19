@@ -5,9 +5,6 @@ __email__ = 'roy.erling.granheim@nmbu.no, matshoemolsen@nmbu.no'
 
 from .island import Cells
 
-__author__ = 'Roy Erling Granheim, Mats Hoem Olsen'
-__email__ = 'roy.erling.granheim@nmbu.no, mats.hoem.olsen@nmbu.no'
-
 def find_border(x_length,y_length):
     """
     Creates a list of border coordinates based on a rectangle.

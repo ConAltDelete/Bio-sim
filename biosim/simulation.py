@@ -277,7 +277,7 @@ img_base=None, img_fmt='png', tmean = False):
 		try:
 			self.__dict__.update(pickle.load(open(file,"br")).__dict__)
 		except:
-			ValueError("This file is not a readeble BioSim file.")
+			raise ValueError("This file is not a readeble BioSim file.")
 
 	def save(self, path: str = "", name = None):
 		"""
@@ -314,4 +314,4 @@ def load(file):
 	try:
 		return pickle.load(open(file,"br"))
 	except:
-		ValueError("This file is not a readeble BioSim file.")
+		raise ValueError("This file is not a readeble BioSim file.")
