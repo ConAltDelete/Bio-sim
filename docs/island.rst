@@ -1,7 +1,7 @@
 =============
 Island module
 =============
-Indroduction
+Introduction
 -------------
 This module contains the class ``Cells``. It keeps track of all animals located at its coordinates. 
 
