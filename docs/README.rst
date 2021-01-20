@@ -37,7 +37,7 @@ To simulate you use the ``biosim.simulate()``. An example of this is
 
 Change map
 ----------
-If you want to change the map you can use the function ``BioSim.re_map()``. To use the function the new map must be the same size as the old map and furfill the same criterias as when inizilizing the first instance of the map. An exsample is 
+If you want to change the map you can use the function ``BioSim.re_map()``. To use the function the new map must be the same size as the old map and fulfill the same criterias as when initializing the first instance of the map. An exsample is 
 
 .. code-block:: python
 
