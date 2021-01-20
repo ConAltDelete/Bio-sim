@@ -108,6 +108,31 @@ class BioSim:
         :param dict params: Dict with valid parameter specification for landscape
         """
         set_param(self.island, landscape, params)
+    
+    def re_map(self, new_map: str):
+        """
+        Changes the map to the new map.
+
+        :param str new_map: The map to replace the old one.
+        """
+        new_map_list, new_illegal_coord = string2map(new_map, self.names)
+        
+        x_length_old_map = len(self.str_map.split()[0])
+        if any( (len(row) != x_length_old_map for row in self.str_map.split()) ):
+            raise ValueError("Incompatible with old map.")
+
+        self.str_map = new_map
+
+        for coord in self.island:
+            if coord not in new_illegal_coord:
+                new_map_list[coord].default.update(self.island[coord].default)
+            
+        self.island = new_map_list
+        self.illegal_coord = new_illegal_coord
+
+        self.viz.convert_map(self.str_map)
+        self.viz.island_map = self.viz.island_map_ax.imshow(self.viz.rgb_map)
+
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
