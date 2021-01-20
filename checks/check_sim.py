@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import time
-
 import textwrap
 import matplotlib.pyplot as plt
 
@@ -19,7 +17,6 @@ __email__ = "hans.ekkehard.plesser@nmbu.no"
 
 
 if __name__ == '__main__':
-    d1 = time.time()
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
                WWWWWWWWHWWWWLLLLLLLW
@@ -59,8 +56,6 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=10, vis_years=1)
+    sim.simulate(num_years=100, vis_years=1, img_years=2000)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=10, vis_years=1)
-    d2 = time.time()
-    print(d2-d1)
+    sim.simulate(num_years=100, vis_years=1, img_years=2000)
