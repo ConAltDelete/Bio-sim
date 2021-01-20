@@ -1,11 +1,16 @@
 # Example simulation scripts
 
-default_sim.py
---------------
+remap_excample.py
+-----------------
 
-Shows a basic simulation
+Shows how to change the map after an simulation.
 
 save_and_load.py
 ----------------
 
 Like ``lock and load`` except we save an file and loads it back with new parameters.
+
+check_sim.py
+------------
+
+How to setup a simulation.
