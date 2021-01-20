@@ -49,8 +49,7 @@ class BioSim:
     """
 
     def __init__(self, island_map: str, ini_pop: list, seed: int = None, ymax_animals=None, cmax_animals=None,
-                 hist_specs=None,
-                 img_base=None, img_fmt='png', tmean=False):
+                 hist_specs=None, img_base=None, img_fmt='png', tmean=False):
         # we set the random seed for future random number generation. In other words,
         # we make a random simulation consistent.#
         if seed:
@@ -239,7 +238,29 @@ class BioSim:
                 for units in self.island[coord].count_fitness[names]:
                     self.total_fitness[names].append(units)
 
-    def create_movie(self, movie_fmt):
+    @property
+    def year(self):
+        """Last year simulated."""
+        return self._year
+
+    @property
+    def num_animals(self):
+        """Total number of animals on island."""
+        return sum(self.num_animals_per_species.values())
+
+    @property
+    def num_animals_per_species(self):
+        """Number of animals per species in island, as dictionary."""
+        dict_count = {species: 0 for species in self.names}
+        for coord in self.island:
+            for species in self.island[coord].default:
+                if species in dict_count:
+                    dict_count[species] += len(self.island[coord].default[species])
+                else:
+                    dict_count[species] = len(self.island[coord].default[species])
+        return dict_count
+
+    def make_movie(self, movie_fmt):
         """Creates a movie of the simulation"""
         if self._img_base is None:
             raise ValueError("RuntimeError: No filename defined")
@@ -270,28 +291,6 @@ class BioSim:
 
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
-
-    @property
-    def year(self):
-        """Last year simulated."""
-        return self._year
-
-    @property
-    def num_animals(self):
-        """Total number of animals on island."""
-        return sum(self.num_animals_per_species.values())
-
-    @property
-    def num_animals_per_species(self):
-        """Number of animals per species in island, as dictionary."""
-        dict_count = {species: 0 for species in self.names}
-        for coord in self.island:
-            for species in self.island[coord].default:
-                if species in dict_count:
-                    dict_count[species] += len(self.island[coord].default[species])
-                else:
-                    dict_count[species] = len(self.island[coord].default[species])
-        return dict_count
 
     def load(self, file: str):
         """
@@ -331,6 +330,18 @@ class BioSim:
         else:
             save_file = open(direct + "save_{}.biosim".format(str(time.time())), "bw")
         pickle.dump(self, save_file)
+
+    def print_random_name(self):
+        n = 0
+        while n == 0:
+            coord, cell = ran.choice(list(self.island.items()))
+            n = len(cell.default)
+        species, animal_list = ran.choice(list(cell.default.items()))
+        name = ran.choice(animal_list).name
+        if name is None:
+            print("You haven't enabled animals to have names!")
+        else:
+            print('Say hello to {}, {} from cell {}!'.format(species, name, str(coord)))
 
 
 def load(file):

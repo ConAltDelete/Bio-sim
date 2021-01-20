@@ -169,10 +169,7 @@ class Visualization:
                                       horizontalalignment='center',
                                       verticalalignment='center',
                                       transform=self.axt.transAxes)
-
         plt.pause(1e-6)
-
-        plt.ion()
 
     def pop_handler(self, current_year, n_species):
         """
