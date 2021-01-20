@@ -4,10 +4,14 @@
 """
 
 from biosim.simulation import *
-import textwrap
+
+cmax = {'Herbivore': 200, 'Carnivore': 50}
+hist = {'weight': {'max': 30, 'delta': 2},
+        'fitness': {'max': 1.0, 'delta': 0.05},
+        'age': {'max': 60, 'delta': 2}}
 
 if __name__ == "__main__":
-    geogr = """\
+    sim = BioSim(island_map="""\
                WWWWWWWWWWWWWWWWWWWWW
                WWWWWWWWHWWWWLLLLLLLW
                WHHHHHLLLLWWLLLLLLLWW
@@ -20,18 +24,15 @@ if __name__ == "__main__":
                WHHHHLLLLDDLLLLWWWWWW
                WWHHHHLLLLLLLLWWWWWWW
                WWWHHHHLLLLLLLWWWWWWW
-               WWWWWWWWWWWWWWWWWWWWW"""
-    geogr = textwrap.dedent(geogr)
-    sim = BioSim(island_map=geogr,ini_pop=[{
-        "loc":(10,9),
+               WWWWWWWWWWWWWWWWWWWWW""",ini_pop=[{
+        "loc":(10, 9),
         "pop":[
             {
         "species": "Herbivore",
         "age": 5,
-        "weight": 20} for _ in range(200)]
-    }])
+        "weight": 20} for _ in range(50)]
+    }], img_base=None, ymax_animals=None, cmax_animals=None, hist_specs=None)
     sim.simulate(num_years=50,vis_years=1)
-    
     sim.add_population(population=[
         {
             "loc":(10,9),
@@ -40,8 +41,10 @@ if __name__ == "__main__":
                     "species": "Carnivore",
                     "age": 5,
                     "weight": 20
-                } for _ in range(100)
+                } for _ in range(20)
             ]
         }
     ])
-    sim.simulate(num_years=250,vis_years=1)
+    sim.print_random_name()
+    sim.simulate(num_years=150, vis_years=1)
+    sim.make_movie('mp4')
