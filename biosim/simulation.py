@@ -132,7 +132,6 @@ class BioSim:
         self.viz.convert_map(self.str_map)
         self.viz.island_map = self.viz.island_map_ax.imshow(self.viz.rgb_map)
 
-
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
@@ -332,16 +331,19 @@ class BioSim:
         pickle.dump(self, save_file)
 
     def print_random_name(self):
-        n = 0
-        while n == 0:
-            coord, cell = ran.choice(list(self.island.items()))
-            n = len(cell.default)
-        species, animal_list = ran.choice(list(cell.default.items()))
-        name = ran.choice(animal_list).name
-        if name is None:
-            print("You haven't enabled animals to have names!")
+        if self.num_animals == 0:
+            print('All animals are dead.')
         else:
-            print('Say hello to {}, {} from cell {}!'.format(species, name, str(coord)))
+            n = 0
+            while n == 0:
+                coord, cell = ran.choice(list(self.island.items()))
+                n = len(cell.default)
+            species, animal_list = ran.choice(list(cell.default.items()))
+            name = ran.choice(animal_list).name
+            if name is None:
+                print("You haven't enabled animals to have names!")
+            else:
+                print('Say hello to {}, {} from cell {}!'.format(species, name, str(coord)))
 
 
 def load(file):
