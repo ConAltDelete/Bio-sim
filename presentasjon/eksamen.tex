@@ -1,0 +1,81 @@
+\documentclass[12pt]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usetheme{Copenhagen}
+\usepackage{listings}
+
+\begin{document}
+\author{Mats Hoem Olsen, Roy Granheim}
+\title{Simulating animals}
+\subtitle{The survivle of the lucky}
+%\logo{}
+\institute{Norwegian university of enviroment and biosciense}
+\date{26/1-2021}
+\subject{INF200}
+%\setbeamercovered{transparent}
+%\setbeamertemplate{navigation symbols}{}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\section{Table of contents}
+\begin{frame}
+\tableofcontents
+\end{frame}
+
+\setcounter{section}{0}
+
+\section{Animal logic}
+
+\begin{frame}{general}
+\begin{itemize}
+\item<+-> feeding
+\item<+-> breading % to be corrected when bothered
+\item<+-> migrate
+\item<+-> grow old
+\item<+-> die
+\end{itemize}
+\pause This sounds like a song...
+\end{frame}
+
+\subsection{logic}
+
+\begin{frame}{general}
+\begin{block}{feeding}
+Herbivore eat what they can, carnivore eat what's left.
+\end{block}
+
+\begin{block}{breeding}
+\begin{enumerate}[<+->]
+\item birth if fit
+\item have enough fat
+\item random
+\end{enumerate}
+\end{block}
+
+\begin{block}{migasion}
+\alt<2>{Move if it can.}{Mostely random...}
+\end{block}
+\end{frame}
+
+\subsection{programming theory}
+
+\begin{frame}{Theory}
+\begin{enumerate}
+\item type-casting to avoid pointer bugs
+\item eval() to create general code.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{lstlisting}[language=Python,basicstyle=\small]
+[n for n in dir(sys.modules["biosim.animal"]) 
+if not re.match("(__)|(np)|(ran)|(animal)",n)]
+\end{lstlisting}
+
+\end{frame}
+
+\end{document}
