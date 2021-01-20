@@ -44,7 +44,7 @@ If you want to change the map you can use the function ``BioSim.re_map()``. To u
 	new_map = "WWWW\nWHHW\nWWWW"
 	old_sim.re_map(new_map)
 
-This can happen after an simulation or before.
+This can happen after an simulation.
 
 
 Save and load state
