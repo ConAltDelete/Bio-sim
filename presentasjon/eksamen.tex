@@ -4,6 +4,7 @@
 \usepackage[english]{babel}
 \usetheme{Copenhagen}
 \usepackage{listings}
+\usepackage{xmpmulti}
 
 \begin{document}
 \author{Mats Hoem Olsen, Roy Granheim}
@@ -30,5 +31,10 @@
 \input{animal.tex}
 
 \input{visuals.tex}
+
+\begin{frame}{fin}
+	\transduration<0-19>{0}
+	\multiinclude[<+->][format=png, graphics={width=\textwidth}]{test/firework}
+\end{frame}
 
 \end{document}

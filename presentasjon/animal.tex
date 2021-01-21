@@ -1,50 +1,21 @@
-\section{Animal logic}
+\section{Animals}
 
-\begin{frame}{general}
-\begin{itemize}
-\item<+-> feeding
-\item<+-> breading % to be corrected when bothered
-\item<+-> migrate
-\item<+-> grow old
-\item<+-> die
-\end{itemize}
-\pause This sounds like a song...
+
+\begin{frame}{diversity}
+	\begin{itemize}[<+->]
+		\item Herbivore
+		\item Carnivore 
+		\item ??? 
+	\end{itemize}
+	\pause More to be.
 \end{frame}
 
-\subsection{logic}
+\begin{frame}{dynamic}
+	If it is an animal, it will, therefore it can.
+	
+	\pause Interacts as it pleases
 
-\begin{frame}{general}
-\begin{block}{feeding}
-Herbivore eat what they can, carnivore eat what's left.
-\end{block}
+	\pause Everybody get approximatly the same treatment
 
-\begin{block}{breeding}
-\begin{enumerate}[<+->]
-\item birth if fit
-\item have enough fat
-\item random
-\end{enumerate}
-\end{block}
-
-\begin{block}{migasion}
-\alt<2>{Move if it can.}{Mostely random...}
-\end{block}
-\end{frame}
-
-\subsection{programming theory}
-
-\begin{frame}{Theory}
-\begin{enumerate}
-\item type-casting to avoid pointer bugs
-\item eval() to create general code.
-\end{enumerate}
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{lstlisting}[language=Python,basicstyle=\small]
-[n for n in dir(sys.modules["biosim.animal"]) 
-if not re.match("(__)|(np)|(ran)|(animal)",n)]
-\end{lstlisting}
-
+	\pause Some are more equal than others
 \end{frame}
