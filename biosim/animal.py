@@ -213,7 +213,7 @@ class Herbivore(animal):
         "F": 10}
 
     def __init__(self, a: int, w: float, coord=None):
-        self.var = dict(Herbivore.default_var)
+        self.var = dict(self.default_var)
         super().__init__(a, w, coord=coord)
 
     def eat(self, f_there):
@@ -252,7 +252,7 @@ class Carnivore(animal):
         "DeltaPhiMax": 10}
 
     def __init__(self, a: int, w: float, coord=None):
-        self.var = dict(Carnivore.default_var)
+        self.var = dict(self.default_var)
         super().__init__(a, w, coord=coord)
 
     def _yield_life(self, fresh_meat: list):
