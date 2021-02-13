@@ -44,6 +44,12 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
+    ini_snake = [{'loc': (4, 15),
+                  'pop': [{'species': 'Snake',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]}]
+
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs, seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
@@ -57,5 +63,25 @@ if __name__ == '__main__':
     sim.set_landscape_parameters('L', {'f_max': 700})
 
     sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    
+    new_map = """\
+               WWWWWWWWWWWWWWWWWWWWW
+               WWWWWWWWHWWWWLLLLLLLW
+               WWHHHHLLLLWWLLLLLLLWW
+               WWWHHHHHHHWWLLLLLLWWW
+               WHWWHHLLLLLLLLLLLLWWW
+               WHHWWHLLLDDLLLHLLLWWW
+               WHHLWWLLDDDLLLHHHHWWW
+               WWHHHWWWWWWWLLHWWWWWW
+               WHHHLLLLLDDWWWLLLLWWW
+               WHHHHLLLLDDLLWWWWWWWW
+               WWHHHHLLLLLLLLWWWWWWW
+               WWWHHHHLLLLLLLWWWWWWW
+               WWWWWWWWWWWWWWWWWWWWW"""
+    new_map = textwrap.dedent(new_map)
+
+    sim.re_map(new_map)
+
     sim.add_population(population=ini_carns)
+    sim.add_population(population=ini_snake)
     sim.simulate(num_years=100, vis_years=1, img_years=2000)

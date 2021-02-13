@@ -331,6 +331,9 @@ class BioSim:
         pickle.dump(self, save_file)
 
     def print_random_name(self):
+        """
+        Prints the animals name.
+        """
         if self.num_animals == 0:
             print('All animals are dead.')
         else:

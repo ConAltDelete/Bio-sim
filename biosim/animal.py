@@ -214,7 +214,7 @@ class Herbivore(animal):
 
     def __init__(self, a: int, w: float, coord=None):
         self.var = dict(self.default_var)
-        super().__init__(a, w, coord=coord)
+        animal.__init__(self,a, w, coord=coord)
 
     def eat(self, f_there):
         """
@@ -253,7 +253,7 @@ class Carnivore(animal):
 
     def __init__(self, a: int, w: float, coord=None):
         self.var = dict(self.default_var)
-        super().__init__(a, w, coord=coord)
+        animal.__init__(self,a, w, coord=coord)
 
     def _yield_life(self, fresh_meat: list):
         """
@@ -302,6 +302,31 @@ class Carnivore(animal):
         self.var["F"] = default_f
         cell.default["Herbivore"] = [f for f in herb_herd if f.var["life"]]
 
+
+class Snake(Carnivore):
+    default_var = {
+        "w_birth": 4,
+        "sigma_birth": 1,
+        "beta": 0.75,
+        "eta": 0.125,
+        "a_half": 20,
+        "phi_age": 0.3,
+        "w_half": 4,
+        "phi_weight": 0.4,
+        "mu": 0.4,
+        "gamma": 1,
+        "zeta": 3.5,
+        "xi": 1.1,
+        "omega": 0.8,
+        "F": 30,
+        "DeltaPhiMax": 5}
+    def __init__(self, a: int, w: float, coord = None):
+        self.var = dict(self.default_var)
+        animal.__init__(self,a, w, coord=coord)
+    
+    def eat(self,cell):
+        if "Herbivore" in cell.default:
+            Carnivore.eat(self,cell)
 
 if __name__ == "__main__":
     pass
