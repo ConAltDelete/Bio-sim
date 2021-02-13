@@ -179,6 +179,8 @@ class animal:
     def random_name():
         """
         Method to give each newly initialized animal a mostly unique name
+
+        :return: string representing the name of animal.
         """
         name_given = str()
         name_length = 5
